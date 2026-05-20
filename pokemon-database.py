@@ -19,7 +19,7 @@ def analyze_pokemon_data(only_gen1=True):
     incluyendo validación de supuestos, optimización de clusters y reducción dimensional.
     
     Args:
-        only_gen1 (bool): Si es True, filtra solo la Gen 1. Si es False, usa todo el dataset.
+        only_gen1 (bool): Si es True, filtra solo la Gen 1. Si es False, usa todo el dataset
     """
     report = [] # Lista para almacenar el reporte científico
     
