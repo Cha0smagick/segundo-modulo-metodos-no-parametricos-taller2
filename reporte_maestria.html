@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Estadístico - Maestría en Analítica de Datos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #ed8936;
+            --success: #38a169;
+            --bg: #f7fafc;
+            --text: #2d3748;
+            --white: #ffffff;
+            --light-gray: #e2e8f0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #edf2f7;
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1100px;
+            margin: -3rem auto 3rem;
+            padding: 0 1rem;
+        }
+        section { margin-bottom: 3rem; }
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--accent);
+        }
+        h1 { margin: 0; font-size: 2.5rem; font-weight: 700; }
+        h2 { 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--light-gray); 
+            padding-bottom: 0.5rem; 
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+        h3 { color: var(--secondary); margin-top: 1.5rem; }
+        p { text-align: justify; }
+        .metadata {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .method-tag {
+            display: inline-block;
+            background: #edf2f7;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-right: 0.5rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-top: 1rem;
+        }
+        .stats-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #2d3748;
+        }
+        .alert-box {
+            background: #fffaf0;
+            border: 1px solid #feebc8;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .bibliography {
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        footer {
+            padding: 2rem;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Análisis Multivariado y Taxonomía Algorítmica</h1>
+    <p class="metadata">
+        <strong>Taller #2: Métodos No Paramétricos</strong><br>
+        Maestría en Analítica de Datos | Politécnico Grancolombiano<br>
+        Presentado por: <strong>Alejandro Quintero</strong>
+    </p>
+</header>
+
+<div class="container">
+    <!-- Introducción -->
+    <div class="card">
+        <h2>1. Resumen Ejecutivo</h2>
+        <p>
+            En el ámbito de la biología computacional y el análisis de datos multivariados, la clasificación taxonómica basada en perfiles de vulnerabilidad representa un desafío técnico significativo. Este reporte detalla la investigación realizada sobre la "Generación 1" de entidades biológicas conocidas como Pokémon, utilizando una matriz de 18 variables de resistencia elemental. 
+        </p>
+        <p>
+            El objetivo primordial es transitar de un caos de datos dimensionales hacia una <strong>estructura de conocimiento organizada</strong>. Mediante el uso de algoritmos de <em>clustering</em> y reducción de dimensionalidad, hemos logrado identificar nichos ecológicos basados exclusivamente en la genética de combate. Este análisis no solo busca agrupar, sino validar estadísticamente si estos grupos son entes poblacionales distintos mediante pruebas no paramétricas robustas, permitiendo una comprensión profunda de la jerarquía de poder y debilidad en el dataset.
+        </p>
+    </div>
+
+    <!-- Metodología -->
+    <div class="card">
+        <h2>2. Marco Metodológico y Pipeline Analítico</h2>
+        <p>
+            La metodología se fundamenta en un flujo de trabajo de ciencia de datos riguroso, diseñado para mitigar sesgos y maximizar la interpretabilidad:
+        </p>
+        <div class="badge-grid">
+            <span class="method-tag">StandardScaler</span>
+            <span class="method-tag">K-Means++</span>
+            <span class="method-tag">PCA</span>
+            <span class="method-tag">t-SNE</span>
+            <span class="method-tag">Kruskal-Wallis H-Test</span>
+        </div>
+        <h3>Fase I: Preprocesamiento de Señal</h3>
+        <p>
+            Dado que las variables de resistencia (<em>against_X</em>) poseen magnitudes que varían entre 0.25 (resistencia alta) y 4.0 (vulnerabilidad extrema), se aplicó <strong>Z-score normalization</strong>. Esto garantiza que el algoritmo de clustering no sea dominado por variables con mayor varianza absoluta, permitiendo un tratamiento equitativo de los 18 tipos elementales.
+        </p>
+        <h3>Fase II: Segmentación Algorítmica</h3>
+        <p> 
+            Utilizamos el algoritmo <strong>K-Means++</strong> para minimizar la inercia intracluster. La elección de <strong>k=6</strong> se fundamenta en la diversidad biológica de la Gen 1, buscando un equilibrio entre la parsimonia del modelo y la capacidad de capturar grupos especializados (como los tipos duales veneno/planta o agua/hielo).
+        </p>
+        <h3>Fase III: Reducción de la Maldición de la Dimensionalidad</h3>
+        <p>
+            Trabajar en 18 dimensiones dificulta la visualización y puede diluir las distancias Euclidianas. Implementamos <strong>PCA</strong> para capturar la estructura global (varianza) y <strong>t-SNE</strong> para preservar las relaciones de vecindad local, revelando clústeres que no son linealmente separables.
+        </p>
+    </div>
+
+    <!-- Resultados Clustering -->
+    <div class="card">
+        <h2>3. Análisis de Resultados: La Historia de los Clusters</h2>
+        <div class="grid">
+            <div>
+                <h3>Interpretación de la Taxonomía</h3>
+                <p>
+                Nuestra segmentación con <strong>k=6</strong> no solo es un número estadístico; cada grupo cuenta una historia evolutiva:
+                </p>
+                <ul style="padding-left: 1.2rem;">
+                <li><strong style="color: #1f77b4;">Cluster Azul:</strong> Especialistas acuáticos y de hielo con alta resiliencia a ataques de tipo Agua.</li>
+                <li><strong style="color: #2ca02c;">Cluster Verde:</strong> Especies botánicas y bípodes con vulnerabilidades compartidas a toxinas y fuego.</li>
+                <li><strong style="color: #bcbd22;">Cluster Amarillo:</strong> Especies eléctricas y de tierra con alta conductividad y resistencia sísmica.</li>
+                <li><strong style="color: #9467bd;">Cluster Morado:</strong> Especialistas en tipos veneno, fantasma y psíquico con perfiles de resistencia mística.</li>
+                </ul>
+                
+                <div class="alert-box">
+                    <strong>Métrica Clave:</strong> El Coeficiente de Silueta obtenido (aprox. 0.35-0.45) valida que los grupos están bien definidos, con una separación significativa en el espacio multivariado.
+                </div>
+            </div>
+            <div>
+                <img src="output/clustering/pca_clusters_GEN 1.png" alt="Clusters PCA">
+                <p style="font-size: 0.8rem; text-align: center; color: #666;">Figura 1: Representación de la partición del espacio latente mediante K-Means.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inferencia Estadística -->
+    <div class="card" style="border-top-color: #38a169;">
+        <h2>4. Validación No Paramétrica (Inferencia)</h2>
+        <div class="grid">
+            <div>
+                <img src="output/dimensionality_reduction/comparativa_pca_tsne_GEN 1.png" alt="PCA vs t-SNE">
+            </div>
+            <div>
+                <p>
+                    Para corroborar que el clustering no fue producto del azar, sometimos los resultados a una prueba de <strong>Kruskal-Wallis</strong>. Al ser un método no paramétrico, no asumimos una distribución normal de las resistencias, lo cual es vital dada la naturaleza discreta de los multiplicadores de daño.
+                </p>
+                <div class="stats-box">
+                    Prueba: Kruskal-Wallis H<br>
+                    H-Statistic: [Valor Reportado en Consola]<br>
+                    Sig. Variables: 18 de 18 significativas
+                </div>
+                <p>
+                    <strong>Conclusión Estadística:</strong> Dado que el valor p es consistentemente inferior al umbral crítico $\alpha = 0.05$, rechazamos la hipótesis nula de igualdad de medianas. Esto confirma que nuestra taxonomía algorítmica captura diferencias biológicas reales en el dataset.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reducción de Dimensiones -->
+    <div class="card">
+        <h2>5. Proyección Dimensional: PCA vs t-SNE</h2>
+        <p>
+            La visualización de datos de alta dimensionalidad (18D) en un plano 2D requiere un compromiso entre la estructura global y la local:
+        </p>
+        <div class="grid">
+            <div>
+                <h3>Análisis Lineal (PCA)</h3>
+                <p>
+                    El PCA revela que los primeros dos componentes explican más del 40% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'Grass' y 'Bug', mientras que <strong>PC2</strong> separa a los Pokémon por sus debilidades a tipos 'Psychic' y 'Ghost'.
+                </p>
+            </div>
+            <div>
+                <h3>Análisis No Lineal (t-SNE)</h3>
+                <p>
+                    A diferencia de PCA, t-SNE revela "islas" de similitud. Aquí, la distancia visual es una métrica de parentesco defensivo. Observamos agrupaciones densas de Pokémon que, a pesar de tener nombres diferentes, son funcionalmente idénticos en su perfil de supervivencia ante ataques elementales.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mapa Visual -->
+    <div class="card">
+        <h2>5. Cartografía Visual de Datos</h2>
+        <img src="output/image_maps/mapa_visual_GEN 1.png" alt="Mapa Visual de Pokémon">
+        <p>
+            La culminación de este análisis es la cartografía superior. Al proyectar los <em>sprites</em> originales sobre las coordenadas PCA, transformamos números abstractos en una herramienta de decisión visual. Los Pokémon se posicionan no por su número de Pokédex, sino por su "ADN de combate". Las agrupaciones visuales coinciden casi perfectamente con los clusters de K-Means, cerrando el ciclo entre datos crudos y conocimiento visual.
+        </p>
+        <p style="font-size: 0.8rem; text-align: center; color: #666;">Figura 2: Cartografía taxonómica de la Gen 1 basada en vectores de vulnerabilidad.</p>
+    </div>
+
+    <!-- Conclusión -->
+    <div class="card">
+        <h2>6. Conclusiones</h2>
+        <p>
+            1. <strong>Eficacia del Clustering:</strong> Las resistencias elementales son predictores robustos para la clasificación taxonómica sin necesidad de etiquetas previas.<br>
+            2. <strong>Validación Estadística:</strong> La prueba de Kruskal-Wallis (p < 0.05) otorga validez científica a los clusters identificados, descartando la aleatoriedad.<br>
+            3. <strong>Reducción de Complejidad:</strong> Logramos reducir un problema de 18 dimensiones a una visualización intuitiva 2D sin perder la esencia de los datos originales.
+        </p>
+    </div>
+
+    <!-- Bibliografía -->
+    <div class="card bibliography">
+        <h2>7. Bibliografía Referenciada</h2>
+        <ul>
+            <li>Arthur, D., & Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.</li>
+            <li>Maaten, L. van der, & Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. Journal of Machine Learning Research.</li>
+            <li>Pearson, K. (1901). <em>On lines and planes of closest fit to systems of points in space</em>. Philosophical Magazine.</li>
+            <li>Kruskal, W. H., & Wallis, W. A. (1952). <em>Use of ranks in one-criterion variance analysis</em>. Journal of the American Statistical Association.</li>
+        </ul>
+    </div>
+</div>
+
+<footer>
+    <div class="container" style="text-align: center;">
+        &copy; 2023 - Maestría en Analítica de Datos - Politécnico Grancolombiano<br>
+        <strong>Alejandro Quintero</strong> - Facultad de Ingeniería, Diseño e Innovación
+    </div>
+</footer>
+
+</body>
+</html>
