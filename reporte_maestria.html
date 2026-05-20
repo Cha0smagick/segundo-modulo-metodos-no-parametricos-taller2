@@ -159,7 +159,7 @@
         </p>
         <h3>Fase II: Segmentación Algorítmica</h3>
         <p> 
-            Utilizamos el algoritmo <strong>K-Means++</strong> para minimizar la inercia intracluster. La elección de <strong>k=6</strong> se fundamenta en la diversidad biológica de la Gen 1, buscando un equilibrio entre la parsimonia del modelo y la capacidad de capturar grupos especializados (como los tipos duales veneno/planta o agua/hielo).
+            Utilizamos el algoritmo <strong>K-Means++</strong> para minimizar la inercia intracluster. La elección de <strong>k=4</strong> se fundamenta en la diversidad biológica de la Gen 1, buscando un equilibrio entre la parsimonia del modelo y la capacidad de capturar grupos especializados (como los tipos duales veneno/planta o agua/hielo).
         </p>
         <h3>Fase III: Reducción de la Maldición de la Dimensionalidad</h3>
         <p>
@@ -174,7 +174,7 @@
             <div>
                 <h3>Interpretación de la Taxonomía</h3>
                 <p>
-                Nuestra segmentación con <strong>k=6</strong> no solo es un número estadístico; cada grupo cuenta una historia evolutiva:
+                Nuestra segmentación con <strong>k=4</strong> no solo es un número estadístico; cada grupo cuenta una historia evolutiva:
                 </p>
                 <ul style="padding-left: 1.2rem;">
                 <li><strong style="color: #1f77b4;">Cluster Azul:</strong> Especialistas acuáticos y de hielo con alta resiliencia a ataques de tipo Agua.</li>
@@ -207,8 +207,8 @@
                 </p>
                 <div class="stats-box">
                     Prueba: Kruskal-Wallis H<br>
-                    H-Statistic: [Valor Reportado en Consola]<br>
-                    Sig. Variables: 18 de 18 significativas
+                    H-Statistic: 1797.98<br>
+                    Sig. Variables: 17 de 18 significativas
                 </div>
                 <p>
                     <strong>Conclusión Estadística:</strong> Dado que el valor p es consistentemente inferior al umbral crítico $\alpha = 0.05$, rechazamos la hipótesis nula de igualdad de medianas. Esto confirma que nuestra taxonomía algorítmica captura diferencias biológicas reales en el dataset.
@@ -227,7 +227,7 @@
             <div>
                 <h3>Análisis Lineal (PCA)</h3>
                 <p>
-                    El PCA revela que los primeros dos componentes explican más del 40% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'Grass' y 'Bug', mientras que <strong>PC2</strong> separa a los Pokémon por sus debilidades a tipos 'Psychic' y 'Ghost'.
+                    El PCA revela que los primeros dos componentes explican más del 40% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'Grass' y 'Bug', mientras que <strong>PC2</strong> separa a los Pokémon por sus debilidades a 'psychic' y 'bug'.
                 </p>
             </div>
             <div>

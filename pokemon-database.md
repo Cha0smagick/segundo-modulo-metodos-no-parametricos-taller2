@@ -16,7 +16,7 @@ El análisis sigue un riguroso pipeline de ciencia de datos:
     *   Selección de 18 variables de resistencia/debilidad elemental (`against_bug` a `against_water`).
     *   **Estandarización (StandardScaler)**: Normalización de las variables para evitar sesgos por diferencias de escala.
 3.  **Segmentación Algorítmica (Clustering)**:
-    *   Aplicación del algoritmo **K-Means++** con `k=6` clusters para minimizar la inercia intracluster.
+    *   Aplicación del algoritmo **K-Means++** con `k=4` clusters para minimizar la inercia intracluster.
     *   Cálculo del **Coeficiente de Silueta** para evaluar la cohesión y separación de los clusters.
 4.  **Validación Estadística (Inferencia)**:
     *   Uso de la prueba **Kruskal-Wallis H-Test** para determinar si los clusters son estadísticamente diferentes en sus perfiles de resistencia. Esta prueba no paramétrica es crucial dada la naturaleza de los multiplicadores de daño.
@@ -89,7 +89,7 @@ output/
 
 ## 📊 Resultados Clave
 
-*   **Clustering (K-Means++)**: Se identificaron 6 clusters principales, con un enfoque en 4 clusters interpretables:
+*   **Clustering (K-Means++)**: Se identificaron 4 clusters principales caracterizados por su perfil defensivo:
     *   <strong style="color: #1f77b4;">Cluster Azul:</strong> Especialistas acuáticos y de hielo.
     *   <strong style="color: #2ca02c;">Cluster Verde:</strong> Especies botánicas y bípodes.
     *   <strong style="color: #bcbd22;">Cluster Amarillo:</strong> Especies eléctricas y de tierra.

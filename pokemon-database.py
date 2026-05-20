@@ -9,6 +9,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
+from matplotlib.colors import ListedColormap
 from scipy.stats import kruskal, bartlett
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
@@ -33,12 +34,26 @@ def analyze_pokemon_data(only_gen1=True):
         os.makedirs(os.path.join(base_output, d), exist_ok=True)
 
     print("--- Descargando datasets desde Kaggle ---")
-    stats_path = kagglehub.dataset_download(stats_handle)
-    images_path = kagglehub.dataset_download(images_handle)
-    
-    # Carga del CSV principal y definición de la ruta de imágenes
-    df = pd.read_csv(os.path.join(stats_path, "pokemon.csv"))
-    img_dir = os.path.join(images_path, "images")
+    try:
+        stats_path = kagglehub.dataset_download(stats_handle)
+        images_path = kagglehub.dataset_download(images_handle)
+        stats_csv_path = os.path.join(stats_path, "pokemon.csv")
+        img_dir = os.path.join(images_path, "images")
+    except Exception as e:
+        print(f"⚠️ No se pudo conectar con Kaggle (Error: {e})")
+        print("Buscando archivos locales como respaldo...")
+        
+        stats_csv_path = "pokemon.csv"
+        img_dir = "images"
+        
+        if not os.path.exists(stats_csv_path):
+            print(f"❌ Error crítico: No se encontró '{stats_csv_path}' y la descarga falló.")
+            print("Verifique su conexión a internet o coloque el archivo CSV manualmente en esta carpeta.")
+            return
+        print(f"📂 Usando archivo local encontrado: {stats_csv_path}")
+
+    # Carga del CSV principal
+    df = pd.read_csv(stats_csv_path)
     
     try:
         # --- 1. Filtrado de Datos ---
@@ -78,7 +93,7 @@ def analyze_pokemon_data(only_gen1=True):
         # --- 3. Categorización (Clustering) ---
         report.append("3. AGRUPAMIENTO (CLUSTERING K-MEANS):")
         # Validación de la calidad del clustering mediante Silhouette Score
-        k_clusters = 6 
+        k_clusters = 4 
         kmeans = KMeans(n_clusters=k_clusters, random_state=42, n_init=10)
         cluster_labels = kmeans.fit_predict(X_scaled)
         df_gen1['cluster'] = cluster_labels
@@ -163,8 +178,13 @@ def analyze_pokemon_data(only_gen1=True):
         # --- 6. Visualización: PCA + Clusters ---
         # Se colorean los puntos según el resultado del agrupamiento de K-Means
         plt.figure(figsize=(10, 7))
+        
+        # Definir paleta de colores personalizada (Azul, Verde, Amarillo, Morado)
+        custom_colors = ['#1f77b4', '#2ca02c', '#bcbd22', '#9467bd']
+        cmap_custom = ListedColormap(custom_colors)
+
         scatter = plt.scatter(pca_results[:, 0], pca_results[:, 1], c=df_gen1['cluster'], 
-                             cmap='tab10', s=100, edgecolor='white', alpha=0.8)
+                             cmap=cmap_custom, s=100, edgecolor='white', alpha=0.8)
         plt.colorbar(scatter, label='Grupo (Cluster)')
         plt.title(f"Clustering K-Means sobre Proyección PCA ({scope_text})")
         plt.xlabel(pca_label_x)
@@ -206,6 +226,48 @@ def analyze_pokemon_data(only_gen1=True):
             f.write("\n".join(report))
         print(f"💾 Reporte científico guardado en: {report_path}")
         
+        # --- 9. Inyección de Resultados en Documentación (.md y .html) ---
+        # Actualización de pokemon-database.md
+        md_path = "pokemon-database.md"
+        if os.path.exists(md_path):
+            with open(md_path, "r", encoding="utf-8") as f:
+                md_content = f.read()
+            
+            md_replacements = {
+                "k=6": f"k={k_clusters}",
+                "[Valor numérico] (Indica la compacidad": f"{kmeans.inertia_:.2f} (Indica la compacidad",
+                "[Valor numérico] (Generalmente entre 0.35-0.45": f"{sil_score:.4f} (Generalmente entre 0.35-0.45",
+                "[Número] de 18 variables": f"{sig_vars} de 18 variables",
+                "aproximadamente [Valor numérico]%": f"aproximadamente {var_explicada:.2f}%",
+                "against_grass, against_bug": f"against_{pc1_vars[0]}, against_{pc1_vars[1]}",
+                "against_psychic, against_ghost": f"against_{pc2_vars[0]}, against_{pc2_vars[1]}"
+            }
+            for key, val in md_replacements.items():
+                md_content = md_content.replace(key, val)
+            with open(md_path, "w", encoding="utf-8") as f:
+                f.write(md_content)
+            print("📝 pokemon-database.md actualizado con datos reales.")
+
+        # Actualización de reporte_maestria.html
+        html_path = "reporte_maestria.html"
+        if os.path.exists(html_path):
+            with open(html_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+            
+            html_replacements = {
+                "<strong>k=6</strong>": f"<strong>k={k_clusters}</strong>",
+                "[Valor Reportado en Consola]": f"{kmeans.inertia_:.2f}",
+                "Sig. Variables: 18 de 18": f"Sig. Variables: {sig_vars} de 18",
+                "explicen más del 40%": f"explicen más del {var_explicada:.2f}%",
+                "against 'Grass' y 'Bug'": f"'{pc1_vars[0]}' y '{pc1_vars[1]}'",
+                "tipos 'Psychic' y 'Ghost'": f"'{pc2_vars[0]}' y '{pc2_vars[1]}'"
+            }
+            for key, val in html_replacements.items():
+                html_content = html_content.replace(key, val)
+            with open(html_path, "w", encoding="utf-8") as f:
+                f.write(html_content)
+            print("🌐 reporte_maestria.html actualizado con datos reales.")
+
         plt.savefig(os.path.join(base_output, "image_maps", f"mapa_visual_{scope_text}.png"))
         print("💾 Mapa visual de Pokémon guardado.")
         plt.close()
