@@ -227,7 +227,7 @@
             <div>
                 <h3>Análisis Lineal (PCA)</h3>
                 <p>
-                    El PCA revela que los primeros dos componentes explican más del 40% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'Grass' y 'Bug', mientras que <strong>PC2</strong> separa a los Pokémon por sus debilidades a 'psychic' y 'bug'.
+                    El PCA revela que los primeros dos componentes explican aproximadamente el 35.76% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'flying', 'grass' y 'ground', mientras que <strong>PC2</strong> separa a los Pokémon por sus perfiles ante 'psychic', 'bug' y 'dark'.
                 </p>
             </div>
             <div>
@@ -241,7 +241,7 @@
 
     <!-- Mapa Visual -->
     <div class="card">
-        <h2>5. Cartografía Visual de Datos</h2>
+        <h2>6. Cartografía Visual de Datos</h2>
         <img src="output/image_maps/mapa_visual_GEN 1.png" alt="Mapa Visual de Pokémon">
         <p>
             La culminación de este análisis es la cartografía superior. Al proyectar los <em>sprites</em> originales sobre las coordenadas PCA, transformamos números abstractos en una herramienta de decisión visual. Los Pokémon se posicionan no por su número de Pokédex, sino por su "ADN de combate". Las agrupaciones visuales coinciden casi perfectamente con los clusters de K-Means, cerrando el ciclo entre datos crudos y conocimiento visual.
@@ -249,9 +249,28 @@
         <p style="font-size: 0.8rem; text-align: center; color: #666;">Figura 2: Cartografía taxonómica de la Gen 1 basada en vectores de vulnerabilidad.</p>
     </div>
 
+    <!-- Aplicaciones Prácticas -->
+    <div class="card" style="border-top-color: #ed8936;">
+        <h2>7. Aplicaciones Prácticas: Entrenadores y Speedrunners</h2>
+        <div class="grid">
+            <div>
+                <h3>Perspectiva del Entrenador</h3>
+                <p>
+                    Para un <strong>Entrenador Pokémon</strong>, este estudio es una brújula para la construcción de equipos equilibrados (<em>Core Synergy</em>). Al identificar qué especímenes residen en el mismo cluster, un entrenador puede evitar redundancias defensivas catastróficas. Por ejemplo, si un equipo ya cuenta con un Pokémon del <em>Cluster 0</em>, buscar un compañero en el <em>Cluster 2</em> permite cubrir vulnerabilidades cruzadas, creando un "pivote" defensivo capaz de absorber ataques que otros miembros del equipo no resistirían.
+                </p>
+            </div>
+            <div>
+                <h3>Perspectiva del Speedrunning</h3>
+                <p>
+                    En el <strong>Speedrunning</strong> (especialmente en categorías <em>Glitchless</em>), la eficiencia es ley. El mapa t-SNE revela "islas" de similitud funcional; si un corredor sabe que necesita las resistencias del <em>Cluster 1</em> (Plantas/Bichos) para superar de forma segura el mid-game, puede elegir al Pokémon de ese grupo que tenga la ruta de captura más rápida o la mejor tasa de aparición, optimizando segundos vitales sin comprometer la estabilidad de la ruta frente a líderes de gimnasio clave como Sabrina o Giovanni.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- Conclusión -->
     <div class="card">
-        <h2>6. Conclusiones</h2>
+        <h2>8. Conclusiones</h2>
         <p>
             1. <strong>Eficacia del Clustering:</strong> Las resistencias elementales son predictores robustos para la clasificación taxonómica sin necesidad de etiquetas previas.<br>
             2. <strong>Validación Estadística:</strong> La prueba de Kruskal-Wallis (p < 0.05) otorga validez científica a los clusters identificados, descartando la aleatoriedad.<br>
@@ -261,7 +280,7 @@
 
     <!-- Bibliografía -->
     <div class="card bibliography">
-        <h2>7. Bibliografía Referenciada</h2>
+        <h2>9. Bibliografía Referenciada</h2>
         <ul>
             <li>Arthur, D., & Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.</li>
             <li>Maaten, L. van der, & Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. Journal of Machine Learning Research.</li>
