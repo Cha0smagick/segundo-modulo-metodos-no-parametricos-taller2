@@ -94,10 +94,10 @@ output/
     *   <strong style="color: #2ca02c;">Cluster Verde:</strong> Especies botánicas y bípodes.
     *   <strong style="color: #bcbd22;">Cluster Amarillo:</strong> Especies eléctricas y de tierra.
     *   <strong style="color: #9467bd;">Cluster Morado:</strong> Especialistas en tipos veneno, fantasma y psíquico.
-*   **Inercia Final**: `[Valor numérico]` (Indica la compacidad de los clusters).
-*   **Coeficiente de Silueta**: `[Valor numérico]` (Generalmente entre 0.35-0.45, indicando una buena separación y cohesión).
-*   **Validación Kruskal-Wallis**: `[Número]` de 18 variables mostraron diferencias significativas entre clusters (p < 0.05), confirmando la validez estadística de la segmentación.
-*   **PCA**: Los dos primeros componentes principales explican aproximadamente `[Valor numérico]`% de la varianza total, con `against_grass`, `against_bug` y `against_psychic`, `against_ghost` como variables dominantes en PC1 y PC2 respectivamente.
+*   **Inercia Final**: `1797.98` (Indica la compacidad de los clusters).
+*   **Coeficiente de Silueta**: `0.2630` (Indicador de cohesión y separación).
+*   **Validación Kruskal-Wallis**: `17` de 18 variables mostraron diferencias significativas entre clusters (p < 0.05), confirmando la validez estadística de la segmentación.
+*   **PCA**: Los dos primeros componentes principales explican aproximadamente `35.76%` de la varianza total, con `against_flying`, `against_grass`, `against_ground` y `against_psychic`, `against_bug`, `against_dark` como variables dominantes en PC1 y PC2 respectivamente.
 *   **Visualización**: La cartografía con sprites de Pokémon confirma visualmente que los grupos formados por K-Means se corresponden con patrones de resistencia y debilidad coherentes.
 
 ## 📝 Reporte Científico
