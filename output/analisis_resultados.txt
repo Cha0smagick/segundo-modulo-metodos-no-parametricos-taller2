@@ -9,9 +9,17 @@
    - Se seleccionaron 18 variables de resistencia elemental.
    - Se aplicó StandardScaler para normalizar las magnitudes, evitando sesgos por escalas de debilidad.
 
+4. REDUCCIÓN DE DIMENSIONALIDAD:
+   - Varianza PC1: 21.50%, PC2: 14.26%
+   - PCA: Se conservó el 35.76% de la varianza total en 2 componentes principales.
+   - Variables clave PC1: flying, grass, ground
+   - Variables clave PC2: psychic, bug, dark
+   - t-SNE: Se proyectó la estructura no lineal para identificar vecindades complejas.
+
 3. AGRUPAMIENTO (CLUSTERING K-MEANS):
    - Algoritmo: K-Means con k=4 clusters.
    - Inercia final: 1797.98
+   - Análisis Jerárquico: Se generó el Dendrograma de Ward para validar la estructura arbórea.
    - Coeficiente de Silueta: 0.2630 (Indicador de cohesión y separación).
    - Distribución de clusters: {0: 81, 1: 49, 2: 15, 3: 6}
 
@@ -21,19 +29,16 @@
      Cluster 2: Resistencia en ['psychic', 'fight', 'water'] | Vulnerable a ['bug', 'ghost', 'dark']
      Cluster 3: Resistencia en ['electric', 'poison', 'fire'] | Vulnerable a ['grass', 'water', 'fight']
 
+3.3 RESULTADOS DBSCAN (EXPLORATORIO):
+   - Parámetros: eps=3.5, min_samples=5
+   - Clusters encontrados: 6
+   - Puntos de ruido (outliers): 24
 3.1 VALIDACIÓN ESTADÍSTICA (INFERENCIA):
    - Se aplicó la prueba de Kruskal-Wallis para validar si los clusters son
      poblaciones estadísticamente diferentes en sus resistencias.
    - Prueba focal (against_fire): H-stat=52.23, p-value=2.6690e-11
    - Resultado global: 17/18 variables muestran diferencias significativas entre clusters.
    - Interpretación: La segmentación es biológicamente relevante.
-
-4. REDUCCIÓN DE DIMENSIONALIDAD:
-   - Varianza PC1: 21.50%, PC2: 14.26%
-   - PCA: Se conservó el 35.76% de la varianza total en 2 componentes principales.
-   - Variables clave PC1: flying, grass, ground
-   - Variables clave PC2: psychic, bug, dark
-   - t-SNE: Se proyectó la estructura no lineal para identificar vecindades complejas.
 
 5. CONCLUSIÓN VISUAL:
    - El mapa visual confirma que los Pokémon se agrupan por sus tipos elementales,

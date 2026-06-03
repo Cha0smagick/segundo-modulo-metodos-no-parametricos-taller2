@@ -4,13 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import shutil
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
-from matplotlib.colors import ListedColormap
+from sklearn.neighbors import NearestNeighbors
+from sklearn.cluster import DBSCAN
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from scipy.stats import kruskal, bartlett
+import scipy.cluster.hierarchy as sch
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 def analyze_pokemon_data(only_gen1=True):
@@ -30,15 +34,29 @@ def analyze_pokemon_data(only_gen1=True):
     # Crear estructura de carpetas para los outputs
     base_output = "output"
     dirs = ["descriptive", "dimensionality_reduction", "clustering", "image_maps"]
+    local_img_dir = "images"
+    
     for d in dirs:
         os.makedirs(os.path.join(base_output, d), exist_ok=True)
+    os.makedirs(local_img_dir, exist_ok=True)
 
     print("--- Descargando datasets desde Kaggle ---")
     try:
         stats_path = kagglehub.dataset_download(stats_handle)
         images_path = kagglehub.dataset_download(images_handle)
         stats_csv_path = os.path.join(stats_path, "pokemon.csv")
-        img_dir = os.path.join(images_path, "images")
+        cached_img_dir = os.path.join(images_path, "images")
+
+        # Sincronizar imágenes al directorio local si está vacío
+        if os.path.exists(cached_img_dir) and not os.listdir(local_img_dir):
+            print(f"📦 Copiando imágenes al directorio local '{local_img_dir}'...")
+            for item in os.listdir(cached_img_dir):
+                src = os.path.join(cached_img_dir, item)
+                dst = os.path.join(local_img_dir, item)
+                if os.path.isfile(src):
+                    shutil.copy2(src, dst)
+        
+        img_dir = local_img_dir
     except Exception as e:
         print(f"⚠️ No se pudo conectar con Kaggle (Error: {e})")
         print("Buscando archivos locales como respaldo...")
@@ -90,49 +108,7 @@ def analyze_pokemon_data(only_gen1=True):
         X_scaled = scaler.fit_transform(X)
         report.append("   - Se aplicó StandardScaler para normalizar las magnitudes, evitando sesgos por escalas de debilidad.\n")
 
-        # --- 3. Categorización (Clustering) ---
-        report.append("3. AGRUPAMIENTO (CLUSTERING K-MEANS):")
-        # Validación de la calidad del clustering mediante Silhouette Score
-        k_clusters = 4 
-        kmeans = KMeans(n_clusters=k_clusters, random_state=42, n_init=10)
-        cluster_labels = kmeans.fit_predict(X_scaled)
-        df_gen1['cluster'] = cluster_labels
-        
-        sil_score = silhouette_score(X_scaled, cluster_labels)
-        
-        print("✅ Categorización (Clustering) completada.")
-        report.append(f"   - Algoritmo: K-Means con k={k_clusters} clusters.")
-        report.append(f"   - Inercia final: {kmeans.inertia_:.2f}")
-        report.append(f"   - Coeficiente de Silueta: {sil_score:.4f} (Indicador de cohesión y separación).")
-        distribucion = df_gen1['cluster'].value_counts().to_dict()
-        report.append(f"   - Distribución de clusters: {distribucion}\n")
-        
-        # Análisis de perfiles por cluster
-        report.append("   - Caracterización de perfiles (Promedios por cluster):")
-        cluster_profiles = df_gen1.groupby('cluster')[cols_against].mean()
-        for i in range(k_clusters):
-            top_res = cluster_profiles.loc[i].nsmallest(3).index.tolist()
-            top_vul = cluster_profiles.loc[i].nlargest(3).index.tolist()
-            report.append(f"     Cluster {i}: Resistencia en {[c.replace('against_','') for c in top_res]} | Vulnerable a {[c.replace('against_','') for c in top_vul]}")
-        report.append("")
-
-        # --- 3.1 Validación Estadística (Kruskal-Wallis) ---
-        report.append("3.1 VALIDACIÓN ESTADÍSTICA (INFERENCIA):")
-        report.append("   - Se aplicó la prueba de Kruskal-Wallis para validar si los clusters son")
-        report.append("     poblaciones estadísticamente diferentes en sus resistencias.")
-        
-        sig_vars = 0
-        for col in cols_against:
-            stat, p_val = kruskal(*[group[col].values for name, group in df_gen1.groupby('cluster')])
-            if p_val < 0.05:
-                sig_vars += 1
-            if col == 'against_fire': # Mantener referencia para el reporte
-                report.append(f"   - Prueba focal (against_fire): H-stat={stat:.2f}, p-value={p_val:.4e}")
-        
-        report.append(f"   - Resultado global: {sig_vars}/18 variables muestran diferencias significativas entre clusters.")
-        report.append("   - Interpretación: La segmentación es biológicamente relevante.\n")
-
-        # --- 4. Reducción de Dimensiones ---
+        # --- 4. Reducción de Dimensiones (Movido arriba para estar disponible en visualizaciones) ---
         report.append("4. REDUCCIÓN DE DIMENSIONALIDAD:")
         # PCA: Reducción lineal para maximizar la varianza explicada
         pca = PCA(n_components=2)
@@ -158,6 +134,150 @@ def analyze_pokemon_data(only_gen1=True):
         report.append(f"   - Variables clave PC2: {', '.join(pc2_vars)}")
         report.append("   - t-SNE: Se proyectó la estructura no lineal para identificar vecindades complejas.\n")
 
+        # --- 3. Categorización (Clustering) ---
+        report.append("3. AGRUPAMIENTO (CLUSTERING K-MEANS):")
+        
+        # Optimización de Clusters (Codo y Silueta)
+        print("📊 Calculando métricas de optimización (Inercia y Silueta)...")
+        k_range = range(2, 11)
+        inertias = []
+        silhouettes = []
+        
+        for k in k_range:
+            km = KMeans(n_clusters=k, random_state=42, n_init=10)
+            labels = km.fit_predict(X_scaled)
+            inertias.append(km.inertia_)
+            silhouettes.append(silhouette_score(X_scaled, labels))
+            
+        # Generar gráfica de optimización
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+        
+        color = 'tab:blue'
+        ax1.set_xlabel('Número de Clusters (k)')
+        ax1.set_ylabel('Inercia (Cohesión)', color=color)
+        ax1.plot(k_range, inertias, marker='o', color=color, label='Inercia (Codo)')
+        ax1.tick_params(axis='y', labelcolor=color)
+        
+        ax2 = ax1.twinx()
+        color = 'tab:red'
+        ax2.set_ylabel('Coeficiente de Silueta (Separación)', color=color)
+        ax2.plot(k_range, silhouettes, marker='s', color=color, label='Silueta')
+        ax2.tick_params(axis='y', labelcolor=color)
+        
+        plt.title(f'Optimización de Clusters: Método del Codo vs Silueta ({scope_text})')
+        plt.grid(True, alpha=0.3)
+        plt.savefig(os.path.join(base_output, "clustering", f"optimizacion_metodos_{scope_text}.png"))
+        plt.close()
+
+        # Generar Dendrograma (Método de Ward)
+        print("📊 Generando Dendrograma (Método de Ward)...")
+        k_clusters = 4 
+        plt.figure(figsize=(12, 7))
+        linkage_matrix = sch.linkage(X_scaled, method='ward')
+        
+        # Calcular la altura de corte para visualizar los clusters seleccionados
+        # Se promedia la distancia del enlace que crea k clusters y el que crea k-1
+        cut_height = (linkage_matrix[-k_clusters+1, 2] + linkage_matrix[-k_clusters, 2]) / 2
+        
+        sch.dendrogram(linkage_matrix, leaf_rotation=90, no_labels=True, color_threshold=cut_height)
+        plt.axhline(y=cut_height, color='r', linestyle='--', label=f'Umbral de corte (k={k_clusters})')
+        
+        plt.title(f'Dendrograma de Clustering Jerárquico (Método de Ward - {scope_text})')
+        plt.xlabel('Especímenes (Distribución de hojas)')
+        plt.ylabel('Distancia Ward')
+        plt.legend()
+        plt.savefig(os.path.join(base_output, "clustering", f"dendrograma_ward_{scope_text}.png"))
+        plt.close()
+
+        # Validación de la calidad del clustering mediante Silhouette Score
+        kmeans = KMeans(n_clusters=k_clusters, random_state=42, n_init=10)
+        cluster_labels = kmeans.fit_predict(X_scaled)
+        df_gen1['cluster'] = cluster_labels
+        
+        sil_score = silhouette_score(X_scaled, cluster_labels)
+        
+        print("✅ Categorización (Clustering) completada.")
+        report.append(f"   - Algoritmo: K-Means con k={k_clusters} clusters.")
+        report.append(f"   - Inercia final: {kmeans.inertia_:.2f}")
+        report.append("   - Análisis Jerárquico: Se generó el Dendrograma de Ward para validar la estructura arbórea.")
+        report.append(f"   - Coeficiente de Silueta: {sil_score:.4f} (Indicador de cohesión y separación).")
+        distribucion = df_gen1['cluster'].value_counts().to_dict()
+        report.append(f"   - Distribución de clusters: {distribucion}\n")
+        
+        # Análisis de perfiles por cluster
+        report.append("   - Caracterización de perfiles (Promedios por cluster):")
+        cluster_profiles = df_gen1.groupby('cluster')[cols_against].mean()
+        for i in range(k_clusters):
+            top_res = cluster_profiles.loc[i].nsmallest(3).index.tolist()
+            top_vul = cluster_profiles.loc[i].nlargest(3).index.tolist()
+            report.append(f"     Cluster {i}: Resistencia en {[c.replace('against_','') for c in top_res]} | Vulnerable a {[c.replace('against_','') for c in top_vul]}")
+        report.append("")
+
+        # --- 3.2 Diagnóstico para DBSCAN (Opcional) ---
+        print("📊 Generando diagnóstico para DBSCAN (K-Distance Graph)...")
+        min_pts = 5 # Valor recomendado para datasets pequeños
+        neighbors = NearestNeighbors(n_neighbors=min_pts)
+        neighbors_fit = neighbors.fit(X_scaled)
+        distances, _ = neighbors_fit.kneighbors(X_scaled)
+        distances = np.sort(distances[:, min_pts-1], axis=0)
+        
+        plt.figure(figsize=(8, 5))
+        plt.plot(distances)
+        plt.title(f'DBSCAN Diagnostic: K-Distance Graph (k={min_pts})')
+        plt.ylabel('Distancia Epsilon (eps)')
+        plt.xlabel('Puntos ordenados')
+        plt.grid(True, alpha=0.3)
+        plt.savefig(os.path.join(base_output, "clustering", f"dbscan_epsilon_check_{scope_text}.png"))
+        plt.close()
+        print(f"✅ Diagnóstico guardado. Revisa 'dbscan_epsilon_check_{scope_text}.png' para elegir eps.")
+
+        # --- 3.3 Ejecución de DBSCAN (Comparativa) ---
+        # Basado en la escala de StandardScaler, un eps entre 3 y 5 suele ser un buen punto de partida
+        # para este dataset.
+        eps_val = 3.8 # Ajustado tras observar la rodilla en el gráfico de diagnóstico
+        min_samples_val = 5
+        dbscan = DBSCAN(eps=eps_val, min_samples=min_samples_val)
+        db_labels = dbscan.fit_predict(X_scaled)
+        
+        n_clusters_db = len(set(db_labels)) - (1 if -1 in db_labels else 0)
+        n_noise = list(db_labels).count(-1)
+        
+        report.append("3.3 RESULTADOS DBSCAN (EXPLORATORIO):")
+        report.append(f"   - Parámetros óptimos sugeridos: eps={eps_val}, min_samples={min_samples_val}")
+        report.append(f"   - Clusters encontrados: {n_clusters_db}")
+        report.append(f"   - Puntos de ruido (outliers): {n_noise}")
+        report.append(f"   - Nota: Los {n_noise} puntos de ruido representan Pokémon con perfiles de resistencia únicos (especialistas).")
+        
+        if n_noise > 0:
+            noise_names = df_gen1[db_labels == -1]['name'].head(10).tolist()
+            report.append(f"   - Ejemplos de especialistas detectados: {', '.join(noise_names)}...")
+        
+        # Visualización de DBSCAN
+        plt.figure(figsize=(10, 7))
+        plt.scatter(pca_results[:, 0], pca_results[:, 1], c=db_labels, 
+                   cmap='viridis', s=100, edgecolor='white', alpha=0.8)
+        plt.title(f"DBSCAN sobre PCA (eps={eps_val}, clusters={n_clusters_db})")
+        plt.xlabel(pca_label_x)
+        plt.ylabel(pca_label_y)
+        plt.savefig(os.path.join(base_output, "clustering", f"pca_dbscan_{scope_text}.png"))
+        plt.close()
+
+        # --- 3.1 Validación Estadística (Kruskal-Wallis) ---
+        report.append("3.1 VALIDACIÓN ESTADÍSTICA (INFERENCIA):")
+        report.append("   - Se aplicó la prueba de Kruskal-Wallis para validar si los clusters son")
+        report.append("     poblaciones estadísticamente diferentes en sus resistencias.")
+        
+        sig_vars = 0
+        for col in cols_against:
+            stat, p_val = kruskal(*[group[col].values for name, group in df_gen1.groupby('cluster')])
+            if p_val < 0.05:
+                sig_vars += 1
+            if col == 'against_fire': # Mantener referencia para el reporte
+                report.append(f"   - Prueba focal (against_fire): H-stat={stat:.2f}, p-value={p_val:.4e}")
+        
+        report.append(f"   - Resultado global: {sig_vars}/18 variables muestran diferencias significativas entre clusters.")
+        report.append("   - Interpretación: La segmentación es biológicamente relevante.\n")
+
         # --- 5. Visualización: PCA vs t-SNE ---
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
         
@@ -168,48 +288,77 @@ def analyze_pokemon_data(only_gen1=True):
         
         ax2.scatter(tsne_results[:, 0], tsne_results[:, 1], c='salmon', edgecolor='k', alpha=0.7)
         ax2.set_title("t-SNE (Reducción No Lineal)")
-        ax2.set_xlabel("Dimensión t-SNE 1")
-        ax2.set_ylabel("Dimensión t-SNE 2")
+        ax2.set_xlabel("Proyección de Parentesco Elemental (t-SNE 1)")
+        ax2.set_ylabel("Proyección de Perfil Defensivo (t-SNE 2)")
         
         plt.savefig(os.path.join(base_output, "dimensionality_reduction", f"comparativa_pca_tsne_{scope_text}.png"))
         print("💾 Gráfico PCA vs t-SNE guardado.")
         plt.close()
 
-        # --- 6. Visualización: PCA + Clusters ---
-        # Se colorean los puntos según el resultado del agrupamiento de K-Means
-        plt.figure(figsize=(10, 7))
-        
+        # Definir paleta de colores y mapa de color reutilizable
         # Definir paleta de colores personalizada (Azul, Verde, Amarillo, Morado)
         custom_colors = ['#1f77b4', '#2ca02c', '#bcbd22', '#9467bd']
-        cmap_custom = ListedColormap(custom_colors)
+        # Se utiliza LinearSegmentedColormap para crear una transición suave (degradado) entre los colores
+        cmap_custom = LinearSegmentedColormap.from_list("pokemon_gradient", custom_colors)
 
+        # --- 6. Visualización: PCA + Clusters ---
+        plt.figure(figsize=(10, 7))
         scatter = plt.scatter(pca_results[:, 0], pca_results[:, 1], c=df_gen1['cluster'], 
                              cmap=cmap_custom, s=100, edgecolor='white', alpha=0.8)
-        plt.colorbar(scatter, label='Grupo (Cluster)')
+        cbar = plt.colorbar(scatter, label='Grupo (Cluster)')
+        cbar.set_ticks(range(k_clusters))
         plt.title(f"Clustering K-Means sobre Proyección PCA ({scope_text})")
         plt.xlabel(pca_label_x)
         plt.ylabel(pca_label_y)
-        
         plt.savefig(os.path.join(base_output, "clustering", f"pca_clusters_{scope_text}.png"))
-        print("💾 Gráfico de Clusters guardado.")
+        print("💾 Gráfico de Clusters (PCA) guardado.")
         plt.close()
 
-        # --- 7. Visualización: Mapa con Imágenes ---
-        # En lugar de puntos, se renderizan los sprites de cada Pokémon en sus coordenadas PCA
-        print("🎨 Generando gráfico con imágenes (esto puede tardar unos segundos)...")
-        fig, ax = plt.subplots(figsize=(14, 12))
-        
-        ax.scatter(pca_results[:, 0], pca_results[:, 1], alpha=0) 
+        # --- 6.1 Visualización: t-SNE + Clusters ---
+        plt.figure(figsize=(10, 7))
+        scatter_tsne = plt.scatter(tsne_results[:, 0], tsne_results[:, 1], c=df_gen1['cluster'], 
+                                  cmap=cmap_custom, s=100, edgecolor='white', alpha=0.8)
+        cbar_tsne = plt.colorbar(scatter_tsne, label='Grupo (Cluster)')
+        cbar_tsne.set_ticks(range(k_clusters))
+        plt.title(f"Clustering K-Means sobre Proyección t-SNE ({scope_text})")
+        plt.xlabel("Proyección de Parentesco Elemental (t-SNE 1)")
+        plt.ylabel("Proyección de Perfil Defensivo (t-SNE 2)")
+        plt.savefig(os.path.join(base_output, "clustering", f"tsne_clusters_{scope_text}.png"))
+        print("💾 Gráfico de Clusters (t-SNE) guardado.")
+        plt.close()
 
-        for i, (idx, row) in enumerate(df_gen1.iterrows()):
-            img_name = str(row['name']).lower().replace(" ", "-")
-            img_path = os.path.join(img_dir, f"{img_name}.png")
+        # --- 7. Visualización: Mapas con Imágenes (PCA y t-SNE) ---
+        print("🎨 Generando mapas visuales con imágenes y colores...")
+        
+        for mode in ['PCA', 't-SNE']:
+            fig, ax = plt.subplots(figsize=(14, 12))
+            coords = pca_results if mode == 'PCA' else tsne_results
             
-            if os.path.exists(img_path):
-                img = plt.imread(img_path)
-                imagebox = OffsetImage(img, zoom=0.35)
-                ab = AnnotationBbox(imagebox, (pca_results[i, 0], pca_results[i, 1]), frameon=False)
-                ax.add_artist(ab)
+            # Dibujar puntos de fondo con colores de cluster para referencia
+            ax.scatter(coords[:, 0], coords[:, 1], c=df_gen1['cluster'], 
+                      cmap=cmap_custom, s=250, alpha=0.4, edgecolors='none')
+
+            for i, (idx, row) in enumerate(df_gen1.iterrows()):
+                img_name = str(row['name']).lower().replace(" ", "-")
+                img_path = os.path.join(img_dir, f"{img_name}.png")
+                
+                if os.path.exists(img_path):
+                    img = plt.imread(img_path)
+                    imagebox = OffsetImage(img, zoom=0.35)
+                    ab = AnnotationBbox(imagebox, (coords[i, 0], coords[i, 1]), frameon=False)
+                    ax.add_artist(ab)
+
+            ax.set_title(f"Mapa Visual de Pokémones {scope_text} ({mode} Mapping)")
+            ax.set_xlabel(pca_label_x if mode == 'PCA' else "Proyección de Parentesco Elemental (t-SNE 1)")
+            ax.set_ylabel(pca_label_y if mode == 'PCA' else "Proyección de Perfil Defensivo (t-SNE 2)")
+            plt.grid(True, linestyle='--', alpha=0.3)
+            
+            filename = f"mapa_visual_{mode.lower().replace('-', '')}_{scope_text}.png"
+            plt.savefig(os.path.join(base_output, "image_maps", filename))
+            plt.close()
+            print(f"💾 {mode} Image Map guardado.")
+
+        # Re-crear ejes para el reporte si es necesario, pero ya guardamos los archivos
 
         ax.set_title("Mapa Visual de Pokémones Gen 1 (PCA Mapping)")
         ax.set_xlabel(pca_label_x)
@@ -267,10 +416,6 @@ def analyze_pokemon_data(only_gen1=True):
             with open(html_path, "w", encoding="utf-8") as f:
                 f.write(html_content)
             print("🌐 reporte_maestria.html actualizado con datos reales.")
-
-        plt.savefig(os.path.join(base_output, "image_maps", f"mapa_visual_{scope_text}.png"))
-        print("💾 Mapa visual de Pokémon guardado.")
-        plt.close()
 
     except Exception as e:
         print(f"❌ Error crítico durante la ejecución: {e}")
