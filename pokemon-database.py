@@ -205,12 +205,24 @@ def analyze_pokemon_data(only_gen1=True):
         report.append(f"   - Distribución de clusters: {distribucion}\n")
         
         # Análisis de perfiles por cluster
-        report.append("   - Caracterización de perfiles (Promedios por cluster):")
+        report.append("   - Caracterización de perfiles y Arquetipos (Promedios por cluster):")
+        
+        # Definición de Arquetipos basada en el dominio de datos
+        archetypes = {
+            0: {"nombre": "Guardianes del Océano y el Acero", "desc": "Especialistas en resistencia elemental (Fuego, Fantasma) y física (Acero)."},
+            1: {"nombre": "Protectores de la Biosfera", "desc": "Expertos en resistir ataques de naturaleza y combate cercano, frágiles ante lo místico."},
+            2: {"nombre": "Místicos del Éter", "desc": "Entidades con defensas psíquicas superiores, vulnerables a miedos primordiales (Sombra/Bichos)."},
+            3: {"nombre": "Centinelas de Alta Tensión", "desc": "Grupo de élite con alta resistencia al calor y electricidad, pero vulnerables a la tierra."}
+        }
+
         cluster_profiles = df_gen1.groupby('cluster')[cols_against].mean()
         for i in range(k_clusters):
             top_res = cluster_profiles.loc[i].nsmallest(3).index.tolist()
             top_vul = cluster_profiles.loc[i].nlargest(3).index.tolist()
-            report.append(f"     Cluster {i}: Resistencia en {[c.replace('against_','') for c in top_res]} | Vulnerable a {[c.replace('against_','') for c in top_vul]}")
+            report.append(f"     Cluster {i} - {archetypes[i]['nombre']}:")
+            report.append(f"       - Arquetipo: {archetypes[i]['desc']}")
+            report.append(f"       - Top Resistencias: {[c.replace('against_','') for c in top_res]}")
+            report.append(f"       - Top Vulnerabilidades: {[c.replace('against_','') for c in top_vul]}")
         report.append("")
 
         # --- 3.2 Diagnóstico para DBSCAN (Opcional) ---
