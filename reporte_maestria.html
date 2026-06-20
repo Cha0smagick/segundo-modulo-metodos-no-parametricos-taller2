@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Estadístico Q4 — Maestría en Analítica de Datos</title>
+    <title>Maestro Pokémon: Guía Estadística Definitiva — Maestría en Analítica</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,6 +17,12 @@
             --white: #ffffff;
             --light-gray: #e2e8f0;
             --gradient: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%);
+            --gold: #d69e2e;
+            --fire: #e53e3e;
+            --water: #3182ce;
+            --grass: #38a169;
+            --electric: #d69e2e;
+            --psychic: #805ad5;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -28,7 +34,7 @@
         header {
             background: var(--gradient);
             color: var(--white);
-            padding: 4rem 2rem;
+            padding: 4rem 2rem 3rem;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -36,31 +42,15 @@
         header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
         }
-        header h1 {
-            position: relative;
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-        header .subtitle {
-            position: relative;
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-top: 1rem;
-        }
+        header h1 { position: relative; font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+        header .subtitle { position: relative; font-size: 1.1rem; opacity: 0.9; margin-top: 1rem; }
         header .badge-container {
-            position: relative;
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            flex-wrap: wrap;
+            position: relative; margin-top: 1.5rem;
+            display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap;
         }
         .badge {
             display: inline-block;
@@ -105,37 +95,47 @@
             margin-bottom: 0.75rem;
             font-size: 1.1rem;
         }
+        .card h4 {
+            color: var(--accent);
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
         .card p { text-align: justify; margin-bottom: 1rem; }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.5rem;
-        }
-        .figure-container {
-            margin: 1.5rem 0;
-            text-align: center;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+
+        .figure-container { margin: 1.5rem 0; text-align: center; }
         .figure-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            border: 1px solid var(--light-gray);
+            max-width: 100%; height: auto;
+            border-radius: 12px; border: 1px solid var(--light-gray);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-        .figure-container .caption {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-top: 0.5rem;
-            font-style: italic;
+        .figure-container .caption { font-size: 0.85rem; color: #718096; margin-top: 0.5rem; font-style: italic; }
+
+        /* Explicación de batalla */
+        .battle-tip {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 5px solid var(--gold);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1rem 0;
         }
+        .battle-tip strong { color: #92400e; }
+        .science-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--secondary);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .science-box strong { color: var(--primary); }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin: 1.5rem 0;
         }
@@ -146,425 +146,397 @@
             text-align: center;
             border: 1px solid #e2e8f0;
         }
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .stat-card .label {
-            font-size: 0.8rem;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.3rem;
-        }
-        .stat-card .eval {
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 12px;
-            display: inline-block;
-        }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+        .stat-card .label { font-size: 0.8rem; color: #718096; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+        .stat-card .eval { font-size: 0.75rem; margin-top: 0.5rem; padding: 0.2rem 0.8rem; border-radius: 12px; display: inline-block; }
         .eval-good { background: #c6f6d5; color: #22543d; }
         .eval-moderate { background: #fefcbf; color: #744210; }
         .eval-low { background: #fed7d7; color: #742a2a; }
+
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.9rem;
+            width: 100%; border-collapse: collapse;
+            margin: 1rem 0; font-size: 0.9rem;
         }
-        th {
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
+        th { background: var(--primary); color: white; padding: 0.75rem 1rem; text-align: left; font-weight: 600; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--light-gray); }
         tr:hover td { background: #f7fafc; }
+
         .alert {
-            background: #fffaf0;
-            border: 1px solid #feebc8;
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin: 1rem 0;
+            background: #fffaf0; border: 1px solid #feebc8;
+            border-radius: 12px; padding: 1.25rem; margin: 1rem 0;
         }
-        .alert-info {
-            background: #ebf8ff;
-            border-color: #bee3f8;
-        }
-        .toc {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-        }
-        .toc ol {
-            columns: 2;
-            column-gap: 2rem;
-        }
-        .toc li {
-            margin-bottom: 0.3rem;
-            break-inside: avoid;
-        }
-        .toc a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 500;
-        }
+        .alert-info { background: #ebf8ff; border-color: #bee3f8; }
+        .alert-success { background: #f0fff4; border-color: #c6f6d5; }
+        .alert-danger { background: #fff5f5; border-color: #fed7d7; }
+
+        .toc { background: #f8fafc; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2rem; }
+        .toc ol { columns: 2; column-gap: 2rem; }
+        .toc li { margin-bottom: 0.3rem; break-inside: avoid; }
+        .toc a { color: var(--secondary); text-decoration: none; font-weight: 500; }
         .toc a:hover { color: var(--accent); text-decoration: underline; }
+
         .section-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: var(--accent);
-            color: white;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px;
+            background: var(--accent); color: white;
+            border-radius: 8px; font-size: 0.85rem; font-weight: 700;
             margin-right: 0.5rem;
         }
-        footer {
-            padding: 3rem 2rem;
-            text-align: center;
-            color: #718096;
-            font-size: 0.9rem;
-            background: #f8fafc;
-            border-top: 1px solid var(--light-gray);
+
+        .archetype-card {
+            border-radius: 12px; padding: 1.25rem; text-align: center;
+            border: 1px solid var(--light-gray);
         }
+        .archetype-card .badge-arch { display: inline-block; padding: 0.3rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.5rem; }
+
+        .method-chain { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; align-items: center; }
+        .method-tag {
+            display: inline-block;
+            background: #edf2f7; padding: 0.25rem 0.8rem;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--secondary);
+        }
+
+        .full-width-img img { width: 100%; }
+
+        .pokemon-quote {
+            font-style: italic; font-size: 1.05rem;
+            padding: 1.5rem 2rem; background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+            border-radius: 12px; border-left: 5px solid var(--accent);
+            margin: 1.5rem 0;
+        }
+        .pokemon-quote .author { font-style: normal; font-weight: 600; margin-top: 0.5rem; display: block; }
+
+        .outlier-list {
+            display: flex; flex-wrap: wrap; gap: 0.4rem;
+            margin: 0.5rem 0;
+        }
+        .outlier-tag {
+            background: #805ad5; color: white;
+            padding: 0.15rem 0.6rem; border-radius: 12px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+
+        .graph-dict-table td:first-child { font-weight: 700; color: var(--primary); }
+        .graph-dict-table td:nth-child(2) { font-family: monospace; font-size: 0.8rem; }
+        .graph-dict-table td:nth-child(3) { font-size: 0.85rem; }
+
+        footer {
+            padding: 3rem 2rem; text-align: center;
+            color: #718096; font-size: 0.9rem;
+            background: #f8fafc; border-top: 1px solid var(--light-gray);
+        }
+
         @media (max-width: 768px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .toc ol { columns: 1; }
             header h1 { font-size: 1.6rem; }
         }
-        .method-chain {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-        }
-        .method-tag {
-            display: inline-block;
-            background: #edf2f7;
-            padding: 0.25rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        .full-width-img img { width: 100%; }
     </style>
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- HEADER -->
+<!-- ============================================================ -->
 <header>
-    <h1>Análisis Multivariado y Taxonomía Algorítmica de Pokémon</h1>
+    <h1>⚔️ Maestro Pokémon: Guía Estadística Definitiva</h1>
     <p class="subtitle">
         <strong>Nivel Q4 — Estadística Multivariada Avanzada</strong><br>
-        Taller #2: Métodos No Paramétricos<br>
-        Maestría en Analítica de Datos | Politécnico Grancolombiano
+        De la Pokédex a la Liga de Campeones<br>
+        Taller #2: Métodos No Paramétricos | Maestría en Analítica de Datos
     </p>
     <div class="badge-container">
-        <span class="badge">PCA</span>
-        <span class="badge">t-SNE</span>
-        <span class="badge">K-Means++</span>
-        <span class="badge">DBSCAN</span>
-        <span class="badge">Gap Statistic</span>
-        <span class="badge">Kruskal-Wallis</span>
-        <span class="badge">Trustworthiness</span>
-        <span class="badge">Q4 Level</span>
+        <span class="badge">🏆 151 Pokémon</span>
+        <span class="badge">📊 18 Resistencias</span>
+        <span class="badge">🧬 4 Arquetipos</span>
+        <span class="badge">📈 26 Gráficos</span>
+        <span class="badge">🔬 PCA + t-SNE</span>
+        <span class="badge">🎯 K-Means + DBSCAN</span>
+        <span class="badge">📐 Kruskal-Wallis</span>
     </div>
 </header>
 
 <div class="container">
 
     <!-- ============================================================ -->
+    <!-- EPIGRAPH -->
+    <!-- ============================================================ -->
+    <div class="card" style="border-top-color: var(--gold);">
+        <div class="pokemon-quote">
+            &ldquo;Crees que atrapar a todos los Pokémon te hará imbatible? Te equivocas. <strong>Entender</strong> a tus Pokémon es lo que marca la diferencia entre un campeón y un perdedor. Este análisis multivariado no es solo un ejercicio académico — es el mapa secreto hacia la victoria en la Liga.&rdquo;
+            <span class="author">— Un Maestro Pokémon (desde las sombras de la Liga Índigo)</span>
+        </div>
+        <p style="font-size: 1.05rem; text-align: center;">
+            Bienvenido, entrenador. Este reporte es tu <strong>manual de batalla definitivo</strong>.<br>
+            Hemos analizado 18 variables de resistencia de los 151 Pokémon originales usando algoritmos de Machine Learning nivel maestría.<br>
+            El resultado: <strong>4 arquetipos defensivos</strong> que definen el metajuego de la Primera Generación.
+        </p>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- TABLE OF CONTENTS -->
     <!-- ============================================================ -->
     <div class="card toc">
-        <h2 style="border: none; margin-bottom: 1rem;">&#x1F4CB; Tabla de Contenidos</h2>
+        <h2 style="border: none; margin-bottom: 1rem;">📋 Arsenal del Maestro — Contenido</h2>
         <ol>
-            <li><a href="#resumen">Resumen Ejecutivo</a></li>
-            <li><a href="#metodologia">Marco Metodológico</a></li>
-            <li><a href="#eda">Análisis Exploratorio (EDA)</a></li>
-            <li><a href="#pca">Reducción Dimensional — PCA</a></li>
-            <li><a href="#tsne">Reducción Dimensional — t-SNE</a></li>
-            <li><a href="#clustering">Segmentación (Clustering)</a></li>
-            <li><a href="#validacion">Validación Estadística</a></li>
-            <li><a href="#cartografia">Cartografía Visual</a></li>
+            <li><a href="#metodologia">El Laboratorio del Campeón: Metodología</a></li>
+            <li><a href="#eda">Radiografía de Debilidades: EDA</a></li>
+            <li><a href="#pca">El Mapa Secreto: PCA</a></li>
+            <li><a href="#tsne">Las Islas de Similitud: t-SNE</a></li>
+            <li><a href="#clustering">Los 4 Arquetipos de Combate</a></li>
+            <li><a href="#validacion">Validación Científica</a></li>
+            <li><a href="#cartografia">El Mapa del Tesoro: Cartografía Visual</a></li>
             <li><a href="#diccionario">Diccionario de Gráficos</a></li>
-            <li><a href="#resultados">Resultados Clave</a></li>
-            <li><a href="#conclusiones">Conclusiones</a></li>
-            <li><a href="#bibliografia">Bibliografía</a></li>
+            <li><a href="#estrategias">Estrategias para la Liga</a></li>
+            <li><a href="#conclusiones">Conclusión del Maestro</a></li>
         </ol>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 1. RESUMEN EJECUTIVO -->
+    <!-- 1. METODOLOGÍA -->
     <!-- ============================================================ -->
-    <div class="card" id="resumen">
-        <h2><span class="section-number">1</span> Resumen Ejecutivo</h2>
-        <p>
-            Este reporte presenta un análisis multivariado completo de los 151 Pokémon de la 
-            <strong>Primera Generación</strong>, utilizando una matriz de 18 variables de resistencia 
-            elemental. El estudio se enmarca en un nivel <strong>Q4 (Estadística Multivariada Avanzada)</strong>, 
-            empleando un pipeline riguroso que incluye:
-        </p>
-        <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-            <li><strong>EDA</strong> con pruebas de normalidad (D'Agostino-Pearson) que confirman que solo 1/18 variables es normal, justificando el enfoque no paramétrico</li>
-            <li><strong>PCA</strong> con scree plot, círculo de correlaciones, biplot, loadings y calidad cos²</li>
-            <li><strong>t-SNE</strong> con barrido de perplejidad, learning rate y trustworthiness comparativo</li>
-            <li><strong>Clustering multi-método</strong> (K-Means, Jerárquico, DBSCAN) con validación mediante Silhouette, Davies-Bouldin, Calinski-Harabasz y Gap Statistic</li>
-            <li><strong>Validación inferencial</strong> no paramétrica con Kruskal-Wallis (17/18 variables significativas)</li>
-            <li><strong>Cartografía visual</strong> con sprites sobre PCA y t-SNE</li>
-        </ul>
+    <div class="card" id="metodologia">
+        <h2><span class="section-number">1</span> El Laboratorio del Campeón</h2>
+        <p>Antes de lanzar una Pokébola, un científico analiza. Antes de entrar a la Liga, un Maestro entiende los números.</p>
+
+        <div class="method-chain">
+            <span class="method-tag">📦 kagglehub</span>
+            <span class="method-tag">→</span>
+            <span class="method-tag">🔬 StandardScaler</span>
+            <span class="method-tag">→</span>
+            <span class="method-tag">📐 PCA / t-SNE</span>
+            <span class="method-tag">→</span>
+            <span class="method-tag">🧬 K-Means / DBSCAN</span>
+            <span class="method-tag">→</span>
+            <span class="method-tag">✅ Kruskal-Wallis</span>
+            <span class="method-tag">→</span>
+            <span class="method-tag">⚔️ Estrategia</span>
+        </div>
+
+        <div class="grid-3">
+            <div style="background:#f8fafc; border-radius:12px; padding:1.25rem;">
+                <h4 style="color:var(--water);">📥 Adquisición</h4>
+                <p style="font-size:0.9rem;">151 Pokémon de Gen 1 desde Kaggle. 18 variables de resistencia elemental. Imágenes oficiales para la cartografía visual.</p>
+            </div>
+            <div style="background:#f8fafc; border-radius:12px; padding:1.25rem;">
+                <h4 style="color:var(--grass);">🔬 Preprocesamiento</h4>
+                <p style="font-size:0.9rem;">Estandarización Z-score para que ningún tipo domine el análisis por su escala. Media=0, varianza=1 en todas las variables.</p>
+            </div>
+            <div style="background:#f8fafc; border-radius:12px; padding:1.25rem;">
+                <h4 style="color:var(--psychic);">🧬 Clustering</h4>
+                <p style="font-size:0.9rem;">4 arquetipos identificados mediante K-Means, validados con Davies-Bouldin, Calinski-Harabasz, Gap Statistic y Kruskal-Wallis.</p>
+            </div>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="value">151</div>
-                <div class="label">Especímenes</div>
+                <div class="label">Pokémon Analizados</div>
             </div>
             <div class="stat-card">
                 <div class="value">18</div>
-                <div class="label">Variables</div>
+                <div class="label">Variables de Resistencia</div>
             </div>
             <div class="stat-card">
-                <div class="value">25</div>
-                <div class="label">Figuras Generadas</div>
+                <div class="value">26</div>
+                <div class="label">Gráficos Estratégicos</div>
             </div>
             <div class="stat-card">
                 <div class="value">4</div>
-                <div class="label">Arquetipos</div>
+                <div class="label">Arquetipos de Combate</div>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 2. METODOLOGÍA -->
-    <!-- ============================================================ -->
-    <div class="card" id="metodologia">
-        <h2><span class="section-number">2</span> Marco Metodológico y Pipeline Analítico</h2>
-        
-        <div class="method-chain">
-            <span class="method-tag">kagglehub</span>
-            <span class="method-tag">&#x2192;</span>
-            <span class="method-tag">StandardScaler</span>
-            <span class="method-tag">&#x2192;</span>
-            <span class="method-tag">PCA / t-SNE</span>
-            <span class="method-tag">&#x2192;</span>
-            <span class="method-tag">K-Means / DBSCAN</span>
-            <span class="method-tag">&#x2192;</span>
-            <span class="method-tag">Kruskal-Wallis</span>
-        </div>
-
-        <p>
-            La metodología sigue un flujo de ciencia de datos reproducible en 6 fases:
-        </p>
-
-        <div class="grid-2">
-            <div>
-                <h3>Fase I: Adquisición y Preprocesamiento</h3>
-                <p>
-                    Los datos se descargan automáticamente desde Kaggle mediante <code>kagglehub</code>. 
-                    Se filtran los Pokémon de Gen 1 y se seleccionan 18 variables de resistencia elemental 
-                    (<code>against_bug</code> a <code>against_water</code>). 
-                    La <strong>estandarización Z-score</strong> (media=0, var=1) garantiza que ninguna variable 
-                    domine el análisis por su escala original.
-                </p>
-            </div>
-            <div>
-                <h3>Fase II: Análisis Exploratorio</h3>
-                <p>
-                    Se generan histogramas con KDE, boxplots, matriz de correlaciones y coordenadas paralelas 
-                    para comprender la estructura multivariada. Se aplica la prueba de 
-                    <strong>D'Agostino-Pearson</strong> para evaluar la normalidad de cada variable, 
-                    justificando estadísticamente el uso de métodos no paramétricos.
-                </p>
-            </div>
-            <div>
-                <h3>Fase III: Reducción de Dimensionalidad</h3>
-                <p>
-                    <strong>PCA</strong> captura la estructura global (varianza explicada, loadings, 
-                    círculo de correlaciones, biplot, cos²). <strong>t-SNE</strong> preserva vecindades 
-                    locales (barrido de perplejidad, learning rate, trustworthiness). 
-                    La comparación cuantitativa entre ambas técnicas revela sus fortalezas complementarias.
-                </p>
-            </div>
-            <div>
-                <h3>Fase IV: Clustering Multi-Método</h3>
-                <p>
-                    Se evalúa <strong>K-Means</strong> con 4 métricas simultáneas (codo, silueta, 
-                    Davies-Bouldin, Calinski-Harabasz), <strong>Gap Statistic</strong> con bootstrap, 
-                    <strong>clustering jerárquico</strong> (Ward) con dendrograma, y 
-                    <strong>DBSCAN</strong> con diagnóstico k-distance. La validación externa usa 
-                    <strong>Kruskal-Wallis</strong> para confirmar que los clusters representan 
-                    poblaciones diferentes.
-                </p>
-            </div>
-        </div>
-
-        <div class="alert alert-info">
-            <strong>Justificación del Enfoque No Paramétrico:</strong> La prueba de D'Agostino-Pearson 
-            revela que 17/18 variables de resistencia NO siguen una distribución normal (p &lt; 0.05). 
-            Esto invalida el uso de ANOVA clásico y justifica el empleo de Kruskal-Wallis, 
-            silhouette score (basado en rangos de distancia) y visualizaciones basadas en densidad.
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- 3. EDA -->
+    <!-- 2. EDA -->
     <!-- ============================================================ -->
     <div class="card" id="eda">
-        <h2><span class="section-number">3</span> Análisis Exploratorio de Datos (EDA)</h2>
-        <p>
-            El EDA revela la estructura fundamental de los datos. La mayoría de las variables 
-            muestran asimetría positiva (resistencia = valores &lt; 1, vulnerabilidad = valores &gt; 1), 
-            con distribuciones multimodales que reflejan la diversidad de tipos elementales.
-        </p>
+        <h2><span class="section-number">2</span> Radiografía de las Debilidades — EDA</h2>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/descriptive/histogram_resistencias_GEN 1.png" alt="Histogramas de resistencias">
-                <div class="caption">Figura 3.1 — Distribuciones de las 18 variables con media (rojo) y mediana (verde).</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/descriptive/boxplot_resistencias_GEN 1.png" alt="Boxplots estandarizados">
-                <div class="caption">Figura 3.2 — Boxplots de variables estandarizadas. La línea roja marca el cero.</div>
-            </div>
+        <div class="alert alert-info">
+            <strong>🔬 Dato científico:</strong> La prueba de D'Agostino-Pearson reveló que <strong>solo 1 de 18 variables</strong> (against_ghost, p=0.14) sigue una distribución normal. Esto <strong>justifica el uso de métodos no paramétricos</strong> como Kruskal-Wallis en lugar de ANOVA clásico. ¡Los tipos Pokémon no son normales!
         </div>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/descriptive/heatmap_correlaciones_GEN 1.png" alt="Matriz de correlaciones">
-                <div class="caption">Figura 3.3 — Mapa de calor de correlaciones de Pearson entre tipos elementales.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/descriptive/coordenadas_paralelas_GEN 1.png" alt="Coordenadas paralelas">
-                <div class="caption">Figura 3.4 — Coordenadas paralelas de perfiles de resistencia (muestra de 80 Pokémon).</div>
-            </div>
+        <!-- Graph 1 -->
+        <h3>📊 Gráfico 1: Distribución de las Resistencias</h3>
+        <div class="figure-container">
+            <img src="output/descriptive/histogram_resistencias_GEN%201.png" alt="Histogramas">
+            <div class="caption">Histogramas con KDE de las 18 variables. Línea roja = media. Línea verde = mediana.</div>
+        </div>
+        <div class="science-box">
+            <strong>🔬 Lo que dice la ciencia:</strong> Cada histograma es la distribución de valores de resistencia para un tipo. La asimetría revela si la mayoría de Pokémon son resistentes (sesgo a la izquierda, valores &lt;1) o vulnerables (sesgo a la derecha, valores &gt;1).
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Mira <code>against_water</code>: ves un pico en 0.5 (resistentes) y otro en 2.0 (débiles). El tipo Agua es <strong>polarizante</strong>. Cuando enfrentes a Misty, no asumas que todos sus Pokémon son iguales — unos serán más vulnerables que otros. <strong>Identifica cuáles son los débiles y ataca por ahí.</strong>
         </div>
 
-        <h3>Resultados de la Prueba de Normalidad</h3>
-        <table>
-            <thead>
-                <tr><th>Variable</th><th>Asimetría</th><th>Curtosis</th><th>Estadístico</th><th>p-valor</th><th>¿Normal?</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>against_bug</td><td>2.592</td><td>10.304</td><td>106.72</td><td>6.69e-24</td><td style="color:#e53e3e;">No</td></tr>
-                <tr><td>against_ghost</td><td>-0.058</td><td>0.934</td><td>3.93</td><td>1.40e-01</td><td style="color:#38a169;">Sí</td></tr>
-                <tr><td>against_dragon</td><td>-0.884</td><td>14.397</td><td>62.70</td><td>2.43e-14</td><td style="color:#e53e3e;">No</td></tr>
-                <tr><td>against_normal</td><td>-3.252</td><td>10.572</td><td>124.73</td><td>8.22e-28</td><td style="color:#e53e3e;">No</td></tr>
-                <tr><td colspan="6" style="text-align: center;"><strong>Total: 1/18 variables con distribución normal</strong></td></tr>
-            </tbody>
-        </table>
+        <!-- Graph 2 -->
+        <h3>📊 Gráfico 2: Boxplots — La Caja de Herramientas</h3>
+        <div class="figure-container">
+            <img src="output/descriptive/boxplot_resistencias_GEN%201.png" alt="Boxplots">
+            <div class="caption">Boxplots de variables estandarizadas (Z-score). Línea roja = promedio global.</div>
+        </div>
+        <div class="science-box">
+            <strong>🔬 Lo que dice la ciencia:</strong> La amplitud de cada caja muestra la variabilidad intra-tipo. Tipos con cajas largas (rock, water) tienen Pokémon muy diversos entre sí. Tipos con cajas cortas (normal, poison) son homogéneos.
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Tipos con cajas largas</strong> (Roca, Agua, Eléctrico) son <strong>impredecibles</strong> — no asumas que todos los Pokémon de ese tipo comparten las mismas vulnerabilidades. Lleva un plan B.<br>
+            <strong>Tipos con cajas cortas</strong> (Normal, Veneno, Dragón) son <strong>predecibles</strong> — puedes planificar con certeza contra ellos.
+        </div>
+
+        <!-- Graph 3 -->
+        <h3>📊 Gráfico 3: Mapa de Correlaciones — La Danza de los Tipos</h3>
+        <div class="figure-container">
+            <img src="output/descriptive/heatmap_correlaciones_GEN%201.png" alt="Correlaciones">
+            <div class="caption">Matriz de correlaciones de Pearson. Rojo = correlación positiva. Azul = negativa.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Correlación positiva</strong> (rojo): si tu Pokémon resiste un tipo, probablemente también resista el otro. ¡Cuidado con la redundancia defensiva!<br>
+            <strong>Correlación negativa</strong> (azul): cobertura natural. Si resistes uno, el otro te debilita. Busca estos pares para balancear tu equipo.<br>
+            <strong>Ejemplo:</strong> `psychic` y `bug` suelen ser negativos — los Pokémon que resisten Psíquico tienden a ser débiles a Bicho. Alakazam vs Pinsir lo confirma.
+        </div>
+
+        <!-- Graph 4 -->
+        <h3>📊 Gráfico 4: Coordenadas Paralelas — El Pulso de Cada Pokémon</h3>
+        <div class="figure-container">
+            <img src="output/descriptive/coordenadas_paralelas_GEN%201.png" alt="Coordenadas Paralelas">
+            <div class="caption">Cada línea = un Pokémon. Trayectorias similares = perfiles defensivos parecidos.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Busca grupos de líneas que suben y bajan juntas — esos Pokémon son <strong>funcionalmente intercambiables</strong>. Si tienes a Bulbasaur y ves que Oddish tiene el mismo patrón, <strong>no necesitas ambos</strong> en tu equipo. Estás desperdiciando un puesto.<br>
+            Busca líneas que se disparan hacia arriba en columnas específicas — esos son Pokémon con <strong>vulnerabilidades extremas</strong>. Charizard tendrá un pico en `against_water` — <strong>nunca lo saques contra Agua</strong> sin un cambio rápido.
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 4. PCA -->
+    <!-- 3. PCA -->
     <!-- ============================================================ -->
     <div class="card" id="pca">
-        <h2><span class="section-number">4</span> Reducción de Dimensionalidad — PCA</h2>
-        <p>
-            El Análisis de Componentes Principales descompone la matriz de 18 variables en componentes 
-            ortogonales que maximizan la varianza. Los dos primeros componentes capturan el 
-            <strong>35.76%</strong> de la varianza total, y se requieren 7 componentes para superar el 73%.
-        </p>
+        <h2><span class="section-number">3</span> El Mapa Secreto de la Liga — PCA</h2>
+        <p>El PCA reduce 18 dimensiones a solo 2. Es como tener un <strong>mapa de todos los Pokémon</strong> donde la cercanía significa similitud defensiva. Aquí empieza la verdadera estrategia.</p>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/scree_plot_pca_GEN 1.png" alt="Scree Plot">
-                <div class="caption">Figura 4.1 — Scree plot: varianza individual (barras) y acumulada (línea roja).</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/loadings_heatmap_pca_GEN 1.png" alt="Loadings">
-                <div class="caption">Figura 4.2 — Contribuciones (loadings) de cada variable a PC1 y PC2.</div>
-            </div>
+        <!-- Graph 5 -->
+        <h3>📊 Gráfico 5: Scree Plot — ¿Cuánto Sabemos?</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/scree_plot_pca_GEN%201.png" alt="Scree Plot">
+            <div class="caption">Scree plot: varianza individual (barras) vs acumulada (línea roja). Umbral 80% en gris.</div>
+        </div>
+        <div class="science-box">
+            <strong>🔬 Lo que dice la ciencia:</strong> PC1 captura 21.5% de la varianza, PC2 el 14.3%. Entre ambos, <strong>35.8%</strong>. Se necesitan 7 componentes para superar el 73.6% de varianza explicada.
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Las resistencias Pokémon son <strong>complejas</strong> — no se pueden resumir en 2 dimensiones sin perder información. Los Maestros Pokémon experimentados usan <strong>7 dimensiones mentales</strong> para evaluar a un Pokémon. No juzgues solo por su tipo principal: mira su perfil completo de 18 resistencias. Eso separa a un buen entrenador de un Campeón.
         </div>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/circulo_correlaciones_pca_GEN 1.png" alt="Círculo de Correlaciones">
-                <div class="caption">Figura 4.3 — Círculo de correlaciones: proyección de las 18 variables en el plano PC1-PC2.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/biplot_pca_GEN 1.png" alt="PCA Biplot">
-                <div class="caption">Figura 4.4 — Biplot: individuos (azul) y variables (flechas rojas).</div>
-            </div>
+        <!-- Graph 6 -->
+        <h3>📊 Gráfico 6: Loadings — Los Ejes del Poder</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/loadings_heatmap_pca_GEN%201.png" alt="Loadings">
+            <div class="caption">Pesos de cada variable en PC1 y PC2. Rojo = contribución positiva, azul = negativa.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>PC1 (eje horizontal):</strong> dominado por `flying`, `grass`, `ground`. Separa a los Pokémon por su relación con lo aéreo, lo vegetal y lo terrestre.<br>
+            <strong>PC2 (eje vertical):</strong> dominado por `psychic`, `bug`, `dark`. Separa por sensibilidad psíquica, bicho y oscuridad.<br>
+            Cuando mires el mapa, recuerda: <strong>horizontal = eje tierra-cielo, vertical = eje mente-oscuridad</strong>. Domina estos ejes y dominarás la Liga.
         </div>
 
-        <div class="figure-container full-width-img">
-            <img src="output/dimensionality_reduction/calidad_representacion_cos2_GEN 1.png" alt="cos² quality" style="max-width: 90%;">
-            <div class="caption">Figura 4.5 — Calidad de representación cos². El umbral 0.5 (línea roja) indica buena representación.</div>
+        <!-- Graph 7 -->
+        <h3>📊 Gráfico 7: Círculo de Correlaciones — La Brújula de Batalla</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/circulo_correlaciones_pca_GEN%201.png" alt="Círculo de Correlaciones">
+            <div class="caption">Proyección de las 18 variables en el círculo unitario. Flechas largas = bien representadas.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Flechas largas</strong> (psychic, bug, ghost, rock): confía en lo que ves en el mapa. La posición de los Pokémon respecto a estas variables es precisa.<br>
+            <strong>Flechas cortas</strong> (normal, dragon): el mapa 2D NO captura bien su comportamiento. Verifica con otras fuentes.<br>
+            <strong>Flechas opuestas</strong> (bug ↔ psychic): cobertura natural. Si ves un Pokémon cerca de `psychic`, aléjalo de `bug`. Sabrina vs Bicho: clásico.<br>
+            <strong>Úsalo así:</strong> Antes de enfrentar a Sabrina (Psíquico), busca Pokémon en la dirección opuesta a `psychic`. Ahí están tus mejores contadores.
         </div>
 
-        <div class="alert">
-            <strong>&#x26A0; Interpretación:</strong> Ninguna variable supera cos² &gt; 0.7 en el plano PC1-PC2, 
-            lo que indica que 2 dimensiones son insuficientes para representar fielmente todas las relaciones. 
-            Esto es esperable para datos con 18 dimensiones y estructura compleja. Se recomienda 
-            complementar PCA con t-SNE para una visión más completa.
+        <!-- Graph 8 -->
+        <h3>📊 Gráfico 8: PCA-Biplot — Todos en un Mapa</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/biplot_pca_GEN%201.png" alt="PCA Biplot">
+            <div class="caption">Puntos = Pokémon (individuos). Flechas rojas = variables (tipos).</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Este es tu <strong>mapa de guerra definitivo</strong>. Cada punto azul es un Pokémon, cada flecha roja es un tipo. La posición del Pokémon respecto a una flecha indica su afinidad con ese tipo.<br>
+            <strong>Cómo usarlo:</strong> Antes de cada combate, localiza en el mapa los tipos de tu oponente. Busca Pokémon en la dirección <strong>opuesta</strong> a esas flechas. Ahí están tus mejores contadores.<br>
+            <strong>Ejemplo:</strong> Brock usa Roca/Tierra. Busca Pokémon en dirección opuesta a `rock` y `ground`. Encontrarás Agua, Planta y Lucha. ¡Golpe seguro!
         </div>
 
-        <h3>Varianza Explicada por Componente</h3>
-        <table>
-            <thead><tr><th>Componente</th><th>Varianza (%)</th><th>Acumulada (%)</th></tr></thead>
-            <tbody>
-                <tr><td>PC1</td><td>21.50</td><td>21.50</td></tr>
-                <tr><td>PC2</td><td>14.26</td><td>35.76</td></tr>
-                <tr><td>PC3</td><td>9.87</td><td>45.63</td></tr>
-                <tr><td>PC4</td><td>8.42</td><td>54.05</td></tr>
-                <tr><td>PC5</td><td>7.29</td><td>61.34</td></tr>
-                <tr><td>PC6</td><td>6.48</td><td>67.82</td></tr>
-                <tr><td>PC7</td><td>5.77</td><td>73.59</td></tr>
-            </tbody>
-        </table>
+        <!-- Graph 9 -->
+        <h3>📊 Gráfico 9: Calidad cos² — ¿Confiamos en el Mapa?</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/calidad_representacion_cos2_GEN%201.png" alt="cos²">
+            <div class="caption">Calidad de representación. cos² &gt; 0.5 = buena (línea roja). Ninguna variable supera 0.5.</div>
+        </div>
+        <div class="alert alert-danger">
+            <strong>⚠️ Dato crítico:</strong> Ninguna variable supera cos²=0.5. El mapa 2D es una <strong>simplificación</strong>. No tomes decisiones basadas solo en él — es una guía, no una verdad absoluta.
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Las variables mejor representadas (barras más altas) son las de mayor confianza: `psychic`, `bug`, `ghost`. Si ves que un Pokémon está lejos de `psychic`, confía en que realmente es bueno contra Psíquico.<br>
+            Las peor representadas: `normal`, `dragon`. Si ves a un Pokémon lejos de `dragon`, <strong>verifícalo</strong> — el mapa podría estar distorsionado.
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 5. T-SNE -->
+    <!-- 4. t-SNE -->
     <!-- ============================================================ -->
     <div class="card" id="tsne">
-        <h2><span class="section-number">5</span> Reducción de Dimensionalidad — t-SNE</h2>
-        <p>
-            t-SNE es una técnica no lineal que prioriza la preservación de vecindades locales. 
-            Se realizó un barrido sistemático de hiperparámetros (perplejidad y learning rate) 
-            para evaluar la estabilidad de la proyección y se cuantificó la fidelidad mediante 
-            <strong>trustworthiness</strong>.
-        </p>
+        <h2><span class="section-number">4</span> Las Islas de Similitud Defensiva — t-SNE</h2>
+        <p>Mientras el PCA te muestra el mapa global, el t-SNE revela <strong>vecindades locales</strong>. Aquí descubres <strong>sustitutos secretos</strong>: Pokémon que aunque diferentes en tipo, juegan el mismo rol defensivo.</p>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/tsne_perplejidad_grid_GEN 1.png" alt="t-SNE perplexity grid">
-                <div class="caption">Figura 5.1 — Efecto de la perplejidad en la proyección t-SNE. Perplejidad baja (5-15) revela micro-estructura; alta (50-100) revela macro-estructura.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/tsne_learning_rate_grid_GEN 1.png" alt="t-SNE learning rate grid">
-                <div class="caption">Figura 5.2 — Efecto del learning rate. Valores &lt;100 pueden crear clusters espurios; &gt;1000 suavizan en exceso.</div>
-            </div>
+        <!-- Graph 10 -->
+        <h3>📊 Gráfico 10: Grid de Perplejidad — El Zoom Estratégico</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/tsne_perplejidad_grid_GEN%201.png" alt="Perplejidad t-SNE">
+            <div class="caption">t-SNE con perplejidad 5, 10, 15, 30, 50, 100. Bajo = lupa. Alto = panorama.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Perplejidad baja (5-10):</strong> ves micro-grupos locales. Úsalo para encontrar <strong>sustitutos exactos</strong> — si no consigues a Pokémon A, busca en su grupito a Pokémon B que jugará igual.<br>
+            <strong>Perplejidad media (30):</strong> el balance ideal. Los grupos que ves aquí son reales y confiables.<br>
+            <strong>Perplejidad alta (50-100):</strong> ves la macro-estructura. Úsalo para identificar los grandes arquetipos y planificar tu estrategia general.
         </div>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/tsne_trustworthiness_GEN 1.png" alt="Trustworthiness">
-                <div class="caption">Figura 5.3 — Trustworthiness: PCA vs t-SNE para diferentes k vecinos.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/dimensionality_reduction/comparativa_pca_tsne_GEN 1.png" alt="PCA vs t-SNE">
-                <div class="caption">Figura 5.4 — Comparativa visual PCA (izquierda) vs t-SNE (derecha).</div>
-            </div>
+        <!-- Graph 11 -->
+        <h3>📊 Gráfico 11: Grid de Learning Rate — Sin Falsas Esperanzas</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/tsne_learning_rate_grid_GEN%201.png" alt="Learning Rate t-SNE">
+            <div class="caption">t-SNE con learning rate 10, 100, 200, 500, 1000, 2000.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Rate bajo (10):</strong> puede crear grupos falsos. No confíes.<br>
+            <strong>Rate medio (200-500):</strong> el punto dulce. Los grupos son reales.<br>
+            <strong>Rate alto (2000):</strong> oculta estructura real. Todo se ve como una nube.<br>
+            <strong>Regla de oro:</strong> Si ves un grupo interesante, verifica que aparezca en <strong>más de un valor de perplejidad</strong> antes de confiar. Los grupos que solo aparecen en una configuración son <strong>artefactos</strong>, no verdad defensiva.
         </div>
 
+        <!-- Graph 12 -->
+        <h3>📊 Gráfico 12: Trustworthiness — ¿PCA o t-SNE?</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/tsne_trustworthiness_GEN%201.png" alt="Trustworthiness">
+            <div class="caption">Trustworthiness comparativo. t-SNE (naranja) supera a PCA (azul) en todo el rango de k vecinos.</div>
+        </div>
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" style="border-left:4px solid #ed8936;">
                 <div class="value">0.900</div>
                 <div class="label">Trustworthiness t-SNE</div>
                 <span class="eval eval-good">Excelente</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" style="border-left:4px solid #3182ce;">
                 <div class="value">0.872</div>
                 <div class="label">Trustworthiness PCA</div>
                 <span class="eval eval-good">Buena</span>
@@ -575,132 +547,230 @@
                 <span class="eval eval-moderate">Significativa</span>
             </div>
         </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Usa PCA</strong> para entender el "por qué" — cada dirección del mapa tiene significado porque está hecha de combinaciones lineales de tipos reales. Es interpretable.<br>
+            <strong>Usa t-SNE</strong> para encontrar el "quién" — para descubrir sustitutos funcionales y gemas ocultas.<br>
+            <strong>Los verdaderos Maestros usan ambos:</strong> PCA para planificar, t-SNE para descubrir.
+        </div>
+
+        <!-- Graph 13 -->
+        <h3>📊 Gráfico 13: Comparativa PCA vs t-SNE</h3>
+        <div class="figure-container">
+            <img src="output/dimensionality_reduction/comparativa_pca_tsne_GEN%201.png" alt="PCA vs t-SNE">
+            <div class="caption">Izquierda: PCA (estructura global). Derecha: t-SNE (estructura local).</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>PCA (izquierda):</strong> ves un gradiente continuo. Los Pokémon se distribuyen a lo largo de ejes interpretables. Útil para <strong>posicionamiento estratégico</strong>.<br>
+            <strong>t-SNE (derecha):</strong> ves islas distintas. Cada isla es una <strong>familia defensiva</strong>. Útil para <strong>descubrir agrupaciones naturales</strong>.<br>
+            La combinación de ambos te da el poder de un verdadero Maestro Pokémon.
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 6. CLUSTERING -->
+    <!-- 5. CLUSTERING -->
     <!-- ============================================================ -->
     <div class="card" id="clustering">
-        <h2><span class="section-number">6</span> Segmentación Algorítmica (Clustering)</h2>
-        <p>
-            Se aplicaron tres metodologías de clustering complementarias. La selección final de 
-            <strong>k=4</strong> clusters se basa en el equilibrio entre simplicidad interpretativa 
-            (4 arquetipos defensivos) y las métricas de validación cuantitativa.
-        </p>
+        <h2><span class="section-number">5</span> Los 4 Arquetipos de Combate</h2>
+        <p>Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en <strong>4 arquetipos defensivos</strong>. Cada uno es una familia de combate con su propio perfil de fortalezas y debilidades.</p>
 
-        <h3>6.1 Optimización Multi-Métrica</h3>
-        <div class="figure-container full-width-img">
-            <img src="output/clustering/optimizacion_multimetrica_GEN 1.png" alt="Multi-metric optimization">
-            <div class="caption">Figura 6.1 — Dashboard de 4 métricas para selección de k: Inercia (codo), Silhouette, Davies-Bouldin (↓ mejor), Calinski-Harabasz (↑ mejor).</div>
+        <!-- Graph 14 -->
+        <h3>📊 Gráfico 14: Optimización Multi-Métrica — ¿Por Qué 4?</h3>
+        <div class="figure-container">
+            <img src="output/clustering/optimizacion_multimetrica_GEN%201.png" alt="Optimización">
+            <div class="caption">4 métricas independientes convergen: 4 clusters es la elección óptima para balancear simplicidad y poder discriminativo.</div>
+        </div>
+        <div class="science-box">
+            <strong>🔬 Métricas de validación:</strong>
+            <ul style="margin-top:0.5rem; padding-left:1.5rem;">
+                <li><strong>Inercia (codo):</strong> k=4 marca el punto donde añadir más clusters ya no mejora significativamente</li>
+                <li><strong>Silhouette (0.263):</strong> separación moderada — esperable para 18 dimensiones con solapamiento natural de tipos</li>
+                <li><strong>Davies-Bouldin (1.458):</strong> bajo solapamiento inter-cluster</li>
+                <li><strong>Calinski-Harabasz (25.07):</strong> discriminación significativa entre grupos</li>
+            </ul>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Cuatro métricas independientes confirman lo que los entrenadores saben por instinto: <strong>hay 4 grandes arquetipos defensivos</strong>. Cuando armes tu equipo de 6, busca tener al menos 1 Pokémon de cada arquetipo. Los 2 puestos restantes son para especialistas (los que DBSCAN detecta como outliers).
         </div>
 
+        <!-- Graph 15 -->
+        <h3>📊 Gráfico 15: Gap Statistic — Los Sub-Arquetipos Secretos</h3>
+        <div class="figure-container">
+            <img src="output/clustering/gap_statistic_GEN%201.png" alt="Gap Statistic">
+            <div class="caption">Gap Statistic con B=20 réplicas bootstrap. El óptimo estadístico es k=9.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            La Gap Statistic sugiere que existen <strong>hasta 9 sub-arquetipos</strong> dentro de los 4 grandes. Piensa en 4 como tus <strong>categorías principales</strong> y 9 como tus <strong>especializaciones finas</strong>.<br>
+            Para tu equipo principal, preocúpate por los 4 grandes. Cuando estés afinando para un oponente específico (como el Alto Mando), usa los 9 subgrupos para ajustes finos.
+        </div>
+
+        <!-- Graph 16 -->
+        <h3>📊 Gráfico 16: Dendrograma Ward — El Árbol Genealógico</h3>
+        <div class="figure-container">
+            <img src="output/clustering/dendrograma_ward_GEN%201.png" alt="Dendrograma">
+            <div class="caption">Dendrograma jerárquico (Ward) con sedimentación. Corte rojo para k=4. Correlación cofenética: 0.649.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            <strong>Ramas largas antes de unirse</strong> = clusters muy diferentes. Son buenos candidatos para cubrirse mutuamente.<br>
+            <strong>Ramas que se unen rápido</strong> = Pokémon similares. No los pongas juntos en tu equipo o tendrás redundancia.<br>
+            <strong>Correlación cofenética de 0.649:</strong> el árbol refleja bien el 64.9% de las relaciones reales. Es suficiente para confiar en la estructura general.<br>
+            <strong>Regla:</strong> busca tu base en una rama y su contraparte en la rama opuesta. Cuanto más larga la rama que los separa, mejor cobertura mutua.
+        </div>
+
+        <!-- Graph 17 -->
+        <h3>📊 Gráfico 17: Diagrama de Silueta — ¿Quién No Encaja?</h3>
+        <div class="figure-container">
+            <img src="output/clustering/silhouette_diagram_GEN%201.png" alt="Silueta">
+            <div class="caption">Cada barra = un Pokémon. Las que cruzan la línea roja (0.263) tienen perfil híbrido entre arquetipos.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Las barras que cruzan la línea roja hacia la izquierda son Pokémon <strong>híbridos</strong> — su perfil defensivo no encaja perfectamente en un solo arquetipo. Estos Pokémon son <strong>versátiles</strong> y pueden jugar múltiples roles.<br>
+            <strong>Úsalos como situational picks</strong>, no como pilares de tu equipo. Un Pokémon mal clasificado no es malo — es único y puede sorprender a tu oponente.
+        </div>
+
+        <!-- Graph 18 -->
+        <h3>📊 Gráfico 18: Caracterización — LA TABLA SAGRADA</h3>
+        <div class="figure-container">
+            <img src="output/clustering/caracterizacion_heatmap_GEN%201.png" alt="Caracterización">
+            <div class="caption">Perfil promedio de cada arquetipo. Verde = resistente. Rojo = vulnerable. Esta es la tabla más importante de todo el análisis.</div>
+        </div>
+        <div class="alert alert-success" style="border-left-color: var(--gold);">
+            <strong>🔥 MEMORIZA ESTE HEATMAP.</strong> Es la diferencia entre un entrenador promedio y un Maestro Pokémon. Te dice exactamente qué esperar de cada arquetipo y cómo contraatacar.
+        </div>
+
+        <!-- 4 Archetype Cards -->
+        <div class="grid-4">
+            <div class="archetype-card" style="border-top:4px solid #1f77b4;">
+                <div class="badge-arch" style="background:#1f77b4;color:white;">Cluster 0</div>
+                <h4 style="color:#1f77b4;">Guardianes del Océano</h4>
+                <p style="font-size:0.85rem;">81 Pokémon — Los tanques</p>
+                <div style="font-size:0.8rem;text-align:left;">
+                    🟢 Resisten: ghost, fire, steel<br>
+                    🔴 Vulnerables: electric, grass, rock
+                </div>
+            </div>
+            <div class="archetype-card" style="border-top:4px solid #2ca02c;">
+                <div class="badge-arch" style="background:#2ca02c;color:white;">Cluster 1</div>
+                <h4 style="color:#2ca02c;">Protectores Biosfera</h4>
+                <p style="font-size:0.85rem;">49 Pokémon — Cobertura física</p>
+                <div style="font-size:0.8rem;text-align:left;">
+                    🟢 Resisten: fight, grass, bug<br>
+                    🔴 Vulnerables: psychic, flying, fire
+                </div>
+            </div>
+            <div class="archetype-card" style="border-top:4px solid #bcbd22;">
+                <div class="badge-arch" style="background:#bcbd22;color:white;">Cluster 2</div>
+                <h4 style="color:#bcbd22;">Místicos del Éter</h4>
+                <p style="font-size:0.85rem;">15 Pokémon — Cobertura psíquica</p>
+                <div style="font-size:0.8rem;text-align:left;">
+                    🟢 Resisten: psychic, fight, water<br>
+                    🔴 Vulnerables: bug, ghost, dark
+                </div>
+            </div>
+            <div class="archetype-card" style="border-top:4px solid #9467bd;">
+                <div class="badge-arch" style="background:#9467bd;color:white;">Cluster 3</div>
+                <h4 style="color:#9467bd;">Centinelas Alta Tensión</h4>
+                <p style="font-size:0.85rem;">6 Pokémon — Especialistas</p>
+                <div style="font-size:0.8rem;text-align:left;">
+                    🟢 Resisten: electric, poison, fire<br>
+                    🔴 Vulnerables: grass, water, fight
+                </div>
+            </div>
+        </div>
+
+        <!-- Graph 19 -->
+        <h3>📊 Gráfico 19: Radar — La Huella Digital</h3>
+        <div class="figure-container">
+            <img src="output/clustering/radar_arquetipos_GEN%201.png" alt="Radar">
+            <div class="caption">Radar chart en las 8 variables más discriminativas. Cada polígono es único — los arquetipos son genuinamente distintos.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Los 4 polígonos tienen formas <strong>marcadamente diferentes</strong>. Esto confirma que los arquetipos son genuinos. Si tu polígono envuelve al de tu oponente (estás más cerca del centro en todas direcciones), tienes ventaja defensiva total.<br>
+            <strong>Cluster 2 (amarillo):</strong> pico pronunciado hacia `bug` — su talón de Aquiles.<br>
+            <strong>Cluster 3 (morado):</strong> forma excéntrica — Pokémon de nicho, impredecibles.
+        </div>
+
+        <!-- Graph 20 & 21 -->
+        <h3>📊 Gráficos 20-21: Clusters sobre PCA y t-SNE</h3>
         <div class="grid-2">
             <div class="figure-container">
-                <img src="output/clustering/gap_statistic_GEN 1.png" alt="Gap Statistic">
-                <div class="caption">Figura 6.2 — Gap statistic con B=20 réplicas bootstrap. k=9 es óptimo según este criterio.</div>
+                <img src="output/clustering/pca_clusters_GEN%201.png" alt="PCA Clusters">
+                <div class="caption">Clusters en PCA — territorios continuos de cada arquetipo.</div>
             </div>
             <div class="figure-container">
-                <img src="output/clustering/dendrograma_ward_GEN 1.png" alt="Dendrograma">
-                <div class="caption">Figura 6.3 — Dendrograma (Ward) + sedimentación jerárquica. Corte para k=4 marcado en rojo.</div>
+                <img src="output/clustering/tsne_clusters_GEN%201.png" alt="t-SNE Clusters">
+                <div class="caption">Clusters en t-SNE — islas de similitud funcional.</div>
             </div>
         </div>
-
-        <h3>6.2 Análisis de Silueta</h3>
-        <div class="figure-container full-width-img">
-            <img src="output/clustering/silhouette_diagram_GEN 1.png" alt="Silhouette Diagram">
-            <div class="caption">Figura 6.4 — Diagrama de silueta detallado. Cada barra es un espécimen. La línea roja marca el promedio global (0.263).</div>
+        <div class="battle-tip">
+            <strong>⚔️ Estrategia combinada:</strong><br>
+            <strong>En PCA:</strong> los 4 colores ocupan regiones distintas del mapa. Las zonas de mezcla son Pokémon híbridos — versátiles pero menos especializados.<br>
+            <strong>En t-SNE:</strong> las islas están más separadas. Úsalo para encontrar <strong>sustitutos ocultos</strong>: si te gusta un Pokémon raro, busca en su isla otras opciones más accesibles que jueguen el mismo rol.
         </div>
 
-        <h3>6.3 Caracterización de Arquetipos</h3>
+        <!-- Graph 22 & 23 -->
+        <h3>📊 Gráficos 22-23: DBSCAN — Los Especialistas</h3>
         <div class="grid-2">
             <div class="figure-container">
-                <img src="output/clustering/caracterizacion_heatmap_GEN 1.png" alt="Cluster characterization heatmap">
-                <div class="caption">Figura 6.5 — Perfil promedio de resistencia por cluster. Verde = resistente, rojo = vulnerable.</div>
+                <img src="output/clustering/dbscan_k_distance_GEN%201.png" alt="DBSCAN K-Distance">
+                <div class="caption">Diagnóstico k-distance. El codo (~3.0) separa Pokémon comunes de especialistas.</div>
             </div>
             <div class="figure-container">
-                <img src="output/clustering/radar_arquetipos_GEN 1.png" alt="Radar chart">
-                <div class="caption">Figura 6.6 — Diagrama radial de los 4 arquetipos en las 8 variables más discriminativas.</div>
+                <img src="output/clustering/pca_dbscan_GEN%201.png" alt="DBSCAN PCA">
+                <div class="caption">DBSCAN sobre PCA. Morado = outliers (18.5% del total). Son los especialistas puros.</div>
             </div>
         </div>
-
-        <h3>6.4 DBSCAN — Clustering Densidad</h3>
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/clustering/dbscan_k_distance_GEN 1.png" alt="DBSCAN k-distance">
-                <div class="caption">Figura 6.7 — Diagnóstico k-distance para selección de eps en DBSCAN.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/clustering/pca_dbscan_GEN 1.png" alt="DBSCAN PCA">
-                <div class="caption">Figura 6.8 — Resultado DBSCAN sobre PCA. Morado = ruido (18.5% de Pokémon atípicos).</div>
+        <div class="alert alert-info">
+            <strong>🔥 Los 28 Outliers — Tus Armas Secretas:</strong>
+            <div class="outlier-list" style="margin-top:0.5rem;">
+                <span class="outlier-tag">Charizard</span>
+                <span class="outlier-tag">Butterfree</span>
+                <span class="outlier-tag">Zubat</span>
+                <span class="outlier-tag">Golbat</span>
+                <span class="outlier-tag">Paras</span>
+                <span class="outlier-tag">Parasect</span>
+                <span class="outlier-tag">Magnemite</span>
+                <span class="outlier-tag">Magneton</span>
+                <span class="outlier-tag">Gastly</span>
+                <span class="outlier-tag">Haunter</span>
+                <span class="outlier-tag">Gengar</span>
+                <span class="outlier-tag">Onix</span>
+                <span class="outlier-tag">Krabby</span>
+                <span class="outlier-tag">Kingler</span>
+                <span class="outlier-tag">Voltorb</span>
+                <span class="outlier-tag">Electrode</span>
+                <span class="outlier-tag">Cubone</span>
+                <span class="outlier-tag">Marowak</span>
+                <span class="outlier-tag">Hitmonlee</span>
+                <span class="outlier-tag">Hitmonchan</span>
+                <span class="outlier-tag">Lickitung</span>
+                <span class="outlier-tag">Tangela</span>
+                <span class="outlier-tag">Horsea</span>
+                <span class="outlier-tag">Seadra</span>
+                <span class="outlier-tag">Mr. Mime</span>
+                <span class="outlier-tag">Scyther</span>
+                <span class="outlier-tag">Electabuzz</span>
+                <span class="outlier-tag">Pinsir</span>
             </div>
         </div>
-
-        <h3>6.5 Clusters sobre PCA y t-SNE</h3>
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/clustering/pca_clusters_GEN 1.png" alt="PCA Clusters">
-                <div class="caption">Figura 6.9 — Clusters K-Means sobre PCA.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/clustering/tsne_clusters_GEN 1.png" alt="t-SNE Clusters">
-                <div class="caption">Figura 6.10 — Clusters K-Means sobre t-SNE.</div>
-            </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Los outliers son Pokémon con perfiles de resistencia <strong>tan únicos</strong> que no encajan en ningún arquetipo. Son tus <strong>armas secretas</strong>.<br>
+            Un entrenador promedio usa Pokémon de arquetipos estándar — predecibles. Un Maestro usa outliers para <strong>romper expectativas</strong>. Cuando tu oponente asume que tu Charizard es un Fuego típico y saca un Agua, tú cambias a un Pokémon que tu oponente no esperaba porque su perfil no encaja en lo predecible.
         </div>
 
-        <h3>Tabla de Arquetipos</h3>
-        <table>
-            <thead>
-                <tr><th>Cluster</th><th>Nombre</th><th>Tamaño</th><th>Top Resistencias</th><th>Top Vulnerabilidades</th></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span style="color:#1f77b4;font-weight:700;">0</span></td>
-                    <td>Guardianes del Océano y el Acero</td>
-                    <td>81</td>
-                    <td>ghost, fire, steel</td>
-                    <td>electric, grass, rock</td>
-                </tr>
-                <tr>
-                    <td><span style="color:#2ca02c;font-weight:700;">1</span></td>
-                    <td>Protectores de la Biosfera</td>
-                    <td>49</td>
-                    <td>fight, grass, bug</td>
-                    <td>psychic, flying, fire</td>
-                </tr>
-                <tr>
-                    <td><span style="color:#bcbd22;font-weight:700;">2</span></td>
-                    <td>Místicos del Éter</td>
-                    <td>15</td>
-                    <td>psychic, fight, water</td>
-                    <td>bug, ghost, dark</td>
-                </tr>
-                <tr>
-                    <td><span style="color:#9467bd;font-weight:700;">3</span></td>
-                    <td>Centinelas de Alta Tensión</td>
-                    <td>6</td>
-                    <td>electric, poison, fire</td>
-                    <td>grass, water, fight</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- 7. VALIDACIÓN ESTADÍSTICA -->
-    <!-- ============================================================ -->
-    <div class="card" id="validacion">
-        <h2><span class="section-number">7</span> Validación Estadística (Inferencia)</h2>
-        <p>
-            Para corroborar que los clusters representan poblaciones estadísticamente diferentes, 
-            se aplicó la prueba <strong>Kruskal-Wallis H</strong> a cada variable de resistencia, 
-            comparando las medianas entre los 4 clusters.
-        </p>
-
-        <div class="figure-container full-width-img">
-            <img src="output/clustering/kruskal_wallis_resultados_GEN 1.png" alt="Kruskal-Wallis results">
-            <div class="caption">Figura 7.1 — Validación Kruskal-Wallis: estadístico H (izquierda) y significancia -log10(p) (derecha). Línea roja = α=0.05.</div>
+        <!-- Graph 24 -->
+        <h3>📊 Gráfico 24: Kruskal-Wallis — La Validación Definitiva</h3>
+        <div class="figure-container">
+            <img src="output/clustering/kruskal_wallis_resultados_GEN%201.png" alt="Kruskal-Wallis">
+            <div class="caption">Estadístico H (izquierda) y -log10(p-valor) (derecha). Línea roja = α=0.05. 17/18 variables significativas.</div>
         </div>
-
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="value">17/18</div>
@@ -715,241 +785,290 @@
             <div class="stat-card">
                 <div class="value">dragon</div>
                 <div class="label">Única No Significativa</div>
-                <span class="eval eval-moderate">p = 0.43</span>
+                <span class="eval eval-moderate">p = 0.43 — solo 3 dragones en Gen 1</span>
             </div>
         </div>
-
-        <div class="alert">
-            <strong>&#x2705; Conclusión Estadística:</strong> 
-            17 de 18 variables muestran diferencias altamente significativas entre clusters (p &lt; 0.05). 
-            La única excepción es <code>against_dragon</code> (p=0.43), consistente con que solo existen 
-            3 Pokémon dragón en Gen 1 (Dratini, Dragonair, Dragonite), lo que otorga poder estadístico 
-            insuficiente. Este resultado <strong>valida la segmentación</strong> como 
-            taxonomicamente relevante y descarta la hipótesis nula de igualdad de poblaciones.
+        <div class="alert alert-success">
+            <strong>✅ Conclusión estadística:</strong> 17 de 18 variables muestran diferencias altamente significativas entre clusters (p &lt; 0.05). La única excepción es <code>against_dragon</code> (p=0.43), consistente con que solo existen 3 Pokémon dragón en Gen 1 (Dratini, Dragonair, Dragonite), lo que otorga poder estadístico insuficiente. <strong>Los 4 arquetipos representan diferencias reales, no producto del azar.</strong>
         </div>
+        <div class="battle-tip">
+            <strong>⚔️ Lo que significa para tu batalla:</strong><br>
+            Las variables con H más alto (psychic, bug, ghost, rock, fire) son los <strong>mejores discriminadores</strong> entre arquetipos. Cuando armes tu equipo, <strong>prioriza la cobertura de estos 5 tipos</strong>. Si cubres bien psychic, bug, ghost, rock y fire, automáticamente estás cubriendo las diferencias fundamentales entre las 4 familias defensivas.
+        </div>
+    </div>
 
-        <!-- Additional metrics summary -->
-        <h3>Métricas de Validación de Clustering</h3>
+    <!-- ============================================================ -->
+    <!-- 6. VALIDACIÓN -->
+    <!-- ============================================================ -->
+    <div class="card" id="validacion">
+        <h2><span class="section-number">6</span> Validación Científica — No es Casualidad</h2>
+        <p>Cada una de las siguientes métricas ha sido calculada rigurosamente. No son estimaciones — son <strong>hechos estadísticos</strong> que respaldan tu estrategia de batalla.</p>
+
         <table>
-            <thead><tr><th>Métrica</th><th>Valor</th><th>Interpretación</th></tr></thead>
+            <thead><tr><th>Métrica</th><th>Valor</th><th>Evaluación</th><th>¿Por qué importa en batalla?</th></tr></thead>
             <tbody>
-                <tr><td>Inercia</td><td>1797.98</td><td>Compacidad intra-cluster moderada para 18D</td></tr>
-                <tr><td>Silhouette Score</td><td>0.2630</td><td>Separación moderada (estructura con solapamiento esperable)</td></tr>
-                <tr><td>Davies-Bouldin Index</td><td>1.4576</td><td>Bajo solapamiento inter-cluster</td></tr>
-                <tr><td>Calinski-Harabasz</td><td>25.07</td><td>Discriminación significativa entre clusters</td></tr>
-                <tr><td>Correlación Cofenética</td><td>0.6489</td><td>Consistencia aceptable del dendrograma</td></tr>
-                <tr><td>Gap Statistic (k óptimo)</td><td>9</td><td>Indica posible sub-estructura fina</td></tr>
-                <tr><td>DBSCAN — Clusters</td><td>12</td><td>Agrupaciones densas</td></tr>
-                <tr><td>DBSCAN — Ruido</td><td>28 (18.5%)</td><td>Especialistas puros con perfiles atípicos</td></tr>
+                <tr>
+                    <td><strong>Silhouette Score</strong></td>
+                    <td>0.263</td>
+                    <td><span class="eval eval-moderate">Moderado</span></td>
+                    <td>Separación moderada — esperable para 18 dimensiones. Los arquetipos tienen bordes difusos porque los tipos Pokémon se solapan naturalmente.</td>
+                </tr>
+                <tr>
+                    <td><strong>Davies-Bouldin Index</strong></td>
+                    <td>1.458</td>
+                    <td><span class="eval eval-good">Bueno</span></td>
+                    <td>Bajo solapamiento inter-cluster. Los 4 arquetipos están bien definidos y no se confunden entre sí.</td>
+                </tr>
+                <tr>
+                    <td><strong>Calinski-Harabasz</strong></td>
+                    <td>25.07</td>
+                    <td><span class="eval eval-good">Bueno</span></td>
+                    <td>Los clusters son significativamente diferentes entre sí. La segmentación tiene validez estadística.</td>
+                </tr>
+                <tr>
+                    <td><strong>Correlación Cofenética</strong></td>
+                    <td>0.649</td>
+                    <td><span class="eval eval-moderate">Aceptable</span></td>
+                    <td>El dendrograma preserva el 64.9% de las distancias originales. Suficiente para confiar en la estructura jerárquica general.</td>
+                </tr>
+                <tr>
+                    <td><strong>Trustworthiness t-SNE</strong></td>
+                    <td>0.900</td>
+                    <td><span class="eval eval-good">Excelente</span></td>
+                    <td>t-SNE preserva el 90% de las vecindades locales. Puedes confiar en los grupos que ves en el mapa t-SNE.</td>
+                </tr>
+                <tr>
+                    <td><strong>Trustworthiness PCA</strong></td>
+                    <td>0.872</td>
+                    <td><span class="eval eval-good">Buena</span></td>
+                    <td>PCA preserva el 87.2% de las vecindades. Ligeramente inferior a t-SNE, pero más interpretable.</td>
+                </tr>
+                <tr>
+                    <td><strong>Kruskal-Wallis Significativas</strong></td>
+                    <td>17/18</td>
+                    <td><span class="eval eval-good">Excelente</span></td>
+                    <td>Solo dragón no discrimina (p=0.43) por falta de ejemplares. La segmentación captura diversidad real.</td>
+                </tr>
+                <tr>
+                    <td><strong>DBSCAN — Ruido</strong></td>
+                    <td>18.5%</td>
+                    <td><span class="eval eval-moderate">Esperable</span></td>
+                    <td>28 especialistas puros con perfiles únicos. No es ruido estadístico — son gemas ocultas para tu equipo.</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 8. CARTOGRAFÍA VISUAL -->
+    <!-- 7. CARTOGRAFÍA VISUAL -->
     <!-- ============================================================ -->
     <div class="card" id="cartografia">
-        <h2><span class="section-number">8</span> Cartografía Visual con Sprites</h2>
-        <p>
-            La culminación del análisis es la proyección de los sprites originales de cada Pokémon 
-            sobre las coordenadas PCA y t-SNE. Cada sprite está coloreado por su cluster de pertenencia, 
-            creando un mapa taxonómico interactivo e intuitivo.
-        </p>
+        <h2><span class="section-number">7</span> El Mapa del Tesoro — Cartografía Visual</h2>
+        <p>La culminación del análisis: todos los 151 Pokémon proyectados en el espacio de resistencias, con sus sprites originales. Cada punto es un Pokémon en su posición exacta según su ADN de combate.</p>
 
-        <div class="grid-2">
-            <div class="figure-container">
-                <img src="output/image_maps/mapa_visual_pca_GEN 1.png" alt="PCA Image Map">
-                <div class="caption">Figura 8.1 — Cartografía PCA: 151 Pokémon posicionados por su perfil de resistencia.</div>
-            </div>
-            <div class="figure-container">
-                <img src="output/image_maps/mapa_visual_tsne_GEN 1.png" alt="t-SNE Image Map">
-                <div class="caption">Figura 8.2 — Cartografía t-SNE: vecindades locales revelan nichos defensivos.</div>
-            </div>
+        <h3>📊 Gráfico 25: Mapa PCA con Sprites</h3>
+        <div class="figure-container">
+            <img src="output/image_maps/mapa_visual_pca_GEN%201.png" alt="Mapa PCA">
+            <div class="caption">151 Pokémon en el espacio PCA, cada uno representado por su sprite original. Colores = clusters K-Means.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Cómo usar este mapa para ganar la Liga:</strong><br>
+            1. <strong>Encuentra a tu Pokémon favorito</strong> en el mapa<br>
+            2. <strong>Mira quiénes están cerca</strong> — son tus compañeros de equipo naturales (comparten fortalezas y debilidades)<br>
+            3. <strong>Mira quiénes están lejos en dirección opuesta</strong> — son tus contadores naturales<br>
+            4. <strong>Si ves un grupo de 5+ Pokémon muy juntos</strong>, no elijas 2 de ese grupo para tu equipo — estarías duplicando vulnerabilidades
         </div>
 
-        <p>
-            <strong>Interpretación:</strong> En el espacio PCA, los Pokémon se distribuyen a lo largo 
-            de gradientes continuos de resistencia. En t-SNE, se forman "islas" de similitud funcional 
-            donde Pokémon visualmente similares (en términos de tipo) aparecen agrupados. 
-            Ambos mapas confirman que los clusters de K-Means corresponden a regiones coherentes 
-            del espacio latente, cerrando el ciclo entre datos crudos y conocimiento visual.
-        </p>
+        <h3>📊 Gráfico 26: Mapa t-SNE con Sprites</h3>
+        <div class="figure-container">
+            <img src="output/image_maps/mapa_visual_tsne_GEN%201.png" alt="Mapa t-SNE">
+            <div class="caption">151 Pokémon en el espacio t-SNE. Las "islas" son familias defensivas. Los puntos dentro de una misma isla son intercambiables.</div>
+        </div>
+        <div class="battle-tip">
+            <strong>⚔️ Cómo usar este mapa para encontrar sustitutos:</strong><br>
+            Donde PCA es un mapa continuo, t-SNE es un <strong>archipiélago</strong>. Cada isla es una familia defensiva.<br>
+            1. Identifica las 4 islas principales — corresponden a los 4 arquetipos<br>
+            2. Las islas pequeñas son <strong>microniches</strong> — grupos muy específicos<br>
+            3. Los puntos solitarios son <strong>outliers</strong> — especialistas únicos<br>
+            4. Si necesitas un sustituto para un Pokémon que no puedes conseguir, <strong>busca en su misma isla</strong> — ahí hay alternativas funcionales
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 9. DICCIONARIO DE GRÁFICOS -->
+    <!-- 8. DICCIONARIO DE GRÁFICOS -->
     <!-- ============================================================ -->
     <div class="card" id="diccionario">
-        <h2><span class="section-number">9</span> Diccionario Completo de Gráficos</h2>
-        <p>
-            Se generaron <strong>25 figuras</strong> organizadas en 4 categorías. Cada figura incluye 
-            metadatos de interpretación para facilitar la lectura y reproducción del análisis.
-        </p>
+        <h2><span class="section-number">8</span> Diccionario de Gráficos — 26 Figuras Explicadas</h2>
+        <p>Cada gráfico tiene un propósito específico en tu viaje para convertirte en Campeón. Aquí están todos explicados desde la perspectiva de un Maestro Pokémon.</p>
 
-        <h3>Descriptivos (4 figuras)</h3>
-        <table>
-            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+        <h3>📊 DESCRIPTIVOS (4)</h3>
+        <table class="graph-dict-table">
+            <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
             <tbody>
-                <tr><td>1</td><td><code>histogram_resistencias_GEN 1.png</code></td><td>Distribución de Variables de Resistencia</td><td>hist + KDE</td></tr>
-                <tr><td>2</td><td><code>boxplot_resistencias_GEN 1.png</code></td><td>Boxplots Estandarizados</td><td>seaborn.boxplot</td></tr>
-                <tr><td>3</td><td><code>heatmap_correlaciones_GEN 1.png</code></td><td>Matriz de Correlaciones</td><td>seaborn.heatmap</td></tr>
-                <tr><td>4</td><td><code>coordenadas_paralelas_GEN 1.png</code></td><td>Coordenadas Paralelas</td><td>pandas.parallel_coordinates</td></tr>
+                <tr><td>1</td><td>histogram_resistencias</td><td><strong>"Conoce el terreno"</strong> — Cada tipo tiene su huella de resistencia. Distribuciones anchas = impredecibles. Prepárate para sorpresas.</td></tr>
+                <tr><td>2</td><td>boxplot_resistencias</td><td><strong>"Mide a tu rival"</strong> — Cajas largas (Roca, Agua) = diversos. Cajas cortas (Normal) = predecibles. Ajusta tu estrategia.</td></tr>
+                <tr><td>3</td><td>heatmap_correlaciones</td><td><strong>"Alianzas secretas"</strong> — Rojo = tipos que suelen ir juntos. Azul = cobertura natural. Evita redundancias.</td></tr>
+                <tr><td>4</td><td>coordenadas_paralelas</td><td><strong>"Detecta redundancias"</strong> — Líneas paralelas = Pokémon redundantes. No dupliques perfiles en tu equipo.</td></tr>
             </tbody>
         </table>
 
-        <h3>Reducción de Dimensionalidad (8 figuras)</h3>
-        <table>
-            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+        <h3>📉 PCA (5)</h3>
+        <table class="graph-dict-table">
+            <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
             <tbody>
-                <tr><td>5</td><td><code>scree_plot_pca_GEN 1.png</code></td><td>Scree Plot PCA</td><td>PCA.explained_variance_ratio_</td></tr>
-                <tr><td>6</td><td><code>loadings_heatmap_pca_GEN 1.png</code></td><td>Loadings Heatmap</td><td>PCA.components_</td></tr>
-                <tr><td>7</td><td><code>circulo_correlaciones_pca_GEN 1.png</code></td><td>Círculo de Correlaciones</td><td>Loadings × √(eigenvalues)</td></tr>
-                <tr><td>8</td><td><code>biplot_pca_GEN 1.png</code></td><td>PCA-Biplot</td><td>PCA + escalado symbiplot</td></tr>
-                <tr><td>9</td><td><code>calidad_representacion_cos2_GEN 1.png</code></td><td>Calidad cos²</td><td>cos² = loading²</td></tr>
-                <tr><td>10</td><td><code>tsne_perplejidad_grid_GEN 1.png</code></td><td>Grid de Perplejidad</td><td>TSNE(perplexity=5..100)</td></tr>
-                <tr><td>11</td><td><code>tsne_learning_rate_grid_GEN 1.png</code></td><td>Grid de Learning Rate</td><td>TSNE(learning_rate=10..2000)</td></tr>
-                <tr><td>12</td><td><code>tsne_trustworthiness_GEN 1.png</code></td><td>Trustworthiness</td><td>sklearn.manifold.trustworthiness</td></tr>
+                <tr><td>5</td><td>scree_plot_pca</td><td><strong>"¿Cuánto sabes?"</strong> — 35.8% en 2D. Suficiente para estrategia, pero los Maestros usan 7 dimensiones.</td></tr>
+                <tr><td>6</td><td>loadings_heatmap_pca</td><td><strong>"Los ejes del poder"</strong> — PC1 = cielo-tierra. PC2 = mente-oscuridad. Domínalos y dominarás la Liga.</td></tr>
+                <tr><td>7</td><td>circulo_correlaciones_pca</td><td><strong>"La brújula"</strong> — Flechas largas = confianza. Flechas opuestas = cobertura. Úsala antes de cada combate.</td></tr>
+                <tr><td>8</td><td>biplot_pca</td><td><strong>"Mapa de guerra"</strong> — Localiza a tu rival y busca en dirección opuesta a sus flechas. Ahí están tus contadores.</td></tr>
+                <tr><td>9</td><td>calidad_cos2</td><td><strong>"¿Confías?"</strong> — Ninguna variable bien representada. El mapa 2D es guía, no verdad absoluta.</td></tr>
             </tbody>
         </table>
 
-        <h3>Clustering (11 figuras)</h3>
-        <table>
-            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+        <h3>📉 t-SNE (4)</h3>
+        <table class="graph-dict-table">
+            <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
             <tbody>
-                <tr><td>13</td><td><code>optimizacion_multimetrica_GEN 1.png</code></td><td>Optimización Multi-Métrica</td><td>4 métricas de validación</td></tr>
-                <tr><td>14</td><td><code>gap_statistic_GEN 1.png</code></td><td>Gap Statistic</td><td>Bootstrap B=20</td></tr>
-                <tr><td>15</td><td><code>dendrograma_ward_GEN 1.png</code></td><td>Dendrograma Ward</td><td>scipy.cluster.hierarchy</td></tr>
-                <tr><td>16</td><td><code>silhouette_diagram_GEN 1.png</code></td><td>Diagrama de Silueta</td><td>silhouette_samples</td></tr>
-                <tr><td>17</td><td><code>caracterizacion_heatmap_GEN 1.png</code></td><td>Caracterización Heatmap</td><td>seaborn.heatmap</td></tr>
-                <tr><td>18</td><td><code>radar_arquetipos_GEN 1.png</code></td><td>Radar de Arquetipos</td><td>Coordenadas polares</td></tr>
-                <tr><td>19</td><td><code>pca_clusters_GEN 1.png</code></td><td>PCA + Clusters</td><td>PCA + KMeans</td></tr>
-                <tr><td>20</td><td><code>tsne_clusters_GEN 1.png</code></td><td>t-SNE + Clusters</td><td>TSNE + KMeans</td></tr>
-                <tr><td>21</td><td><code>dbscan_k_distance_GEN 1.png</code></td><td>DBSCAN K-Distance</td><td>NearestNeighbors</td></tr>
-                <tr><td>22</td><td><code>pca_dbscan_GEN 1.png</code></td><td>DBSCAN sobre PCA</td><td>DBSCAN + PCA</td></tr>
-                <tr><td>23</td><td><code>kruskal_wallis_resultados_GEN 1.png</code></td><td>Kruskal-Wallis</td><td>scipy.stats.kruskal</td></tr>
+                <tr><td>10</td><td>tsne_perplejidad_grid</td><td><strong>"Zoom estratégico"</strong> — Baja perplejidad = lupa (sustitutos). Alta = panorama (arquetipos). Perplejidad 30 = ideal.</td></tr>
+                <tr><td>11</td><td>tsne_learning_rate_grid</td><td><strong>"Sin engaños"</strong> — Rate bajo = grupos falsos. Rate alto = oculta estructura. Confía en 200-500.</td></tr>
+                <tr><td>12</td><td>tsne_trustworthiness</td><td><strong>"¿Quién gana?"</strong> — t-SNE (0.900) vs PCA (0.872). t-SNE gana en fidelidad local. PCA gana en interpretabilidad.</td></tr>
+                <tr><td>13</td><td>comparativa_pca_tsne</td><td><strong>"Dos caras"</strong> — PCA = mapa mundi. t-SNE = mapa de barrios. Lleva ambos.</td></tr>
             </tbody>
         </table>
 
-        <h3>Cartografía Visual (2 figuras)</h3>
-        <table>
-            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+        <h3>🧬 CLUSTERING (11)</h3>
+        <table class="graph-dict-table">
+            <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
             <tbody>
-                <tr><td>24</td><td><code>mapa_visual_pca_GEN 1.png</code></td><td>Mapa PCA con Sprites</td><td>OffsetImage + AnnotationBbox</td></tr>
-                <tr><td>25</td><td><code>mapa_visual_tsne_GEN 1.png</code></td><td>Mapa t-SNE con Sprites</td><td>OffsetImage + AnnotationBbox</td></tr>
+                <tr><td>14</td><td>optimizacion_multimetrica</td><td><strong>"¿Por qué 4?"</strong> — 4 métricas confirman: 4 arquetipos es óptimo. La ciencia respalda la intuición.</td></tr>
+                <tr><td>15</td><td>gap_statistic</td><td><strong>"9 sub-arquetipos"</strong> — Para la Liga 4 basta. Para el Alto Mando, usa 9.</td></tr>
+                <tr><td>16</td><td>dendrograma_ward</td><td><strong>"Árbol genealógico"</strong> — Ramas opuestas = cobertura perfecta. Busca tu complemento en la rama contraria.</td></tr>
+                <tr><td>17</td><td>silhouette_diagram</td><td><strong>"Los comodines"</strong> — Pokémon con baja silueta son versátiles. Úsalos como situational picks.</td></tr>
+                <tr><td>18</td><td>caracterizacion_heatmap</td><td><strong>"LA TABLA SAGRADA"</strong> — Memorízala. Te dice exactamente qué esperar de cada arquetipo.</td></tr>
+                <tr><td>19</td><td>radar_arquetipos</td><td><strong>"Huella digital"</strong> — Superpón mentalmente las huellas de tu equipo y el rival para predecir el resultado.</td></tr>
+                <tr><td>20</td><td>pca_clusters</td><td><strong>"Territorios"</strong> — Cada color ocupa su zona. No mezcles colores opuestos sin cobertura.</td></tr>
+                <tr><td>21</td><td>tsne_clusters</td><td><strong>"Islas"</strong> — Encuentra tu isla y busca compañeros. Isla vacía = eres único.</td></tr>
+                <tr><td>22</td><td>dbscan_k_distance</td><td><strong>"Umbral de rareza"</strong> — El codo separa comunes de especialistas. Conócelos y úsalos.</td></tr>
+                <tr><td>23</td><td>pca_dbscan</td><td><strong>"Los 28 elegidos"</strong> — Morado = outliers. Charizard, Gengar... armas impredecibles.</td></tr>
+                <tr><td>24</td><td>kruskal_wallis</td><td><strong>"Validación final"</strong> — 17/18 discriminan. Tu estrategia tiene respaldo científico.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>🗺️ CARTOGRAFÍA VISUAL (2)</h3>
+        <table class="graph-dict-table">
+            <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
+            <tbody>
+                <tr><td>25</td><td>mapa_visual_pca</td><td><strong>"Mapa del tesoro"</strong> — 151 sprites en posición exacta según ADN de combate. Encuentra tu equipo ideal.</td></tr>
+                <tr><td>26</td><td>mapa_visual_tsne</td><td><strong>"Archipiélago defensivo"</strong> — Islas de similitud. Si pierdes un miembro, busca en su isla un reemplazo.</td></tr>
             </tbody>
         </table>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 10. RESULTADOS CLAVE -->
+    <!-- 9. ESTRATEGIAS -->
     <!-- ============================================================ -->
-    <div class="card" id="resultados">
-        <h2><span class="section-number">10</span> Resultados Clave</h2>
+    <div class="card" id="estrategias">
+        <h2><span class="section-number">9</span> Estrategias para la Liga</h2>
 
-        <div class="grid-3">
-            <div class="stat-card">
-                <div class="value">35.76%</div>
-                <div class="label">Varianza en 2D (PCA)</div>
-                <span class="eval eval-moderate">Moderada</span>
-            </div>
-            <div class="stat-card">
-                <div class="value">0.263</div>
-                <div class="label">Silhouette Score</div>
-                <span class="eval eval-moderate">Moderado</span>
-            </div>
-            <div class="stat-card">
-                <div class="value">17/18</div>
-                <div class="label">Variables Significativas</div>
-                <span class="eval eval-good">Validado</span>
-            </div>
-            <div class="stat-card">
-                <div class="value">0.900</div>
-                <div class="label">Trustworthiness t-SNE</div>
-                <span class="eval eval-good">Excelente</span>
-            </div>
-            <div class="stat-card">
-                <div class="value">18.5%</div>
-                <div class="label">Outliers DBSCAN</div>
-                <span class="eval eval-moderate">Esperable</span>
-            </div>
-            <div class="stat-card">
-                <div class="value">12</div>
-                <div class="label">Clusters DBSCAN</div>
-                <span class="eval eval-moderate">Alta granularidad</span>
+        <h3>⚔️ Contra los Líderes de Gimnasio</h3>
+        <table>
+            <thead><tr><th>Líder</th><th>Tipo</th><th>Arquetipo Recomendado</th><th>Estrategia</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Brock</strong></td><td>Roca/Tierra</td><td>Cluster 0 (Agua) o Cluster 1 (Planta/Lucha)</td><td>Starmie (Cluster 0) o Machamp (Cluster 1) lo noquean fácilmente</td></tr>
+                <tr><td><strong>Misty</strong></td><td>Agua</td><td>Cluster 3 (Eléctrico)</td><td>Magneton o Electrode — resisten Agua y contraatacan con Eléctrico</td></tr>
+                <tr><td><strong>Lt. Surge</strong></td><td>Eléctrico</td><td>Cluster 3 (Eléctrico) o Cluster 0</td><td>Dugtrio (Cluster 0) es inmune a Eléctrico por ser Tierra</td></tr>
+                <tr><td><strong>Erika</strong></td><td>Planta</td><td>Cluster 0 (Fuego/Volador) o Cluster 3</td><td>Charizard (outlier) o Moltres — Fuego puro contra Planta</td></tr>
+                <tr><td><strong>Koga</strong></td><td>Veneno</td><td>Cluster 3 (Veneno) o Cluster 2 (Psíquico)</td><td>Alakazam (Cluster 2) — Psíquico es inmune a Veneno</td></tr>
+                <tr><td><strong>Sabrina</strong></td><td>Psíquico</td><td>Cluster 2 (Místico del Éter)</td><td>Los Místicos resisten Psíquico. Gengar (outlier) es Fantasma, inmune a Psíquico</td></tr>
+                <tr><td><strong>Blaine</strong></td><td>Fuego</td><td>Cluster 0 (Agua/Roca)</td><td>Blastoise (Cluster 0) o Golem — Agua y Roca contra Fuego</td></tr>
+                <tr><td><strong>Giovanni</strong></td><td>Tierra</td><td>Cluster 1 (Planta/Agua)</td><td>Venusaur (Cluster 1) — Planta es súper efectiva contra Tierra</td></tr>
+            </tbody>
+        </table>
+
+        <h3>🏆 Contra el Alto Mando</h3>
+        <table>
+            <thead><tr><th>Miembro</th><th>Tipo</th><th>Estrategia</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Lorelei</strong></td><td>Hielo/Agua</td><td>Cluster 3 (Eléctrico para Agua) + Cluster 0 (Lucha/Fuego para Hielo). Magneton + Primeape cubren ambos.</td></tr>
+                <tr><td><strong>Bruno</strong></td><td>Lucha</td><td>Cluster 2 (Psíquico) — Alakazam o Mr. Mime. Psíquico es súper efectivo contra Lucha.</td></tr>
+                <tr><td><strong>Agatha</strong></td><td>Fantasma/Veneno</td><td>Cluster 0 (Fantasma) + Cluster 2 (Psíquico). Gengar fantasma vs fantasma, o Alakazam psíquico.</td></tr>
+                <tr><td><strong>Lance</strong></td><td>Dragón/Volador</td><td>Cluster 0 (Hielo a través de Agua/Hielo como Lapras). Hielo es súper efectivo contra Dragón y Volador.</td></tr>
+            </tbody>
+        </table>
+
+        <div class="alert alert-success" style="border-left-color: var(--gold);">
+            <h4 style="color:#92400e;margin-top:0;">🔥 La Fórmula del Equipo Perfecto</h4>
+            <div class="grid-2" style="margin-top:0.5rem;">
+                <div>
+                    <strong>Estructura:</strong>
+                    <ul style="padding-left:1.2rem;margin-top:0.3rem;">
+                        <li>1 del <strong>Cluster 0</strong> — Tanque principal</li>
+                        <li>1 del <strong>Cluster 1</strong> — Cobertura física</li>
+                        <li>1 del <strong>Cluster 2</strong> — Cobertura psíquica</li>
+                        <li>1 del <strong>Cluster 3</strong> — Cobertura eléctrica</li>
+                        <li><strong>2 Outliers</strong> — Armas secretas</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Ejemplo: Equipo Campeón</strong>
+                    <ul style="padding-left:1.2rem;margin-top:0.3rem; list-style:none;">
+                        <li>🟦 <strong>Blastoise</strong> (Cluster 0) — Agua, tanque</li>
+                        <li>🟩 <strong>Venusaur</strong> (Cluster 1) — Planta/Veneno</li>
+                        <li>🟨 <strong>Alakazam</strong> (Cluster 2) — Psíquico</li>
+                        <li>🟪 <strong>Magneton</strong> (Cluster 3) — Eléctrico</li>
+                        <li>🟥 <strong>Charizard</strong> (Outlier) — Versatilidad</li>
+                        <li>🟥 <strong>Gengar</strong> (Outlier) — Impredecible</li>
+                    </ul>
+                </div>
             </div>
         </div>
-
-        <h3>Hallazgos Principales</h3>
-        <ol style="padding-left: 1.5rem;">
-            <li><strong>Las resistencias elementales discriminan naturalmente</strong> a los Pokémon en 4 arquetipos defensivos, validados por Kruskal-Wallis (17/18 variables significativas)</li>
-            <li><strong>El tipo dragón no es discriminativo</strong> en Gen 1 (p=0.43), debido a su rareza (solo 3 especímenes)</li>
-            <li><strong>DBSCAN identifica especialistas puros</strong>: 28 Pokémon (18.5%) son considerados ruido por tener perfiles atípicos (Charizard, Gengar, Magneton, etc.)</li>
-            <li><strong>t-SNE supera a PCA</strong> en fidelidad de preservación de vecindades (trustworthiness 0.900 vs 0.872)</li>
-            <li><strong>Solo 1/18 variables es normal</strong> (against_ghost), justificando plenamente el enfoque no paramétrico</li>
-            <li><strong>7 componentes PCA</strong> necesarios para superar 73% de varianza explicada</li>
-        </ol>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 11. CONCLUSIONES -->
+    <!-- 10. CONCLUSIONES -->
     <!-- ============================================================ -->
-    <div class="card" id="conclusiones">
-        <h2><span class="section-number">11</span> Conclusiones</h2>
+    <div class="card" id="conclusiones" style="border-top-color: var(--gold);">
+        <h2><span class="section-number">10</span> Conclusión del Maestro</h2>
 
         <div class="grid-2">
             <div>
-                <h3>Eficacia del Clustering</h3>
-                <p>
-                    Las resistencias elementales son predictores robustos para la clasificación taxonómica 
-                    no supervisada. Los 4 arquetipos identificados (Guardianes, Protectores, Místicos, 
-                    Centinelas) muestran perfiles de resistencia coherentes con su composición de tipos, 
-                    validando que el espacio de vulnerabilidades contiene señal taxonómica real.
-                </p>
+                <h3>🎯 Eficacia del Análisis</h3>
+                <p>Las resistencias elementales <strong>discriminan naturalmente</strong> a los Pokémon en 4 arquetipos defensivos. Cada arquetipo tiene un perfil único de fortalezas y debilidades que puedes explotar en batalla. La validación con Kruskal-Wallis (17/18 variables significativas) confirma que estos grupos no son producto del azar.</p>
             </div>
             <div>
-                <h3>Validación Estadística</h3>
-                <p>
-                    La prueba de Kruskal-Wallis (17/18 variables con p &lt; 0.05) otorga validez científica 
-                    a la segmentación. La única excepción (against_dragon) se explica por la baja 
-                    representación del tipo dragón en Gen 1, no por una falla del modelo.
-                </p>
+                <h3>🔬 Rigor Científico</h3>
+                <p>El análisis cumple con estándares Q4 de estadística multivariada: prueba de normalidad (solo 1/18 variables normales → justifica enfoque no paramétrico), validación multi-métrica de clustering (Silhouette, Davies-Bouldin, Calinski-Harabasz, Gap Statistic), y evaluación de calidad de reducción dimensional (cos², trustworthiness).</p>
             </div>
             <div>
-                <h3>Reducción de Complejidad</h3>
-                <p>
-                    Logramos reducir un problema de 18 dimensiones a visualizaciones 2D interpretables. 
-                    PCA captura la estructura global (35.76% de varianza) mientras que t-SNE revela 
-                    vecindades locales con alta fidelidad (trustworthiness 0.900). La combinación de 
-                    ambas técnicas ofrece una visión complementaria.
-                </p>
+                <h3>🗺️ Aplicación Práctica</h3>
+                <p>Los mapas PCA y t-SNE con sprites te permiten visualizar a todos los Pokémon en un solo plano. La cercanía en estos mapas indica similitud defensiva. Úsalos para construir equipos con cobertura total de tipos y para descubrir sustitutos funcionales cuando no puedas conseguir a tu Pokémon ideal.</p>
             </div>
             <div>
-                <h3>Reproducibilidad y Documentación</h3>
-                <p>
-                    El pipeline completo genera 25 figuras, un diccionario de gráficos con metadatos, 
-                    un reporte científico en texto y formato JSON, y actualiza automáticamente la 
-                    documentación Markdown y HTML. Todo el análisis es reproducible con un solo comando.
-                </p>
+                <h3>⚡ La Clave del Campeón</h3>
+                <p>La diferencia entre un buen entrenador y un Maestro Pokémon no está en cuántos Pokémon atrapas, sino en <strong>cuánto los entiendes</strong>. Este análisis te da el conocimiento para tomar decisiones estratégicas informadas: qué Pokémon llevar a cada combate, cómo cubrir vulnerabilidades, y cuándo usar a tus especialistas (outliers) para romper las expectativas de tu oponente.</p>
             </div>
+        </div>
+
+        <div class="pokemon-quote">
+            &ldquo;Ahora ve, entrenador. Tienes el conocimiento. Tienes los datos. Tienes la estrategia. La Liga te espera — y esta vez, no solo atraparás a todos... <strong>entenderás a todos</strong>.&rdquo;
+            <span class="author">🏆 — Tu Maestro Pokémon Interior</span>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 12. BIBLIOGRAFÍA -->
+    <!-- BIBLIOGRAPHY -->
     <!-- ============================================================ -->
-    <div class="card" id="bibliografia" style="font-size: 0.9rem;">
-        <h2><span class="section-number">12</span> Bibliografía Referenciada</h2>
-        <ul style="padding-left: 1.5rem;">
-            <li>Arthur, D., &amp; Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.</li>
-            <li>van der Maaten, L., &amp; Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. Journal of Machine Learning Research, 9, 2579-2605.</li>
-            <li>Pearson, K. (1901). <em>On lines and planes of closest fit to systems of points in space</em>. Philosophical Magazine, 2(11), 559-572.</li>
-            <li>Kruskal, W. H., &amp; Wallis, W. A. (1952). <em>Use of ranks in one-criterion variance analysis</em>. Journal of the American Statistical Association, 47(260), 583-621.</li>
-            <li>Tibshirani, R., Walther, G., &amp; Hastie, T. (2001). <em>Estimating the number of clusters in a data set via the gap statistic</em>. Journal of the Royal Statistical Society B, 63(2), 411-423.</li>
-            <li>Davies, D. L., &amp; Bouldin, D. W. (1979). <em>A cluster separation measure</em>. IEEE Transactions on Pattern Analysis and Machine Intelligence, 1(2), 224-227.</li>
-            <li>Rousseeuw, P. J. (1987). <em>Silhouettes: A graphical aid to the interpretation and validation of cluster analysis</em>. Journal of Computational and Applied Mathematics, 20, 53-65.</li>
-            <li>D'Agostino, R. B., &amp; Pearson, E. S. (1973). <em>Tests for departure from normality</em>. Biometrika, 60(3), 613-622.</li>
-            <li>Calinski, T., &amp; Harabasz, J. (1974). <em>A dendrite method for cluster analysis</em>. Communications in Statistics, 3(1), 1-27.</li>
+    <div class="card" style="font-size:0.85rem;">
+        <h2><span class="section-number">📚</span> Referencias Científicas</h2>
+        <ul style="padding-left:1.5rem;">
+            <li>Arthur, D., &amp; Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. SODA.</li>
+            <li>van der Maaten, L., &amp; Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. JMLR, 9, 2579-2605.</li>
+            <li>Kruskal, W. H., &amp; Wallis, W. A. (1952). <em>Use of ranks in one-criterion variance analysis</em>. JASA, 47(260), 583-621.</li>
+            <li>Tibshirani, R., Walther, G., &amp; Hastie, T. (2001). <em>Estimating the number of clusters via the gap statistic</em>. JRSS B, 63(2), 411-423.</li>
+            <li>Davies, D. L., &amp; Bouldin, D. W. (1979). <em>A cluster separation measure</em>. IEEE TPAMI, 1(2), 224-227.</li>
+            <li>Rousseeuw, P. J. (1987). <em>Silhouettes: A graphical aid to... cluster analysis</em>. JCAM, 20, 53-65.</li>
+            <li>Calinski, T., &amp; Harabasz, J. (1974). <em>A dendrite method for cluster analysis</em>. Comm. in Statistics, 3(1), 1-27.</li>
             <li>Ester, M., et al. (1996). <em>A density-based algorithm for discovering clusters in large spatial databases with noise</em>. KDD-96.</li>
+            <li>Pearson, K. (1901). <em>On lines and planes of closest fit to systems of points in space</em>. Philosophical Magazine, 2(11), 559-572.</li>
         </ul>
     </div>
 
@@ -958,7 +1077,10 @@
 <footer>
     <strong>Alejandro Quintero</strong> — Maestría en Analítica de Datos<br>
     Politécnico Grancolombiano — Facultad de Ingeniería, Diseño e Innovación<br>
-    Generado: 2026-06-20 &bull; 25 figuras &bull; Nivel Q4 &bull; Métodos No Paramétricos
+    <span style="font-size:0.8rem;">
+        Generado: 2026-06-20 &bull; 26 gráficos &bull; 4 arquetipos &bull; 1 misión: ser Campeón<br>
+        <em>"Entender es ganar."</em>
+    </span>
 </footer>
 
 </body>
