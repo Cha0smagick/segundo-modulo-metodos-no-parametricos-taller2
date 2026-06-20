@@ -1,0 +1,177 @@
+{
+  "histogram_variables": {
+    "file": "histogram_resistencias.png",
+    "title": "Distribución de las 18 Variables de Resistencia Elemental",
+    "tipo": "Histograma con KDE",
+    "interpretacion": "Visualiza la forma de la distribución de cada variable de resistencia. Valores < 1 indican resistencia (mitigación de daño), > 1 indican vulnerabilidad. La asimetría revela sesgos en el diseño de tipos.",
+    "metodo": "matplotlib.pyplot.hist + seaborn.kdeplot"
+  },
+  "boxplot_variables": {
+    "file": "boxplot_resistencias.png",
+    "title": "Diagrama de Caja: Variables de Resistencia Estandarizadas",
+    "tipo": "Boxplot",
+    "interpretacion": "Muestra la mediana, dispersión y outliers por variable. Bigotes extendidos indican alta variabilidad en ese tipo elemental.",
+    "metodo": "seaborn.boxplot"
+  },
+  "correlation_heatmap": {
+    "file": "heatmap_correlaciones.png",
+    "title": "Mapa de Calor: Correlaciones entre Resistencias Elementales",
+    "tipo": "Heatmap de correlación (Pearson)",
+    "interpretacion": "Estructura de dependencia lineal entre variables. Clusters de alta correlación sugieren tipos elementales que suelen co-aparecer.",
+    "metodo": "seaborn.heatmap con matriz de correlación de Pearson"
+  },
+  "parallel_coordinates": {
+    "file": "coordenadas_paralelas.png",
+    "title": "Coordenadas Paralelas: Perfiles de Resistencia por Pokémon",
+    "tipo": "Coordenadas paralelas",
+    "interpretacion": "Cada línea es un Pokémon. El cruce de patrones revela perfiles defensivos típicos. Agrupaciones de líneas = arquetipos de resistencia.",
+    "metodo": "pandas.plotting.parallel_coordinates"
+  },
+  "scree_plot": {
+    "file": "scree_plot_pca.png",
+    "title": "Gráfico de Sedimentación: Varianza Explicada por Componente PCA",
+    "tipo": "Scree plot (sedimentación)",
+    "interpretacion": "Muestra la varianza explicada por cada componente principal. El 'codo' indica el número óptimo de dimensiones a retener. Se superpone la varianza acumulada para facilitar la decisión.",
+    "metodo": "PCA.explained_variance_ratio_"
+  },
+  "loadings_heatmap": {
+    "file": "loadings_heatmap_pca.png",
+    "title": "Mapa de Calor: Contribuciones (Loadings) de Variables a Componentes Principales",
+    "tipo": "Heatmap de loadings",
+    "interpretacion": "Cada celda representa el peso de una variable en un componente. Valores absolutos altos = variable importante para ese componente.",
+    "metodo": "PCA.components_"
+  },
+  "correlation_circle": {
+    "file": "circulo_correlaciones_pca.png",
+    "title": "Círculo de Correlaciones: Proyección de Variables en el Plano PC1-PC2",
+    "tipo": "Círculo de correlaciones (variables factor map)",
+    "interpretacion": "Variables cercanas al borde del círculo están bien representadas. Ángulos agudos entre vectores = correlación positiva; ángulos obtusos = correlación negativa; ortogonal = no correlación.",
+    "metodo": "PCA.components_ escalados por sqrt(eigenvalues)"
+  },
+  "pca_biplot": {
+    "file": "biplot_pca.png",
+    "title": "PCA-Biplot: Individuos y Variables en el Plano Factorial",
+    "tipo": "Biplot (individuos + variables)",
+    "interpretacion": "Doble representación: puntos = Pokémon (individuos), flechas = variables. La proximidad entre un Pokémon y una flecha indica afinidad con esa característica.",
+    "metodo": "PCA con escalado symbiplot"
+  },
+  "cos2_quality": {
+    "file": "calidad_representacion_cos2.png",
+    "title": "Calidad de Representación (cos²): Contribución de Cada Variable a los Ejes",
+    "tipo": "Gráfico de barras cos²",
+    "interpretacion": "cos² > 0.5 indica buena representación. Variables con bajo cos² están mal proyectadas en el plano PC1-PC2.",
+    "metodo": "cos² = (component_loadings)²"
+  },
+  "tsne_perplexity_grid": {
+    "file": "tsne_perplejidad_grid.png",
+    "title": "Análisis de Sensibilidad: t-SNE con Diferentes Valores de Perplejidad",
+    "tipo": "Grid de t-SNE (barrido de perplejidad)",
+    "interpretacion": "Perplejidad baja (~5-10) revela estructura local fina; perplejidad alta (~30-50) revela estructura global. La estabilidad visual entre valores sugiere clusters robustos.",
+    "metodo": "TSNE con perplexity ∈ {5, 10, 15, 30, 50, 100}"
+  },
+  "tsne_learning_rate_grid": {
+    "file": "tsne_learning_rate_grid.png",
+    "title": "Análisis de Sensibilidad: t-SNE con Diferentes Learning Rates",
+    "tipo": "Grid de t-SNE (barrido de learning rate)",
+    "interpretacion": "Learning rate controla la convergencia. Valores muy bajos pueden producir clusters falsos. Valores altos suavizan la estructura.",
+    "metodo": "TSNE con learning_rate ∈ {10, 100, 200, 500, 1000, 2000}"
+  },
+  "tsne_trustworthiness": {
+    "file": "tsne_trustworthiness.png",
+    "title": "Trustworthiness: Fidelidad de Preservación de Vecindades (t-SNE vs PCA)",
+    "tipo": "Gráfico de líneas comparativo",
+    "interpretacion": "Trustworthiness mide qué tan bien se preservan los vecinos del espacio original en la proyección. Valores > 0.8 indican buena preservación. t-SNE suele superar a PCA en este aspecto.",
+    "metodo": "sklearn.manifold.trustworthiness"
+  },
+  "cluster_optimization_multi": {
+    "file": "optimizacion_multimetrica.png",
+    "title": "Optimización Multi-Métrica: Evaluación de k para K-Means",
+    "tipo": "Dashboard multi-métrica (4 paneles)",
+    "interpretacion": "Evalúa simultáneamente: Inercia (codo), Silueta, Davies-Bouldin (menor es mejor), Calinski-Harabasz (mayor es mejor). El consenso entre métricas guía la selección de k.",
+    "metodo": "KMeans con k=2..10 evaluado con 4 métricas"
+  },
+  "gap_statistic": {
+    "file": "gap_statistic.png",
+    "title": "Gap Statistic: Contraste de Inercia contra Distribución Nula de Referencia",
+    "tipo": "Gap statistic con barras de error",
+    "interpretacion": "El k óptimo es el primer valor donde la curva se estabiliza (regla de 1 error estándar). La gap statistic compara la inercia observada contra la esperada bajo distribución uniforme.",
+    "metodo": "Gap statistic con B=20 réplicas bootstrap"
+  },
+  "dendrogram": {
+    "file": "dendrograma_ward.png",
+    "title": "Dendrograma: Clustering Jerárquico Aglomerativo (Método de Ward)",
+    "tipo": "Dendrograma",
+    "interpretacion": "La altura de las uniones indica disimilitud entre clusters. Un corte horizontal define los clusters. Ramas largas antes de unirse = clusters bien separados.",
+    "metodo": "scipy.cluster.hierarchy.linkage + dendrogram"
+  },
+  "silhouette_diagram": {
+    "file": "silhouette_diagram.png",
+    "title": "Diagrama de Silueta: Cohesión y Separación por Cluster",
+    "tipo": "Silhouette plot",
+    "interpretacion": "Cada barra horizontal es un espécimen. Barras que cruzan la línea de promedio global indican especímenes mal clasificados. Clusters con anchos uniformes son homogéneos.",
+    "metodo": "silhouette_samples + fill_betweenx"
+  },
+  "cluster_characterization": {
+    "file": "caracterizacion_heatmap.png",
+    "title": "Caracterización de Arquetipos: Perfil Promedio de Resistencia por Cluster",
+    "tipo": "Heatmap de perfiles",
+    "interpretacion": "Filas = clusters, columnas = tipos elementales. Color rojo = vulnerabilidad (valor alto), verde = resistencia. Patrones consistentes definen arquetipos defensivos.",
+    "metodo": "seaborn.heatmap sobre groupby.mean()"
+  },
+  "cluster_radar": {
+    "file": "radar_arquetipos.png",
+    "title": "Diagrama Radial: Perfil Comparativo de Arquetipos por Cluster",
+    "tipo": "Radar chart (spider plot)",
+    "interpretacion": "Cada eje es un tipo elemental. La superposición de perfiles muestra similitudes y diferencias entre clusters. Formas distintas = arquetipos diferenciados.",
+    "metodo": "matplotlib.pyplot.subplot con coordenadas polares"
+  },
+  "pca_clusters": {
+    "file": "pca_clusters.png",
+    "title": "Proyección PCA con Clusters K-Means",
+    "tipo": "Scatter plot 2D",
+    "interpretacion": "Visualización de la partición del espacio latente. Clusters bien separados en el plano PC1-PC2 indican que las resistencias elementales discriminan naturalmente.",
+    "metodo": "PCA + KMeans, coloreado por cluster"
+  },
+  "tsne_clusters": {
+    "file": "tsne_clusters.png",
+    "title": "Proyección t-SNE con Clusters K-Means",
+    "tipo": "Scatter plot 2D",
+    "interpretacion": "t-SNE revela estructura no lineal. Clusters compactos y separados indican grupos naturales en los datos.",
+    "metodo": "TSNE + KMeans, coloreado por cluster"
+  },
+  "dbscan_diagnostic": {
+    "file": "dbscan_k_distance.png",
+    "title": "Diagnóstico DBSCAN: Gráfico K-Distance para Selección de Epsilon",
+    "tipo": "K-distance plot",
+    "interpretacion": "El 'codo' en la curva sugiere el valor óptimo de eps. Puntos por encima del codo serán considerados ruido.",
+    "metodo": "NearestNeighbors.kneighbors"
+  },
+  "dbscan_result": {
+    "file": "pca_dbscan.png",
+    "title": "DBSCAN sobre Proyección PCA",
+    "tipo": "Scatter plot con ruido",
+    "interpretacion": "Puntos en morado = ruido (outliers). Muestra qué Pokémon tienen perfiles de resistencia atípicos (especialistas puros).",
+    "metodo": "DBSCAN + PCA"
+  },
+  "pca_image_map": {
+    "file": "mapa_visual_pca.png",
+    "title": "Cartografía Visual: Pokémon en el Espacio PCA con Sprites",
+    "tipo": "Image map (scatter + sprites)",
+    "interpretacion": "Cada sprite está posicionado según su perfil de resistencia. Pokémon cercanos comparten vulnerabilidades y fortalezas.",
+    "metodo": "OffsetImage + AnnotationBbox sobre PCA"
+  },
+  "tsne_image_map": {
+    "file": "mapa_visual_tsne.png",
+    "title": "Cartografía Visual: Pokémon en el Espacio t-SNE con Sprites",
+    "tipo": "Image map (scatter + sprites)",
+    "interpretacion": "t-SNE agrupa por vecindad local. 'Islas' de Pokémon visualmente similares indican nichos defensivos.",
+    "metodo": "OffsetImage + AnnotationBbox sobre t-SNE"
+  },
+  "validation_kruskal": {
+    "file": "kruskal_wallis_resultados.png",
+    "title": "Validación Estadística: Test de Kruskal-Wallis por Variable",
+    "tipo": "Gráfico de barras con umbral de significancia",
+    "interpretacion": "Barras que cruzan la línea roja (p=0.05) NO son significativas. La mayoría de variables deben ser significativas para validar que los clusters representan poblaciones diferentes.",
+    "metodo": "scipy.stats.kruskal"
+  }
+}

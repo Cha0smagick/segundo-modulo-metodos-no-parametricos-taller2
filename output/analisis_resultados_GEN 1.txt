@@ -1,0 +1,143 @@
+REPORTE DE ANALISIS ESTADISTICO DE POKEMON (GEN 1)
+Generado: 2026-06-20 18:01:58
+======================================================================
+
+1. ESTRUCTURA DE DIRECTORIOS CREADA.
+
+2. DATOS CARGADOS DESDE: C:\Users\USER\.cache\kagglehub\datasets\rounakbanik\pokemon\versions\1\pokemon.csv
+
+3. FILTRADO: GEN 1
+   Tamaño de muestra: 151 especímenes.
+   Datos faltantes: 119
+
+4. PREPROCESAMIENTO
+   Variables: 18
+   Estandarización: Z-score
+
+--- ESTADÍSTICAS DESCRIPTIVAS (GEN 1) ---
+       against_bug  against_dark  against_dragon  against_electric  against_fairy  against_fight  against_fire  against_flying  against_ghost  against_grass  against_ground  against_ice  against_normal  against_poison  against_psychic  against_rock  against_steel  against_water
+count   151.000000    151.000000      151.000000        151.000000     151.000000     151.000000    151.000000      151.000000     151.000000     151.000000      151.000000   151.000000      151.000000      151.000000       151.000000    151.000000     151.000000     151.000000
+mean      0.905629      1.066225        0.980132          1.158940       0.917219       0.953642      1.036424        1.168874       0.966887       1.147351        1.168874     1.160596        0.937086        0.899007         1.218543      1.271523       0.937086       1.109272
+std       0.572088      0.349645        0.237212          0.693712       0.380484       0.560062      0.620750        0.573403       0.508818       0.970941        0.722582     0.637929        0.194119        0.401226         0.501917      0.720498       0.412531       0.750320
+min       0.250000      0.500000        0.000000          0.000000       0.500000       0.000000      0.250000        0.250000       0.000000       0.250000        0.000000     0.250000        0.000000        0.000000         0.500000      0.500000       0.250000       0.500000
+25%       0.500000      1.000000        1.000000          0.750000       0.500000       0.500000      0.500000        1.000000       1.000000       0.500000        1.000000     0.500000        1.000000        0.500000         1.000000      1.000000       0.500000       0.500000
+50%       1.000000      1.000000        1.000000          1.000000       1.000000       1.000000      1.000000        1.000000       1.000000       1.000000        1.000000     1.000000        1.000000        1.000000         1.000000      1.000000       1.000000       1.000000
+75%       1.000000      1.000000        1.000000          2.000000       1.000000       1.000000      1.000000        1.000000       1.000000       2.000000        2.000000     2.000000        1.000000        1.000000         2.000000      2.000000       1.000000       1.000000
+max       4.000000      2.000000        2.000000          4.000000       2.000000       2.000000      4.000000        4.000000       2.000000       4.000000        4.000000     4.000000        1.000000        2.000000         2.000000      4.000000       2.000000       4.000000
+
+
+--- ASIMETRÍA Y CURTOSIS ---
+Variable             Asimetría    Curtosis    
+--------------------------------------------
+bug                  2.592        10.304      
+dark                 1.709        3.160       
+dragon               -0.884       14.397      
+electric             0.445        0.489       
+fairy                1.301        2.418       
+fight                0.787        -0.290      
+fire                 1.867        5.449       
+flying               1.978        6.433       
+ghost                -0.058       0.934       
+grass                1.645        2.413       
+ground               0.645        1.703       
+ice                  0.900        0.993       
+normal               -3.252       10.572      
+poison               0.741        1.952       
+psychic              0.676        -0.899      
+rock                 1.870        4.580       
+steel                1.204        1.712       
+water                2.391        6.537       
+
+--- PRUEBA DE NORMALIDAD (D'Agostino-Pearson) ---
+  bug                stat=106.72, p=6.6898e-24 -> No normal
+  dark               stat=57.90, p=2.6786e-13 -> No normal
+  dragon             stat=62.70, p=2.4250e-14 -> No normal
+  electric           stat=6.47, p=3.9311e-02 -> No normal
+  fairy              stat=41.35, p=1.0473e-09 -> No normal
+  fight              stat=14.04, p=8.9185e-04 -> No normal
+  fire               stat=72.20, p=2.0937e-16 -> No normal
+  flying             stat=78.85, p=7.5441e-18 -> No normal
+  ghost              stat=3.93, p=1.4023e-01 -> Normal
+  grass              stat=52.17, p=4.6905e-12 -> No normal
+  ground             stat=17.83, p=1.3457e-04 -> No normal
+  ice                stat=20.98, p=2.7751e-05 -> No normal
+  normal             stat=124.73, p=8.2198e-28 -> No normal
+  poison             stat=21.81, p=1.8400e-05 -> No normal
+  psychic            stat=26.46, p=1.7941e-06 -> No normal
+  rock               stat=69.04, p=1.0214e-15 -> No normal
+  steel              stat=34.46, p=3.2918e-08 -> No normal
+  water              stat=91.27, p=1.5159e-20 -> No normal
+
+  Variables con distribución normal: 1/18
+
+--- PCA: VARIANZA EXPLICADA ---
+  PC1: 21.50%
+  PC2: 14.26%
+  Total 2 componentes: 35.76%
+  Dimensiones necesarias para 80%: 7
+
+--- CALIDAD DE REPRESENTACIÓN (cos²) ---
+  Variables bien representadas (cos²>0.7): []
+  Variables mal representadas (cos²<0.3): ['bug', 'dark', 'dragon', 'electric', 'fairy', 'fight', 'fire', 'flying', 'ghost', 'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water']
+
+--- TRUSTWORTHINESS (FIDELIDAD DE VECINDADES) ---
+  PCA (2D):  promedio = 0.8724
+  t-SNE (2D): promedio = 0.9003
+  La técnica con mayor trustworthiness preserva mejor las relaciones de vecindad del espacio original.
+
+--- COMPARATIVA PCA vs t-SNE ---
+  PCA: Captura estructura global (35.8% varianza en 2D)
+  t-SNE: Preserva vecindades locales (Trustworthiness: 0.900)
+  Recomendación: Usar PCA para interpretación de ejes, t-SNE para identificación visual de clusters.
+
+--- GAP STATISTIC ---
+  k óptimo por Gap statistic: 9
+  Gap values: {2: 0.8475, 3: 0.9221, 4: 1.013, 5: 1.0811, 6: 1.1656, 7: 1.2662, 8: 1.3544, 9: 1.5146, 10: 1.5227}
+
+--- K-MEANS CLUSTERING (k=4) ---
+  Inercia final: 1797.98
+  Coeficiente de Silueta: 0.2630
+  Índice Davies-Bouldin: 1.4576
+  Índice Calinski-Harabasz: 25.07
+  Distribución: {0: 81, 1: 49, 2: 15, 3: 6}
+  Número de iteraciones: 4
+
+--- CLUSTERING JERÁRQUICO (WARD) ---
+  Correlación cofenética: 0.6489
+  (Indica cuán bien el dendrograma preserva las distancias originales)
+
+--- ARQUETIPOS POR CLUSTER ---
+  Cluster 0 - Guardianes del Océano y el Acero:
+    Arquetipo: Especialistas en resistencia elemental (Fuego, Fantasma) y física (Acero).
+    Top Resistencias: ['ghost', 'fire', 'steel']
+    Top Vulnerabilidades: ['electric', 'grass', 'rock']
+  Cluster 1 - Protectores de la Biosfera:
+    Arquetipo: Expertos en resistir ataques de naturaleza y combate cercano, frágiles ante lo místico.
+    Top Resistencias: ['fight', 'grass', 'bug']
+    Top Vulnerabilidades: ['psychic', 'flying', 'fire']
+  Cluster 2 - Místicos del Éter:
+    Arquetipo: Entidades con defensas psíquicas superiores, vulnerables a miedos primordiales.
+    Top Resistencias: ['psychic', 'fight', 'water']
+    Top Vulnerabilidades: ['bug', 'ghost', 'dark']
+  Cluster 3 - Centinelas de Alta Tensión:
+    Arquetipo: Grupo de élite con alta resistencia al calor y electricidad, pero vulnerables a la tierra.
+    Top Resistencias: ['electric', 'poison', 'fire']
+    Top Vulnerabilidades: ['grass', 'water', 'fight']
+
+--- DBSCAN (DENSITY-BASED) ---
+  Parámetros: eps=3.00, min_samples=5
+  Clusters encontrados: 12
+  Puntos de ruido (outliers): 28 (18.5%)
+  Ejemplos outliers: Charizard, Butterfree, Zubat, Golbat, Paras, Parasect, Magnemite, Magneton, Gastly, Haunter...
+
+--- VALIDACIÓN ESTADÍSTICA (KRUSKAL-WALLIS) ---
+  Variables significativas (p<0.05): 17/18
+  Las variables con diferencias significativas entre clusters
+  confirman que la segmentación captura diversidad real.
+  Variables NO significativas:
+    - dragon: H=2.76, p=4.3020e-01
+
+--- CARTOGRAFÍA VISUAL ---
+  Mapas generados: PCA y t-SNE con sprites de Pokémon.
+  La posición espacial refleja el perfil de resistencia.
+  Sprites PCA: 151 | t-SNE: 151

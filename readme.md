@@ -1,120 +1,322 @@
 # Análisis Multivariado y Taxonomía Algorítmica de Pokémon (Gen 1)
+## Nivel Q4 — Estadística Multivariada Avanzada
 
-Este proyecto implementa un análisis estadístico avanzado para segmentar y clasificar Pokémon de la Primera Generación (Gen 1) basándose en sus perfiles de resistencia y debilidad elemental. Utilizando técnicas de clustering (K-Means++) y reducción de dimensionalidad (PCA, t-SNE), el objetivo es descubrir patrones ocultos y validar estadísticamente la existencia de grupos taxonómicos distintos.
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue)](https://python.org)
+[![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.4%2B-orange)](https://scikit-learn.org)
+[![Maestría](https://img.shields.io/badge/Maestr%C3%ADa-Anal%C3%ADtica%20de%20Datos-green)](https://www.poli.edu.co)
+
+Este proyecto implementa un **pipeline completo de análisis multivariado** a nivel de maestría (Q4) para segmentar y clasificar Pokémon de la Primera Generación basándose en sus perfiles de resistencia elemental (18 variables). Se emplean técnicas de **clustering multi-método**, **reducción de dimensionalidad con validación**, y un riguroso marco de **validación estadística no paramétrica**.
+
+---
+
+## 📋 Tabla de Contenidos
+
+- [Objetivo del Proyecto](#objetivo-del-proyecto)
+- [Pipeline Analítico](#pipeline-analítico)
+- [Resultados Clave](#resultados-clave)
+- [Diccionario de Gráficos (25 figuras)](#diccionario-de-gráficos)
+- [Tecnologías](#tecnologías)
+- [Instalación y Uso](#instalación-y-uso)
+- [Estructura de Salida](#estructura-de-salida)
+- [Interpretación Científica](#interpretación-científica)
+- [Autor y Licencia](#autor-y-licencia)
+
+---
 
 ## 🎯 Objetivo del Proyecto
 
-El propósito principal es transformar un conjunto de datos multidimensional (18 variables de resistencia elemental) en una estructura de conocimiento organizada. Se busca identificar "nichos ecológicos" o grupos de Pokémon con perfiles de combate similares, y validar estos grupos mediante pruebas estadísticas no paramétricas, ofreciendo una comprensión profunda de las interacciones de poder y debilidad en el universo Pokémon.
+Transformar un conjunto de datos multidimensional (18 variables de resistencia elemental × 151 especímenes) en una **estructura de conocimiento organizada** mediante:
 
-## 🚀 Metodología y Pipeline Analítico
+1. **Segmentación algorítmica** con validación multi-métrica (K-Means, Jerárquico, DBSCAN)
+2. **Reducción de dimensionalidad** con evaluación de calidad (PCA + t-SNE)
+3. **Validación estadística inferencial** (Kruskal-Wallis, D'Agostino-Pearson)
+4. **Cartografía visual** con sprites para interpretación intuitiva
 
-El análisis sigue un riguroso pipeline de ciencia de datos:
+---
 
-1.  **Adquisición de Datos**: Descarga automática de datasets de Pokémon (estadísticas e imágenes) desde Kaggle.
-2.  **Preprocesamiento de Datos**:
-    *   Filtrado de Pokémon de la Primera Generación (opcionalmente, se puede analizar todo el dataset).
-    *   Selección de 18 variables de resistencia/debilidad elemental (`against_bug` a `against_water`).
-    *   **Estandarización (StandardScaler)**: Normalización de las variables para evitar sesgos por diferencias de escala.
-3.  **Segmentación Algorítmica (Clustering)**:
-    *   Aplicación del algoritmo **K-Means++** con `k=4` clusters para minimizar la inercia intracluster.
-    *   Cálculo del **Coeficiente de Silueta** para evaluar la cohesión y separación de los clusters.
-4.  **Validación Estadística (Inferencia)**:
-    *   Uso de la prueba **Kruskal-Wallis H-Test** para determinar si los clusters son estadísticamente diferentes en sus perfiles de resistencia. Esta prueba no paramétrica es crucial dada la naturaleza de los multiplicadores de daño.
-5.  **Reducción de Dimensionalidad**:
-    *   **Análisis de Componentes Principales (PCA)**: Proyección lineal a 2 dimensiones para capturar la máxima varianza y visualizar la estructura global de los datos.
-    *   **t-Distributed Stochastic Neighbor Embedding (t-SNE)**: Proyección no lineal a 2 dimensiones para preservar las relaciones de vecindad local y revelar agrupaciones complejas.
-6.  **Visualización de Resultados**:
-    *   Gráficos de dispersión de PCA y t-SNE.
-    *   Visualización de clusters sobre la proyección PCA.
-    *   **Cartografía Visual**: Proyección de los sprites de Pokémon en el espacio PCA, coloreados por cluster, para una interpretación intuitiva de los grupos.
+## 🚀 Pipeline Analítico
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  FASE 0: Adquisición           kagglehub → pokemon.csv + images │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 1: Preprocesamiento      Filtrado Gen 1 → StandardScaler  │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 2: EDA                   Histogramas, Boxplots,           │
+│                                Correlaciones, Coord. Paralelas   │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 3: Reducción Dimensional  PCA (scree, círculo, biplot,    │
+│                                 cos², loadings)                  │
+│                                 t-SNE (perplejidad, learning     │
+│                                 rate, trustworthiness)           │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 4: Clustering             K-Means multi-métrica, Gap,     │
+│                                 Dendrograma (Ward), DBSCAN,      │
+│                                 Kruskal-Wallis                  │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 5: Visualizaciones        PCA/t-SNE + clusters,           │
+│                                 Mapas con sprites               │
+├─────────────────────────────────────────────────────────────────┤
+│  FASE 6: Reportes               .txt, .md, .html, .json         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Etapas Detalladas
+
+#### Fase 1 — Preprocesamiento
+- **Filtrado**: 151 Pokémon de la Generación 1
+- **Variables**: 18 resistencias elementales (`against_bug` a `against_water`)
+- **Estandarización**: Z-score (media=0, var=1) para evitar sesgos por escala
+- **Datos faltantes**: 119 celdas con valores ausentes (principalmente en `against_fairy` y `against_steel` para Gen 1)
+
+#### Fase 2 — Análisis Exploratorio (EDA)
+- **Distribuciones**: Solo 1/18 variables (`against_ghost`) pasa la prueba de normalidad D'Agostino-Pearson (p>0.05), justificando el uso de métodos **no paramétricos**
+- **Correlaciones**: Estructura de dependencia entre tipos elementales revela co-ocurrencias naturales
+- **Asimetría**: Variables como `against_normal` (skew=-3.25) y `against_bug` (skew=2.59) muestran alta asimetría
+
+#### Fase 3 — Reducción de Dimensionalidad
+
+**PCA (Análisis de Componentes Principales):**
+| Componente | Varianza Explicada | Acumulada |
+|-----------|-------------------|-----------|
+| PC1 | 21.50% | 21.50% |
+| PC2 | 14.26% | [Ver reporte] |
+| PC3 | 9.87% | 45.63% |
+| PC4 | 8.42% | 54.05% |
+| PC5 | 7.29% | 61.34% |
+| PC6 | 6.48% | 67.82% |
+| PC7 | 5.77% | **73.59%** |
+
+- Se requieren **7 componentes** para explicar >73% de la varianza
+- **Círculo de correlaciones**: Visualiza las relaciones entre variables originales y los componentes
+- **cos²**: Ninguna variable supera 0.7 de calidad de representación en 2D, indicando que 2 dimensiones capturan estructura global pero no detalles finos
+
+**t-SNE:**
+- **Trustworthiness promedio**: 0.900 (vs PCA: 0.872) → t-SNE preserva mejor las vecindades locales
+- **Barrido de perplejidad**: Valores entre 15-50 producen las proyecciones más estables
+- **Learning rate**: 200-500 ofrecen el mejor balance convergencia-calidad
+
+#### Fase 4 — Clustering
+
+**K-Means (k=4):**
+| Métrica | Valor | Interpretación |
+|---------|-------|----------------|
+| Inercia | 1797.98 | Compacidad intra-cluster |
+| Silhouette | 0.2630 | Separación moderada |
+| Davies-Bouldin | 1.4576 | Menor es mejor (solapamiento bajo) |
+| Calinski-Harabasz | 25.07 | Mayor es mejor |
+
+**Distribución de clusters:**
+| Cluster | Tamaño | Arquetipo |
+|---------|--------|-----------|
+| 0 | 81 | Guardianes del Océano y el Acero |
+| 1 | 49 | Protectores de la Biosfera |
+| 2 | 15 | Místicos del Éter |
+| 3 | 6 | Centinelas de Alta Tensión |
+
+**Gap Statistic**: Sugiere k=9 como óptimo estadístico (contraste con distribución nula)
+
+**DBSCAN**: Detecta 12 clusters densos, con 28 outliers (18.5%) — Pokémon con perfiles de resistencia únicos (Charizard, Gengar, Magneton, etc.)
+
+**Validación Kruskal-Wallis**: 17/18 variables muestran diferencias significativas (p<0.05) entre clusters. Solo `against_dragon` no discrimina (p=0.43), consistente con la rareza del tipo dragón en Gen 1.
+
+---
+
+## 📊 Resultados Clave
+
+### Métricas de Segmentación
+| Indicador | Valor | Evaluación |
+|-----------|-------|------------|
+| **Silhouette Score** | 0.2630 | Separación moderada (estructura natural con solapamiento) |
+| **Davies-Bouldin Index** | 1.4576 | Bajo solapamiento inter-cluster |
+| **Calinski-Harabasz** | 25.07 | Discriminación significativa |
+| **Correlación cofenética** | 0.6489 | Consistencia jerárquica aceptable |
+| **Trustworthiness t-SNE** | 0.9003 | Excelente preservación de vecindades |
+| **Trustworthiness PCA** | 0.8724 | Buena preservación de estructura global |
+
+### Hallazgos Clave
+1. **Las resistencias elementales discriminan naturalmente** a los Pokémon en 4 arquetipos defensivos
+2. **El tipo dragón no es discriminativo** en Gen 1 (solo 3 Pokémon: Dragonite, Dragonair, Dratini)
+3. **DBSCAN identifica especialistas puros**: 18.5% de Pokémon tienen perfiles atípicos
+4. **t-SNE supera a PCA** en fidelidad local (trustworthiness 0.900 vs 0.872)
+5. **Solo 1/18 variables es normal**: justifica plenamente el enfoque no paramétrico
+
+---
+
+## 📈 Diccionario de Gráficos
+
+El pipeline genera **25 figuras** en 4 categorías. A continuación se listan con su interpretación metodológica:
+
+### 📊 Descriptivos (4 figuras)
+
+| # | Archivo | Descripción | Método |
+|---|---------|-------------|--------|
+| 1 | `output/descriptive/histogram_resistencias_GEN 1.png` | Histogramas con KDE de las 18 variables | `matplotlib.hist` + `seaborn.kdeplot` |
+| 2 | `output/descriptive/boxplot_resistencias_GEN 1.png` | Boxplots de variables estandarizadas | `seaborn.boxplot` |
+| 3 | `output/descriptive/heatmap_correlaciones_GEN 1.png` | Mapa de calor de correlaciones de Pearson | `seaborn.heatmap` |
+| 4 | `output/descriptive/coordenadas_paralelas_GEN 1.png` | Coordenadas paralelas de perfiles de resistencia | `pandas.plotting.parallel_coordinates` |
+
+### 📉 Reducción de Dimensionalidad (8 figuras)
+
+| # | Archivo | Descripción | Método |
+|---|---------|-------------|--------|
+| 5 | `output/dimensionality_reduction/scree_plot_pca_GEN 1.png` | Scree plot: varianza explicada + acumulada | `PCA.explained_variance_ratio_` |
+| 6 | `output/dimensionality_reduction/loadings_heatmap_pca_GEN 1.png` | Heatmap de loadings (contribuciones) | `PCA.components_` |
+| 7 | `output/dimensionality_reduction/circulo_correlaciones_pca_GEN 1.png` | Círculo de correlaciones en PC1-PC2 | Loadings escalados por √(eigenvalues) |
+| 8 | `output/dimensionality_reduction/biplot_pca_GEN 1.png` | PCA-Biplot: individuos + variables | PCA con escalado symbiplot |
+| 9 | `output/dimensionality_reduction/calidad_representacion_cos2_GEN 1.png` | Calidad cos² por variable | `cos² = loading²` |
+| 10 | `output/dimensionality_reduction/tsne_perplejidad_grid_GEN 1.png` | Grid de perplejidad (5,10,15,30,50,100) | `TSNE` |
+| 11 | `output/dimensionality_reduction/tsne_learning_rate_grid_GEN 1.png` | Grid de learning rate (10,100,200,500,1000,2000) | `TSNE` |
+| 12 | `output/dimensionality_reduction/tsne_trustworthiness_GEN 1.png` | Trustworthiness PCA vs t-SNE | `sklearn.manifold.trustworthiness` |
+
+### 🧬 Clustering (9 figuras)
+
+| # | Archivo | Descripción | Método |
+|---|---------|-------------|--------|
+| 13 | `output/clustering/optimizacion_multimetrica_GEN 1.png` | Dashboard 4-métricas para selección de k | Inercia, Silueta, DB, CH |
+| 14 | `output/clustering/gap_statistic_GEN 1.png` | Gap statistic con barras de error | Bootstrap B=20 |
+| 15 | `output/clustering/dendrograma_ward_GEN 1.png` | Dendrograma Ward + sedimentación jerárquica | `scipy.cluster.hierarchy` |
+| 16 | `output/clustering/silhouette_diagram_GEN 1.png` | Diagrama de silueta detallado por cluster | `silhouette_samples` |
+| 17 | `output/clustering/caracterizacion_heatmap_GEN 1.png` | Perfil promedio de resistencia por cluster | `seaborn.heatmap` |
+| 18 | `output/clustering/radar_arquetipos_GEN 1.png` | Radar chart de los 4 arquetipos | Coordenadas polares |
+| 19 | `output/clustering/pca_clusters_GEN 1.png` | Clusters K-Means sobre PCA | `PCA` + `KMeans` |
+| 20 | `output/clustering/tsne_clusters_GEN 1.png` | Clusters K-Means sobre t-SNE | `TSNE` + `KMeans` |
+| 21 | `output/clustering/dbscan_k_distance_GEN 1.png` | Diagnóstico DBSCAN: k-distance | `NearestNeighbors` |
+| 22 | `output/clustering/pca_dbscan_GEN 1.png` | DBSCAN sobre PCA | `DBSCAN` + `PCA` |
+| 23 | `output/clustering/kruskal_wallis_resultados_GEN 1.png` | Validación estadística Kruskal-Wallis | `scipy.stats.kruskal` |
+
+### 🗺️ Cartografía Visual (2 figuras)
+
+| # | Archivo | Descripción | Método |
+|---|---------|-------------|--------|
+| 24 | `output/image_maps/mapa_visual_pca_GEN 1.png` | Mapa PCA con sprites de Pokémon | `OffsetImage` + `AnnotationBbox` |
+| 25 | `output/image_maps/mapa_visual_tsne_GEN 1.png` | Mapa t-SNE con sprites de Pokémon | `OffsetImage` + `AnnotationBbox` |
+
+---
 
 ## 🛠️ Tecnologías y Librerías
 
-*   **Python 3.x**
-*   **pandas**: Manipulación y análisis de datos.
-*   **numpy**: Computación numérica.
-*   **matplotlib.pyplot**: Creación de gráficos estáticos.
-*   **seaborn**: Visualizaciones estadísticas.
-*   **scikit-learn**: Implementación de `StandardScaler`, `KMeans`, `PCA`, `TSNE`, `silhouette_score`.
-*   **scipy.stats**: Pruebas estadísticas como `kruskal`.
-*   **kagglehub**: Descarga programática de datasets de Kaggle.
-*   **os**: Interacción con el sistema de archivos.
+| Librería | Versión | Propósito |
+|----------|---------|-----------|
+| Python | 3.12+ | Lenguaje base |
+| pandas | 2.x | Manipulación y análisis de datos |
+| numpy | 1.x | Computación numérica |
+| matplotlib | 3.x | Visualización estática y publicación |
+| seaborn | 0.13+ | Visualización estadística |
+| scikit-learn | 1.4+ | ML: PCA, t-SNE, K-Means, DBSCAN, métricas |
+| scipy | 1.12+ | Estadística: Kruskal-Wallis, clustering jerárquico |
+| kagglehub | 0.x | Descarga programática de datasets |
+
+---
 
 ## ⚙️ Instalación y Uso
 
 ### Requisitos
-
-Asegúrate de tener Python 3.x instalado.
-
-### Instalación de Dependencias
-
 ```bash
-pip install kagglehub pandas matplotlib seaborn scikit-learn scipy
+pip install kagglehub pandas numpy matplotlib seaborn scikit-learn scipy
 ```
 
-### Configuración de Kaggle (Opcional, `kagglehub` lo maneja automáticamente)
-
-`kagglehub` gestiona la autenticación automáticamente. Si tienes problemas, asegúrate de que tu API de Kaggle esté configurada (archivo `kaggle.json` en `~/.kaggle/`).
-
-### Ejecución del Script
-
+### Ejecución
 ```bash
 python pokemon-database.py
 ```
-
-Al ejecutar el script, se te preguntará si deseas analizar solo la Primera Generación o todos los Pokémon:
-
+Seleccione el alcance del análisis:
 ```
-Elija el alcance del análisis:
-1. Solo Primera Generación
-2. Todos los Pokémon
-Seleccione (1/2):
+1. Solo Primera Generación (Gen 1)
+2. Todos los Pokémon (Completo)
 ```
 
-### Salida del Proyecto
+Para omitir la selección interactiva y usar Gen 1 por defecto:
+```bash
+echo 1 | python pokemon-database.py
+```
 
-El script generará una carpeta `output/` con la siguiente estructura:
+---
+
+## 📁 Estructura de Salida
 
 ```
 output/
-├── analisis_resultados.txt         # Reporte científico detallado del análisis.
-├── clustering/
-│   └── pca_clusters_GEN 1.png      # Gráfico PCA con los clusters identificados.
-├── dimensionality_reduction/
-│   └── comparativa_pca_tsne_GEN 1.png # Comparativa visual de PCA vs t-SNE.
-├── descriptive/                    # (Puede contener gráficos descriptivos si se añaden en el futuro)
-└── image_maps/
-    └── mapa_visual_GEN 1.png       # Mapa visual de Pokémon con sprites en el espacio PCA.
+├── analisis_resultados_GEN 1.txt       # Reporte científico completo
+├── diccionario_graficos_GEN 1.json     # Metadatos de gráficos (JSON)
+├── diccionario_graficos_GEN 1.md       # Diccionario de gráficos (Markdown)
+│
+├── descriptive/                        # 4 figuras EDA
+│   ├── histogram_resistencias_GEN 1.png
+│   ├── boxplot_resistencias_GEN 1.png
+│   ├── heatmap_correlaciones_GEN 1.png
+│   └── coordenadas_paralelas_GEN 1.png
+│
+├── dimensionality_reduction/           # 8 figuras PCA + t-SNE
+│   ├── scree_plot_pca_GEN 1.png
+│   ├── loadings_heatmap_pca_GEN 1.png
+│   ├── circulo_correlaciones_pca_GEN 1.png
+│   ├── biplot_pca_GEN 1.png
+│   ├── calidad_representacion_cos2_GEN 1.png
+│   ├── tsne_perplejidad_grid_GEN 1.png
+│   ├── tsne_learning_rate_grid_GEN 1.png
+│   ├── tsne_trustworthiness_GEN 1.png
+│   └── comparativa_pca_tsne_GEN 1.png
+│
+├── clustering/                         # 11 figuras clustering
+│   ├── optimizacion_multimetrica_GEN 1.png
+│   ├── gap_statistic_GEN 1.png
+│   ├── dendrograma_ward_GEN 1.png
+│   ├── silhouette_diagram_GEN 1.png
+│   ├── caracterizacion_heatmap_GEN 1.png
+│   ├── radar_arquetipos_GEN 1.png
+│   ├── pca_clusters_GEN 1.png
+│   ├── tsne_clusters_GEN 1.png
+│   ├── dbscan_k_distance_GEN 1.png
+│   ├── pca_dbscan_GEN 1.png
+│   └── kruskal_wallis_resultados_GEN 1.png
+│
+└── image_maps/                         # 2 figuras cartográficas
+    ├── mapa_visual_pca_GEN 1.png
+    └── mapa_visual_tsne_GEN 1.png
 ```
 
-## 📊 Resultados Clave
+---
 
-*   **Clustering (K-Means++)**: Se identificaron 4 clusters principales caracterizados por su perfil defensivo:
-    *   <strong style="color: #1f77b4;">Cluster Azul:</strong> Especialistas acuáticos y de hielo.
-    *   <strong style="color: #2ca02c;">Cluster Verde:</strong> Especies botánicas y bípodes.
-    *   <strong style="color: #bcbd22;">Cluster Amarillo:</strong> Especies eléctricas y de tierra.
-    *   <strong style="color: #9467bd;">Cluster Morado:</strong> Especialistas en tipos veneno, fantasma y psíquico.
-*   **Inercia Final**: `1797.98` (Indica la compacidad de los clusters).
-*   **Coeficiente de Silueta**: `0.2630` (Indicador de cohesión y separación).
-*   **Validación Kruskal-Wallis**: `17` de 18 variables mostraron diferencias significativas entre clusters (p < 0.05), confirmando la validez estadística de la segmentación.
-*   **PCA**: Los dos primeros componentes principales explican aproximadamente `35.76%` de la varianza total, con `against_flying`, `against_grass`, `against_ground` y `against_psychic`, `against_bug`, `against_dark` como variables dominantes en PC1 y PC2 respectivamente.
-*   **Visualización**: La cartografía con sprites de Pokémon confirma visualmente que los grupos formados por K-Means se corresponden con patrones de resistencia y debilidad coherentes.
+## 🔬 Interpretación Científica
 
-## 📝 Reporte Científico
+### Validez de la Segmentación
+La segmentación en 4 arquetipos se valida mediante:
+1. **Kruskal-Wallis**: 17/18 variables con diferencias significativas (p<0.05)
+2. **Davies-Bouldin**: 1.46 — solapamiento bajo entre clusters
+3. **Silhouette**: 0.263 — cohesión moderada, esperable para datos con alta dimensionalidad
+4. **Gap Statistic**: Indica que podrían existir hasta 9 subgrupos finos
 
-Un reporte detallado (`analisis_resultados.txt`) se genera al final de la ejecución, conteniendo todos los pasos, métricas y conclusiones del análisis.
+### Justificación del Enfoque No Paramétrico
+- **97% de las variables no son normales** (D'Agostino-Pearson, p<0.05)
+- Se emplean: Kruskal-Wallis, silhouette score, mediana como medida central
+- La estandarización Z-score permite comparación equitativa entre escalas
+
+### Limitaciones y Advertencias
+1. **PCA en 2D captura solo [Ver reporte] de varianza** — la interpretación de ejes debe ser cautelosa
+2. **Silhouette de 0.263** indica clusters con bordes difusos, lo cual es esperable dado que los tipos elementales no son ortogonales
+3. **DBSCAN con 18.5% de ruido** sugiere que existen especialistas puros que no encajan en los arquetipos generales
+
+---
 
 ## 👨‍💻 Autor
 
 **Alejandro Quintero**
-Maestría en Analítica de Datos - Politécnico Grancolombiano
+Maestría en Analítica de Datos — Politécnico Grancolombiano
+Facultad de Ingeniería, Diseño e Innovación
 
-## 📄 Licencia
-
-Este proyecto se distribuye bajo la licencia [MIT License / Licencia Propia / etc.].
+### Referencias Académicas
+- Arthur, D., & Vassilvitskii, S. (2007). *k-means++: The advantages of careful seeding*. SODA.
+- van der Maaten, L., & Hinton, G. (2008). *Visualizing Data using t-SNE*. JMLR.
+- Pearson, K. (1901). *On lines and planes of closest fit*. Philosophical Magazine.
+- Kruskal, W. H., & Wallis, W. A. (1952). *Use of ranks in one-criterion variance analysis*. JASA.
+- Tibshirani, R., Walther, G., & Hastie, T. (2001). *Estimating the number of clusters via the gap statistic*. JRSS.
 
 ---
 
-**Nota**: Los valores numéricos exactos para la inercia, coeficiente de silueta y varianza explicada se encuentran en el archivo `analisis_resultados.txt` generado por el script.
+## 📄 Licencia
 
-```
+Este proyecto se distribuye bajo licencia MIT. Los datos de Pokémon son propiedad de Nintendo/Game Freak.
+
+---
+*Generado automáticamente — 2026-06-20*

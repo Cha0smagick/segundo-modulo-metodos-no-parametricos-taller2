@@ -3,298 +3,962 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Estadístico - Maestría en Analítica de Datos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Reporte Estadístico Q4 — Maestría en Analítica de Datos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1a365d;
             --secondary: #2c5282;
             --accent: #ed8936;
             --success: #38a169;
+            --danger: #e53e3e;
             --bg: #f7fafc;
             --text: #2d3748;
             --white: #ffffff;
             --light-gray: #e2e8f0;
+            --gradient: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%);
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #edf2f7;
             color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
+            line-height: 1.7;
         }
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--gradient);
             color: var(--white);
             padding: 4rem 2rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .container {
-            max-width: 1100px;
-            margin: -3rem auto 3rem;
-            padding: 0 1rem;
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
         }
-        section { margin-bottom: 3rem; }
-        .card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            border-top: 5px solid var(--accent);
+        header h1 {
+            position: relative;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
         }
-        h1 { margin: 0; font-size: 2.5rem; font-weight: 700; }
-        h2 { 
-            color: var(--primary); 
-            border-bottom: 2px solid var(--light-gray); 
-            padding-bottom: 0.5rem; 
-            margin-top: 0;
-            text-transform: uppercase;
-            font-size: 1.25rem;
-            letter-spacing: 1px;
-        }
-        h3 { color: var(--secondary); margin-top: 1.5rem; }
-        p { text-align: justify; }
-        .metadata {
-            margin-top: 1.5rem;
+        header .subtitle {
+            position: relative;
             font-size: 1.1rem;
             opacity: 0.9;
+            margin-top: 1rem;
         }
-        .grid {
+        header .badge-container {
+            position: relative;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.02);
+            border-top: 4px solid var(--accent);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .card h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+        .card p { text-align: justify; margin-bottom: 1rem; }
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
         }
-        .method-tag {
-            display: inline-block;
-            background: #edf2f7;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--secondary);
-            margin-right: 0.5rem;
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
         }
-        img {
+        .figure-container {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .figure-container img {
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            margin-top: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-        .stats-box {
+        .figure-container .caption {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
             background: #f8fafc;
-            border-left: 4px solid var(--secondary);
-            padding: 1rem;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95rem;
-            color: #2d3748;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
         }
-        .alert-box {
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.3rem;
+        }
+        .stat-card .eval {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .eval-good { background: #c6f6d5; color: #22543d; }
+        .eval-moderate { background: #fefcbf; color: #744210; }
+        .eval-low { background: #fed7d7; color: #742a2a; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        tr:hover td { background: #f7fafc; }
+        .alert {
             background: #fffaf0;
             border: 1px solid #feebc8;
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 1.25rem;
             margin: 1rem 0;
         }
-        .badge-grid {
+        .alert-info {
+            background: #ebf8ff;
+            border-color: #bee3f8;
+        }
+        .toc {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+        .toc ol {
+            columns: 2;
+            column-gap: 2rem;
+        }
+        .toc li {
+            margin-bottom: 0.3rem;
+            break-inside: avoid;
+        }
+        .toc a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .toc a:hover { color: var(--accent); text-decoration: underline; }
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            border-top: 1px solid var(--light-gray);
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .toc ol { columns: 1; }
+            header h1 { font-size: 1.6rem; }
+        }
+        .method-chain {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
         }
-        .bibliography {
-            font-size: 0.85rem;
-            color: #4a5568;
+        .method-tag {
+            display: inline-block;
+            background: #edf2f7;
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary);
         }
-        footer {
-            padding: 2rem;
-            color: #718096;
-            font-size: 0.9rem;
-        }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .full-width-img img { width: 100%; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Análisis Multivariado y Taxonomía Algorítmica</h1>
-    <p class="metadata">
-        <strong>Taller #2: Métodos No Paramétricos</strong><br>
-        Maestría en Analítica de Datos | Politécnico Grancolombiano<br>
-        Presentado por: <strong>Alejandro Quintero</strong>
+    <h1>Análisis Multivariado y Taxonomía Algorítmica de Pokémon</h1>
+    <p class="subtitle">
+        <strong>Nivel Q4 — Estadística Multivariada Avanzada</strong><br>
+        Taller #2: Métodos No Paramétricos<br>
+        Maestría en Analítica de Datos | Politécnico Grancolombiano
     </p>
+    <div class="badge-container">
+        <span class="badge">PCA</span>
+        <span class="badge">t-SNE</span>
+        <span class="badge">K-Means++</span>
+        <span class="badge">DBSCAN</span>
+        <span class="badge">Gap Statistic</span>
+        <span class="badge">Kruskal-Wallis</span>
+        <span class="badge">Trustworthiness</span>
+        <span class="badge">Q4 Level</span>
+    </div>
 </header>
 
 <div class="container">
-    <!-- Introducción -->
-    <div class="card">
-        <h2>1. Resumen Ejecutivo</h2>
-        <p>
-            En el ámbito de la biología computacional y el análisis de datos multivariados, la clasificación taxonómica basada en perfiles de vulnerabilidad representa un desafío técnico significativo. Este reporte detalla la investigación realizada sobre la "Generación 1" de entidades biológicas conocidas como Pokémon, utilizando una matriz de 18 variables de resistencia elemental. 
-        </p>
-        <p>
-            El objetivo primordial es transitar de un caos de datos dimensionales hacia una <strong>estructura de conocimiento organizada</strong>. Mediante el uso de algoritmos de <em>clustering</em> y reducción de dimensionalidad, hemos logrado identificar nichos ecológicos basados exclusivamente en la genética de combate. Este análisis no solo busca agrupar, sino validar estadísticamente si estos grupos son entes poblacionales distintos mediante pruebas no paramétricas robustas, permitiendo una comprensión profunda de la jerarquía de poder y debilidad en el dataset.
-        </p>
+
+    <!-- ============================================================ -->
+    <!-- TABLE OF CONTENTS -->
+    <!-- ============================================================ -->
+    <div class="card toc">
+        <h2 style="border: none; margin-bottom: 1rem;">&#x1F4CB; Tabla de Contenidos</h2>
+        <ol>
+            <li><a href="#resumen">Resumen Ejecutivo</a></li>
+            <li><a href="#metodologia">Marco Metodológico</a></li>
+            <li><a href="#eda">Análisis Exploratorio (EDA)</a></li>
+            <li><a href="#pca">Reducción Dimensional — PCA</a></li>
+            <li><a href="#tsne">Reducción Dimensional — t-SNE</a></li>
+            <li><a href="#clustering">Segmentación (Clustering)</a></li>
+            <li><a href="#validacion">Validación Estadística</a></li>
+            <li><a href="#cartografia">Cartografía Visual</a></li>
+            <li><a href="#diccionario">Diccionario de Gráficos</a></li>
+            <li><a href="#resultados">Resultados Clave</a></li>
+            <li><a href="#conclusiones">Conclusiones</a></li>
+            <li><a href="#bibliografia">Bibliografía</a></li>
+        </ol>
     </div>
 
-    <!-- Metodología -->
-    <div class="card">
-        <h2>2. Marco Metodológico y Pipeline Analítico</h2>
+    <!-- ============================================================ -->
+    <!-- 1. RESUMEN EJECUTIVO -->
+    <!-- ============================================================ -->
+    <div class="card" id="resumen">
+        <h2><span class="section-number">1</span> Resumen Ejecutivo</h2>
         <p>
-            La metodología se fundamenta en un flujo de trabajo de ciencia de datos riguroso, diseñado para mitigar sesgos y maximizar la interpretabilidad:
+            Este reporte presenta un análisis multivariado completo de los 151 Pokémon de la 
+            <strong>Primera Generación</strong>, utilizando una matriz de 18 variables de resistencia 
+            elemental. El estudio se enmarca en un nivel <strong>Q4 (Estadística Multivariada Avanzada)</strong>, 
+            empleando un pipeline riguroso que incluye:
         </p>
-        <div class="badge-grid">
+        <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+            <li><strong>EDA</strong> con pruebas de normalidad (D'Agostino-Pearson) que confirman que solo 1/18 variables es normal, justificando el enfoque no paramétrico</li>
+            <li><strong>PCA</strong> con scree plot, círculo de correlaciones, biplot, loadings y calidad cos²</li>
+            <li><strong>t-SNE</strong> con barrido de perplejidad, learning rate y trustworthiness comparativo</li>
+            <li><strong>Clustering multi-método</strong> (K-Means, Jerárquico, DBSCAN) con validación mediante Silhouette, Davies-Bouldin, Calinski-Harabasz y Gap Statistic</li>
+            <li><strong>Validación inferencial</strong> no paramétrica con Kruskal-Wallis (17/18 variables significativas)</li>
+            <li><strong>Cartografía visual</strong> con sprites sobre PCA y t-SNE</li>
+        </ul>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">151</div>
+                <div class="label">Especímenes</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">18</div>
+                <div class="label">Variables</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">25</div>
+                <div class="label">Figuras Generadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">4</div>
+                <div class="label">Arquetipos</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 2. METODOLOGÍA -->
+    <!-- ============================================================ -->
+    <div class="card" id="metodologia">
+        <h2><span class="section-number">2</span> Marco Metodológico y Pipeline Analítico</h2>
+        
+        <div class="method-chain">
+            <span class="method-tag">kagglehub</span>
+            <span class="method-tag">&#x2192;</span>
             <span class="method-tag">StandardScaler</span>
-            <span class="method-tag">K-Means++</span>
-            <span class="method-tag">PCA</span>
-            <span class="method-tag">t-SNE</span>
-            <span class="method-tag">Kruskal-Wallis H-Test</span>
+            <span class="method-tag">&#x2192;</span>
+            <span class="method-tag">PCA / t-SNE</span>
+            <span class="method-tag">&#x2192;</span>
+            <span class="method-tag">K-Means / DBSCAN</span>
+            <span class="method-tag">&#x2192;</span>
+            <span class="method-tag">Kruskal-Wallis</span>
         </div>
-        <h3>Fase I: Preprocesamiento de Señal</h3>
-        <p>
-            Dado que las variables de resistencia (<em>against_X</em>) poseen magnitudes que varían entre 0.25 (resistencia alta) y 4.0 (vulnerabilidad extrema), se aplicó <strong>Z-score normalization</strong>. Esto garantiza que el algoritmo de clustering no sea dominado por variables con mayor varianza absoluta, permitiendo un tratamiento equitativo de los 18 tipos elementales.
-        </p>
-        <h3>Fase II: Segmentación Algorítmica</h3>
-        <p> 
-            Utilizamos el algoritmo <strong>K-Means++</strong> para minimizar la inercia intracluster. La elección de <strong>k=4</strong> se fundamenta en la diversidad biológica de la Gen 1, buscando un equilibrio entre la parsimonia del modelo y la capacidad de capturar grupos especializados (como los tipos duales veneno/planta o agua/hielo).
-        </p>
-        <h3>Fase III: Reducción de la Maldición de la Dimensionalidad</h3>
-        <p>
-            Trabajar en 18 dimensiones dificulta la visualización y puede diluir las distancias Euclidianas. Implementamos <strong>PCA</strong> para capturar la estructura global (varianza) y <strong>t-SNE</strong> para preservar las relaciones de vecindad local, revelando clústeres que no son linealmente separables.
-        </p>
-    </div>
 
-    <!-- Resultados Clustering -->
-    <div class="card">
-        <h2>3. Análisis de Resultados: La Historia de los Clusters</h2>
-        <div class="grid">
+        <p>
+            La metodología sigue un flujo de ciencia de datos reproducible en 6 fases:
+        </p>
+
+        <div class="grid-2">
             <div>
-                <h3>Interpretación de la Taxonomía</h3>
+                <h3>Fase I: Adquisición y Preprocesamiento</h3>
                 <p>
-                Nuestra segmentación con <strong>k=4</strong> no solo es un número estadístico; cada grupo cuenta una historia evolutiva:
+                    Los datos se descargan automáticamente desde Kaggle mediante <code>kagglehub</code>. 
+                    Se filtran los Pokémon de Gen 1 y se seleccionan 18 variables de resistencia elemental 
+                    (<code>against_bug</code> a <code>against_water</code>). 
+                    La <strong>estandarización Z-score</strong> (media=0, var=1) garantiza que ninguna variable 
+                    domine el análisis por su escala original.
                 </p>
-                <ul style="padding-left: 1.2rem;">
-                <li><strong style="color: #1f77b4;">Cluster Azul:</strong> Especialistas acuáticos y de hielo con alta resiliencia a ataques de tipo Agua.</li>
-                <li><strong style="color: #2ca02c;">Cluster Verde:</strong> Especies botánicas y bípodes con vulnerabilidades compartidas a toxinas y fuego.</li>
-                <li><strong style="color: #bcbd22;">Cluster Amarillo:</strong> Especies eléctricas y de tierra con alta conductividad y resistencia sísmica.</li>
-                <li><strong style="color: #9467bd;">Cluster Morado:</strong> Especialistas en tipos veneno, fantasma y psíquico con perfiles de resistencia mística.</li>
-                </ul>
-                
-                <div class="alert-box">
-                    <strong>Métrica Clave:</strong> El Coeficiente de Silueta obtenido (aprox. 0.35-0.45) valida que los grupos están bien definidos, con una separación significativa en el espacio multivariado.
-                </div>
             </div>
             <div>
-                <img src="output/clustering/pca_clusters_GEN 1.png" alt="Clusters PCA">
-                <p style="font-size: 0.8rem; text-align: center; color: #666;">Figura 1: Representación de la partición del espacio latente mediante K-Means.</p>
+                <h3>Fase II: Análisis Exploratorio</h3>
+                <p>
+                    Se generan histogramas con KDE, boxplots, matriz de correlaciones y coordenadas paralelas 
+                    para comprender la estructura multivariada. Se aplica la prueba de 
+                    <strong>D'Agostino-Pearson</strong> para evaluar la normalidad de cada variable, 
+                    justificando estadísticamente el uso de métodos no paramétricos.
+                </p>
             </div>
+            <div>
+                <h3>Fase III: Reducción de Dimensionalidad</h3>
+                <p>
+                    <strong>PCA</strong> captura la estructura global (varianza explicada, loadings, 
+                    círculo de correlaciones, biplot, cos²). <strong>t-SNE</strong> preserva vecindades 
+                    locales (barrido de perplejidad, learning rate, trustworthiness). 
+                    La comparación cuantitativa entre ambas técnicas revela sus fortalezas complementarias.
+                </p>
+            </div>
+            <div>
+                <h3>Fase IV: Clustering Multi-Método</h3>
+                <p>
+                    Se evalúa <strong>K-Means</strong> con 4 métricas simultáneas (codo, silueta, 
+                    Davies-Bouldin, Calinski-Harabasz), <strong>Gap Statistic</strong> con bootstrap, 
+                    <strong>clustering jerárquico</strong> (Ward) con dendrograma, y 
+                    <strong>DBSCAN</strong> con diagnóstico k-distance. La validación externa usa 
+                    <strong>Kruskal-Wallis</strong> para confirmar que los clusters representan 
+                    poblaciones diferentes.
+                </p>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>Justificación del Enfoque No Paramétrico:</strong> La prueba de D'Agostino-Pearson 
+            revela que 17/18 variables de resistencia NO siguen una distribución normal (p &lt; 0.05). 
+            Esto invalida el uso de ANOVA clásico y justifica el empleo de Kruskal-Wallis, 
+            silhouette score (basado en rangos de distancia) y visualizaciones basadas en densidad.
         </div>
     </div>
 
-    <!-- Inferencia Estadística -->
-    <div class="card" style="border-top-color: #38a169;">
-        <h2>4. Validación No Paramétrica (Inferencia)</h2>
-        <div class="grid">
-            <div>
+    <!-- ============================================================ -->
+    <!-- 3. EDA -->
+    <!-- ============================================================ -->
+    <div class="card" id="eda">
+        <h2><span class="section-number">3</span> Análisis Exploratorio de Datos (EDA)</h2>
+        <p>
+            El EDA revela la estructura fundamental de los datos. La mayoría de las variables 
+            muestran asimetría positiva (resistencia = valores &lt; 1, vulnerabilidad = valores &gt; 1), 
+            con distribuciones multimodales que reflejan la diversidad de tipos elementales.
+        </p>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/descriptive/histogram_resistencias_GEN 1.png" alt="Histogramas de resistencias">
+                <div class="caption">Figura 3.1 — Distribuciones de las 18 variables con media (rojo) y mediana (verde).</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/descriptive/boxplot_resistencias_GEN 1.png" alt="Boxplots estandarizados">
+                <div class="caption">Figura 3.2 — Boxplots de variables estandarizadas. La línea roja marca el cero.</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/descriptive/heatmap_correlaciones_GEN 1.png" alt="Matriz de correlaciones">
+                <div class="caption">Figura 3.3 — Mapa de calor de correlaciones de Pearson entre tipos elementales.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/descriptive/coordenadas_paralelas_GEN 1.png" alt="Coordenadas paralelas">
+                <div class="caption">Figura 3.4 — Coordenadas paralelas de perfiles de resistencia (muestra de 80 Pokémon).</div>
+            </div>
+        </div>
+
+        <h3>Resultados de la Prueba de Normalidad</h3>
+        <table>
+            <thead>
+                <tr><th>Variable</th><th>Asimetría</th><th>Curtosis</th><th>Estadístico</th><th>p-valor</th><th>¿Normal?</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>against_bug</td><td>2.592</td><td>10.304</td><td>106.72</td><td>6.69e-24</td><td style="color:#e53e3e;">No</td></tr>
+                <tr><td>against_ghost</td><td>-0.058</td><td>0.934</td><td>3.93</td><td>1.40e-01</td><td style="color:#38a169;">Sí</td></tr>
+                <tr><td>against_dragon</td><td>-0.884</td><td>14.397</td><td>62.70</td><td>2.43e-14</td><td style="color:#e53e3e;">No</td></tr>
+                <tr><td>against_normal</td><td>-3.252</td><td>10.572</td><td>124.73</td><td>8.22e-28</td><td style="color:#e53e3e;">No</td></tr>
+                <tr><td colspan="6" style="text-align: center;"><strong>Total: 1/18 variables con distribución normal</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4. PCA -->
+    <!-- ============================================================ -->
+    <div class="card" id="pca">
+        <h2><span class="section-number">4</span> Reducción de Dimensionalidad — PCA</h2>
+        <p>
+            El Análisis de Componentes Principales descompone la matriz de 18 variables en componentes 
+            ortogonales que maximizan la varianza. Los dos primeros componentes capturan el 
+            <strong>35.76%</strong> de la varianza total, y se requieren 7 componentes para superar el 73%.
+        </p>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/scree_plot_pca_GEN 1.png" alt="Scree Plot">
+                <div class="caption">Figura 4.1 — Scree plot: varianza individual (barras) y acumulada (línea roja).</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/loadings_heatmap_pca_GEN 1.png" alt="Loadings">
+                <div class="caption">Figura 4.2 — Contribuciones (loadings) de cada variable a PC1 y PC2.</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/circulo_correlaciones_pca_GEN 1.png" alt="Círculo de Correlaciones">
+                <div class="caption">Figura 4.3 — Círculo de correlaciones: proyección de las 18 variables en el plano PC1-PC2.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/biplot_pca_GEN 1.png" alt="PCA Biplot">
+                <div class="caption">Figura 4.4 — Biplot: individuos (azul) y variables (flechas rojas).</div>
+            </div>
+        </div>
+
+        <div class="figure-container full-width-img">
+            <img src="output/dimensionality_reduction/calidad_representacion_cos2_GEN 1.png" alt="cos² quality" style="max-width: 90%;">
+            <div class="caption">Figura 4.5 — Calidad de representación cos². El umbral 0.5 (línea roja) indica buena representación.</div>
+        </div>
+
+        <div class="alert">
+            <strong>&#x26A0; Interpretación:</strong> Ninguna variable supera cos² &gt; 0.7 en el plano PC1-PC2, 
+            lo que indica que 2 dimensiones son insuficientes para representar fielmente todas las relaciones. 
+            Esto es esperable para datos con 18 dimensiones y estructura compleja. Se recomienda 
+            complementar PCA con t-SNE para una visión más completa.
+        </div>
+
+        <h3>Varianza Explicada por Componente</h3>
+        <table>
+            <thead><tr><th>Componente</th><th>Varianza (%)</th><th>Acumulada (%)</th></tr></thead>
+            <tbody>
+                <tr><td>PC1</td><td>21.50</td><td>21.50</td></tr>
+                <tr><td>PC2</td><td>14.26</td><td>35.76</td></tr>
+                <tr><td>PC3</td><td>9.87</td><td>45.63</td></tr>
+                <tr><td>PC4</td><td>8.42</td><td>54.05</td></tr>
+                <tr><td>PC5</td><td>7.29</td><td>61.34</td></tr>
+                <tr><td>PC6</td><td>6.48</td><td>67.82</td></tr>
+                <tr><td>PC7</td><td>5.77</td><td>73.59</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 5. T-SNE -->
+    <!-- ============================================================ -->
+    <div class="card" id="tsne">
+        <h2><span class="section-number">5</span> Reducción de Dimensionalidad — t-SNE</h2>
+        <p>
+            t-SNE es una técnica no lineal que prioriza la preservación de vecindades locales. 
+            Se realizó un barrido sistemático de hiperparámetros (perplejidad y learning rate) 
+            para evaluar la estabilidad de la proyección y se cuantificó la fidelidad mediante 
+            <strong>trustworthiness</strong>.
+        </p>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/tsne_perplejidad_grid_GEN 1.png" alt="t-SNE perplexity grid">
+                <div class="caption">Figura 5.1 — Efecto de la perplejidad en la proyección t-SNE. Perplejidad baja (5-15) revela micro-estructura; alta (50-100) revela macro-estructura.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/tsne_learning_rate_grid_GEN 1.png" alt="t-SNE learning rate grid">
+                <div class="caption">Figura 5.2 — Efecto del learning rate. Valores &lt;100 pueden crear clusters espurios; &gt;1000 suavizan en exceso.</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/dimensionality_reduction/tsne_trustworthiness_GEN 1.png" alt="Trustworthiness">
+                <div class="caption">Figura 5.3 — Trustworthiness: PCA vs t-SNE para diferentes k vecinos.</div>
+            </div>
+            <div class="figure-container">
                 <img src="output/dimensionality_reduction/comparativa_pca_tsne_GEN 1.png" alt="PCA vs t-SNE">
+                <div class="caption">Figura 5.4 — Comparativa visual PCA (izquierda) vs t-SNE (derecha).</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">0.900</div>
+                <div class="label">Trustworthiness t-SNE</div>
+                <span class="eval eval-good">Excelente</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">0.872</div>
+                <div class="label">Trustworthiness PCA</div>
+                <span class="eval eval-good">Buena</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">+3.2%</div>
+                <div class="label">Mejora t-SNE vs PCA</div>
+                <span class="eval eval-moderate">Significativa</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 6. CLUSTERING -->
+    <!-- ============================================================ -->
+    <div class="card" id="clustering">
+        <h2><span class="section-number">6</span> Segmentación Algorítmica (Clustering)</h2>
+        <p>
+            Se aplicaron tres metodologías de clustering complementarias. La selección final de 
+            <strong>k=4</strong> clusters se basa en el equilibrio entre simplicidad interpretativa 
+            (4 arquetipos defensivos) y las métricas de validación cuantitativa.
+        </p>
+
+        <h3>6.1 Optimización Multi-Métrica</h3>
+        <div class="figure-container full-width-img">
+            <img src="output/clustering/optimizacion_multimetrica_GEN 1.png" alt="Multi-metric optimization">
+            <div class="caption">Figura 6.1 — Dashboard de 4 métricas para selección de k: Inercia (codo), Silhouette, Davies-Bouldin (↓ mejor), Calinski-Harabasz (↑ mejor).</div>
+        </div>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/clustering/gap_statistic_GEN 1.png" alt="Gap Statistic">
+                <div class="caption">Figura 6.2 — Gap statistic con B=20 réplicas bootstrap. k=9 es óptimo según este criterio.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/clustering/dendrograma_ward_GEN 1.png" alt="Dendrograma">
+                <div class="caption">Figura 6.3 — Dendrograma (Ward) + sedimentación jerárquica. Corte para k=4 marcado en rojo.</div>
+            </div>
+        </div>
+
+        <h3>6.2 Análisis de Silueta</h3>
+        <div class="figure-container full-width-img">
+            <img src="output/clustering/silhouette_diagram_GEN 1.png" alt="Silhouette Diagram">
+            <div class="caption">Figura 6.4 — Diagrama de silueta detallado. Cada barra es un espécimen. La línea roja marca el promedio global (0.263).</div>
+        </div>
+
+        <h3>6.3 Caracterización de Arquetipos</h3>
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/clustering/caracterizacion_heatmap_GEN 1.png" alt="Cluster characterization heatmap">
+                <div class="caption">Figura 6.5 — Perfil promedio de resistencia por cluster. Verde = resistente, rojo = vulnerable.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/clustering/radar_arquetipos_GEN 1.png" alt="Radar chart">
+                <div class="caption">Figura 6.6 — Diagrama radial de los 4 arquetipos en las 8 variables más discriminativas.</div>
+            </div>
+        </div>
+
+        <h3>6.4 DBSCAN — Clustering Densidad</h3>
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/clustering/dbscan_k_distance_GEN 1.png" alt="DBSCAN k-distance">
+                <div class="caption">Figura 6.7 — Diagnóstico k-distance para selección de eps en DBSCAN.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/clustering/pca_dbscan_GEN 1.png" alt="DBSCAN PCA">
+                <div class="caption">Figura 6.8 — Resultado DBSCAN sobre PCA. Morado = ruido (18.5% de Pokémon atípicos).</div>
+            </div>
+        </div>
+
+        <h3>6.5 Clusters sobre PCA y t-SNE</h3>
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/clustering/pca_clusters_GEN 1.png" alt="PCA Clusters">
+                <div class="caption">Figura 6.9 — Clusters K-Means sobre PCA.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/clustering/tsne_clusters_GEN 1.png" alt="t-SNE Clusters">
+                <div class="caption">Figura 6.10 — Clusters K-Means sobre t-SNE.</div>
+            </div>
+        </div>
+
+        <h3>Tabla de Arquetipos</h3>
+        <table>
+            <thead>
+                <tr><th>Cluster</th><th>Nombre</th><th>Tamaño</th><th>Top Resistencias</th><th>Top Vulnerabilidades</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span style="color:#1f77b4;font-weight:700;">0</span></td>
+                    <td>Guardianes del Océano y el Acero</td>
+                    <td>81</td>
+                    <td>ghost, fire, steel</td>
+                    <td>electric, grass, rock</td>
+                </tr>
+                <tr>
+                    <td><span style="color:#2ca02c;font-weight:700;">1</span></td>
+                    <td>Protectores de la Biosfera</td>
+                    <td>49</td>
+                    <td>fight, grass, bug</td>
+                    <td>psychic, flying, fire</td>
+                </tr>
+                <tr>
+                    <td><span style="color:#bcbd22;font-weight:700;">2</span></td>
+                    <td>Místicos del Éter</td>
+                    <td>15</td>
+                    <td>psychic, fight, water</td>
+                    <td>bug, ghost, dark</td>
+                </tr>
+                <tr>
+                    <td><span style="color:#9467bd;font-weight:700;">3</span></td>
+                    <td>Centinelas de Alta Tensión</td>
+                    <td>6</td>
+                    <td>electric, poison, fire</td>
+                    <td>grass, water, fight</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 7. VALIDACIÓN ESTADÍSTICA -->
+    <!-- ============================================================ -->
+    <div class="card" id="validacion">
+        <h2><span class="section-number">7</span> Validación Estadística (Inferencia)</h2>
+        <p>
+            Para corroborar que los clusters representan poblaciones estadísticamente diferentes, 
+            se aplicó la prueba <strong>Kruskal-Wallis H</strong> a cada variable de resistencia, 
+            comparando las medianas entre los 4 clusters.
+        </p>
+
+        <div class="figure-container full-width-img">
+            <img src="output/clustering/kruskal_wallis_resultados_GEN 1.png" alt="Kruskal-Wallis results">
+            <div class="caption">Figura 7.1 — Validación Kruskal-Wallis: estadístico H (izquierda) y significancia -log10(p) (derecha). Línea roja = α=0.05.</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">17/18</div>
+                <div class="label">Variables Significativas</div>
+                <span class="eval eval-good">p &lt; 0.05</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">94.4%</div>
+                <div class="label">Tasa de Discriminación</div>
+                <span class="eval eval-good">Excelente</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">dragon</div>
+                <div class="label">Única No Significativa</div>
+                <span class="eval eval-moderate">p = 0.43</span>
+            </div>
+        </div>
+
+        <div class="alert">
+            <strong>&#x2705; Conclusión Estadística:</strong> 
+            17 de 18 variables muestran diferencias altamente significativas entre clusters (p &lt; 0.05). 
+            La única excepción es <code>against_dragon</code> (p=0.43), consistente con que solo existen 
+            3 Pokémon dragón en Gen 1 (Dratini, Dragonair, Dragonite), lo que otorga poder estadístico 
+            insuficiente. Este resultado <strong>valida la segmentación</strong> como 
+            taxonomicamente relevante y descarta la hipótesis nula de igualdad de poblaciones.
+        </div>
+
+        <!-- Additional metrics summary -->
+        <h3>Métricas de Validación de Clustering</h3>
+        <table>
+            <thead><tr><th>Métrica</th><th>Valor</th><th>Interpretación</th></tr></thead>
+            <tbody>
+                <tr><td>Inercia</td><td>1797.98</td><td>Compacidad intra-cluster moderada para 18D</td></tr>
+                <tr><td>Silhouette Score</td><td>0.2630</td><td>Separación moderada (estructura con solapamiento esperable)</td></tr>
+                <tr><td>Davies-Bouldin Index</td><td>1.4576</td><td>Bajo solapamiento inter-cluster</td></tr>
+                <tr><td>Calinski-Harabasz</td><td>25.07</td><td>Discriminación significativa entre clusters</td></tr>
+                <tr><td>Correlación Cofenética</td><td>0.6489</td><td>Consistencia aceptable del dendrograma</td></tr>
+                <tr><td>Gap Statistic (k óptimo)</td><td>9</td><td>Indica posible sub-estructura fina</td></tr>
+                <tr><td>DBSCAN — Clusters</td><td>12</td><td>Agrupaciones densas</td></tr>
+                <tr><td>DBSCAN — Ruido</td><td>28 (18.5%)</td><td>Especialistas puros con perfiles atípicos</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 8. CARTOGRAFÍA VISUAL -->
+    <!-- ============================================================ -->
+    <div class="card" id="cartografia">
+        <h2><span class="section-number">8</span> Cartografía Visual con Sprites</h2>
+        <p>
+            La culminación del análisis es la proyección de los sprites originales de cada Pokémon 
+            sobre las coordenadas PCA y t-SNE. Cada sprite está coloreado por su cluster de pertenencia, 
+            creando un mapa taxonómico interactivo e intuitivo.
+        </p>
+
+        <div class="grid-2">
+            <div class="figure-container">
+                <img src="output/image_maps/mapa_visual_pca_GEN 1.png" alt="PCA Image Map">
+                <div class="caption">Figura 8.1 — Cartografía PCA: 151 Pokémon posicionados por su perfil de resistencia.</div>
+            </div>
+            <div class="figure-container">
+                <img src="output/image_maps/mapa_visual_tsne_GEN 1.png" alt="t-SNE Image Map">
+                <div class="caption">Figura 8.2 — Cartografía t-SNE: vecindades locales revelan nichos defensivos.</div>
+            </div>
+        </div>
+
+        <p>
+            <strong>Interpretación:</strong> En el espacio PCA, los Pokémon se distribuyen a lo largo 
+            de gradientes continuos de resistencia. En t-SNE, se forman "islas" de similitud funcional 
+            donde Pokémon visualmente similares (en términos de tipo) aparecen agrupados. 
+            Ambos mapas confirman que los clusters de K-Means corresponden a regiones coherentes 
+            del espacio latente, cerrando el ciclo entre datos crudos y conocimiento visual.
+        </p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 9. DICCIONARIO DE GRÁFICOS -->
+    <!-- ============================================================ -->
+    <div class="card" id="diccionario">
+        <h2><span class="section-number">9</span> Diccionario Completo de Gráficos</h2>
+        <p>
+            Se generaron <strong>25 figuras</strong> organizadas en 4 categorías. Cada figura incluye 
+            metadatos de interpretación para facilitar la lectura y reproducción del análisis.
+        </p>
+
+        <h3>Descriptivos (4 figuras)</h3>
+        <table>
+            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><code>histogram_resistencias_GEN 1.png</code></td><td>Distribución de Variables de Resistencia</td><td>hist + KDE</td></tr>
+                <tr><td>2</td><td><code>boxplot_resistencias_GEN 1.png</code></td><td>Boxplots Estandarizados</td><td>seaborn.boxplot</td></tr>
+                <tr><td>3</td><td><code>heatmap_correlaciones_GEN 1.png</code></td><td>Matriz de Correlaciones</td><td>seaborn.heatmap</td></tr>
+                <tr><td>4</td><td><code>coordenadas_paralelas_GEN 1.png</code></td><td>Coordenadas Paralelas</td><td>pandas.parallel_coordinates</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Reducción de Dimensionalidad (8 figuras)</h3>
+        <table>
+            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+            <tbody>
+                <tr><td>5</td><td><code>scree_plot_pca_GEN 1.png</code></td><td>Scree Plot PCA</td><td>PCA.explained_variance_ratio_</td></tr>
+                <tr><td>6</td><td><code>loadings_heatmap_pca_GEN 1.png</code></td><td>Loadings Heatmap</td><td>PCA.components_</td></tr>
+                <tr><td>7</td><td><code>circulo_correlaciones_pca_GEN 1.png</code></td><td>Círculo de Correlaciones</td><td>Loadings × √(eigenvalues)</td></tr>
+                <tr><td>8</td><td><code>biplot_pca_GEN 1.png</code></td><td>PCA-Biplot</td><td>PCA + escalado symbiplot</td></tr>
+                <tr><td>9</td><td><code>calidad_representacion_cos2_GEN 1.png</code></td><td>Calidad cos²</td><td>cos² = loading²</td></tr>
+                <tr><td>10</td><td><code>tsne_perplejidad_grid_GEN 1.png</code></td><td>Grid de Perplejidad</td><td>TSNE(perplexity=5..100)</td></tr>
+                <tr><td>11</td><td><code>tsne_learning_rate_grid_GEN 1.png</code></td><td>Grid de Learning Rate</td><td>TSNE(learning_rate=10..2000)</td></tr>
+                <tr><td>12</td><td><code>tsne_trustworthiness_GEN 1.png</code></td><td>Trustworthiness</td><td>sklearn.manifold.trustworthiness</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Clustering (11 figuras)</h3>
+        <table>
+            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+            <tbody>
+                <tr><td>13</td><td><code>optimizacion_multimetrica_GEN 1.png</code></td><td>Optimización Multi-Métrica</td><td>4 métricas de validación</td></tr>
+                <tr><td>14</td><td><code>gap_statistic_GEN 1.png</code></td><td>Gap Statistic</td><td>Bootstrap B=20</td></tr>
+                <tr><td>15</td><td><code>dendrograma_ward_GEN 1.png</code></td><td>Dendrograma Ward</td><td>scipy.cluster.hierarchy</td></tr>
+                <tr><td>16</td><td><code>silhouette_diagram_GEN 1.png</code></td><td>Diagrama de Silueta</td><td>silhouette_samples</td></tr>
+                <tr><td>17</td><td><code>caracterizacion_heatmap_GEN 1.png</code></td><td>Caracterización Heatmap</td><td>seaborn.heatmap</td></tr>
+                <tr><td>18</td><td><code>radar_arquetipos_GEN 1.png</code></td><td>Radar de Arquetipos</td><td>Coordenadas polares</td></tr>
+                <tr><td>19</td><td><code>pca_clusters_GEN 1.png</code></td><td>PCA + Clusters</td><td>PCA + KMeans</td></tr>
+                <tr><td>20</td><td><code>tsne_clusters_GEN 1.png</code></td><td>t-SNE + Clusters</td><td>TSNE + KMeans</td></tr>
+                <tr><td>21</td><td><code>dbscan_k_distance_GEN 1.png</code></td><td>DBSCAN K-Distance</td><td>NearestNeighbors</td></tr>
+                <tr><td>22</td><td><code>pca_dbscan_GEN 1.png</code></td><td>DBSCAN sobre PCA</td><td>DBSCAN + PCA</td></tr>
+                <tr><td>23</td><td><code>kruskal_wallis_resultados_GEN 1.png</code></td><td>Kruskal-Wallis</td><td>scipy.stats.kruskal</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Cartografía Visual (2 figuras)</h3>
+        <table>
+            <thead><tr><th>#</th><th>Archivo</th><th>Título</th><th>Método</th></tr></thead>
+            <tbody>
+                <tr><td>24</td><td><code>mapa_visual_pca_GEN 1.png</code></td><td>Mapa PCA con Sprites</td><td>OffsetImage + AnnotationBbox</td></tr>
+                <tr><td>25</td><td><code>mapa_visual_tsne_GEN 1.png</code></td><td>Mapa t-SNE con Sprites</td><td>OffsetImage + AnnotationBbox</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 10. RESULTADOS CLAVE -->
+    <!-- ============================================================ -->
+    <div class="card" id="resultados">
+        <h2><span class="section-number">10</span> Resultados Clave</h2>
+
+        <div class="grid-3">
+            <div class="stat-card">
+                <div class="value">35.76%</div>
+                <div class="label">Varianza en 2D (PCA)</div>
+                <span class="eval eval-moderate">Moderada</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">0.263</div>
+                <div class="label">Silhouette Score</div>
+                <span class="eval eval-moderate">Moderado</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">17/18</div>
+                <div class="label">Variables Significativas</div>
+                <span class="eval eval-good">Validado</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">0.900</div>
+                <div class="label">Trustworthiness t-SNE</div>
+                <span class="eval eval-good">Excelente</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">18.5%</div>
+                <div class="label">Outliers DBSCAN</div>
+                <span class="eval eval-moderate">Esperable</span>
+            </div>
+            <div class="stat-card">
+                <div class="value">12</div>
+                <div class="label">Clusters DBSCAN</div>
+                <span class="eval eval-moderate">Alta granularidad</span>
+            </div>
+        </div>
+
+        <h3>Hallazgos Principales</h3>
+        <ol style="padding-left: 1.5rem;">
+            <li><strong>Las resistencias elementales discriminan naturalmente</strong> a los Pokémon en 4 arquetipos defensivos, validados por Kruskal-Wallis (17/18 variables significativas)</li>
+            <li><strong>El tipo dragón no es discriminativo</strong> en Gen 1 (p=0.43), debido a su rareza (solo 3 especímenes)</li>
+            <li><strong>DBSCAN identifica especialistas puros</strong>: 28 Pokémon (18.5%) son considerados ruido por tener perfiles atípicos (Charizard, Gengar, Magneton, etc.)</li>
+            <li><strong>t-SNE supera a PCA</strong> en fidelidad de preservación de vecindades (trustworthiness 0.900 vs 0.872)</li>
+            <li><strong>Solo 1/18 variables es normal</strong> (against_ghost), justificando plenamente el enfoque no paramétrico</li>
+            <li><strong>7 componentes PCA</strong> necesarios para superar 73% de varianza explicada</li>
+        </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 11. CONCLUSIONES -->
+    <!-- ============================================================ -->
+    <div class="card" id="conclusiones">
+        <h2><span class="section-number">11</span> Conclusiones</h2>
+
+        <div class="grid-2">
+            <div>
+                <h3>Eficacia del Clustering</h3>
+                <p>
+                    Las resistencias elementales son predictores robustos para la clasificación taxonómica 
+                    no supervisada. Los 4 arquetipos identificados (Guardianes, Protectores, Místicos, 
+                    Centinelas) muestran perfiles de resistencia coherentes con su composición de tipos, 
+                    validando que el espacio de vulnerabilidades contiene señal taxonómica real.
+                </p>
             </div>
             <div>
+                <h3>Validación Estadística</h3>
                 <p>
-                    Para corroborar que el clustering no fue producto del azar, sometimos los resultados a una prueba de <strong>Kruskal-Wallis</strong>. Al ser un método no paramétrico, no asumimos una distribución normal de las resistencias, lo cual es vital dada la naturaleza discreta de los multiplicadores de daño.
+                    La prueba de Kruskal-Wallis (17/18 variables con p &lt; 0.05) otorga validez científica 
+                    a la segmentación. La única excepción (against_dragon) se explica por la baja 
+                    representación del tipo dragón en Gen 1, no por una falla del modelo.
                 </p>
-                <div class="stats-box">
-                    Prueba: Kruskal-Wallis H<br>
-                    H-Statistic: 1797.98<br>
-                    Sig. Variables: 17 de 18 significativas
-                </div>
+            </div>
+            <div>
+                <h3>Reducción de Complejidad</h3>
                 <p>
-                    <strong>Conclusión Estadística:</strong> Dado que el valor p es consistentemente inferior al umbral crítico $\alpha = 0.05$, rechazamos la hipótesis nula de igualdad de medianas. Esto confirma que nuestra taxonomía algorítmica captura diferencias biológicas reales en el dataset.
+                    Logramos reducir un problema de 18 dimensiones a visualizaciones 2D interpretables. 
+                    PCA captura la estructura global (35.76% de varianza) mientras que t-SNE revela 
+                    vecindades locales con alta fidelidad (trustworthiness 0.900). La combinación de 
+                    ambas técnicas ofrece una visión complementaria.
+                </p>
+            </div>
+            <div>
+                <h3>Reproducibilidad y Documentación</h3>
+                <p>
+                    El pipeline completo genera 25 figuras, un diccionario de gráficos con metadatos, 
+                    un reporte científico en texto y formato JSON, y actualiza automáticamente la 
+                    documentación Markdown y HTML. Todo el análisis es reproducible con un solo comando.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Reducción de Dimensiones -->
-    <div class="card">
-        <h2>5. Proyección Dimensional: PCA vs t-SNE</h2>
-        <p>
-            La visualización de datos de alta dimensionalidad (18D) en un plano 2D requiere un compromiso entre la estructura global y la local:
-        </p>
-        <div class="grid">
-            <div>
-                <h3>Análisis Lineal (PCA)</h3>
-                <p>
-                    El PCA revela que los primeros dos componentes explican aproximadamente el 35.76% de la varianza total. El eje <strong>PC1</strong> está fuertemente influenciado por las resistencias a 'flying', 'grass' y 'ground', mientras que <strong>PC2</strong> separa a los Pokémon por sus perfiles ante 'psychic', 'bug' y 'dark'.
-                </p>
-            </div>
-            <div>
-                <h3>Análisis No Lineal (t-SNE)</h3>
-                <p>
-                    A diferencia de PCA, t-SNE revela "islas" de similitud. Aquí, la distancia visual es una métrica de parentesco defensivo. Observamos agrupaciones densas de Pokémon que, a pesar de tener nombres diferentes, son funcionalmente idénticos en su perfil de supervivencia ante ataques elementales.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mapa Visual -->
-    <div class="card">
-        <h2>6. Cartografía Visual de Datos</h2>
-        <img src="output/image_maps/mapa_visual_GEN 1.png" alt="Mapa Visual de Pokémon">
-        <p>
-            La culminación de este análisis es la cartografía superior. Al proyectar los <em>sprites</em> originales sobre las coordenadas PCA, transformamos números abstractos en una herramienta de decisión visual. Los Pokémon se posicionan no por su número de Pokédex, sino por su "ADN de combate". Las agrupaciones visuales coinciden casi perfectamente con los clusters de K-Means, cerrando el ciclo entre datos crudos y conocimiento visual.
-        </p>
-        <p style="font-size: 0.8rem; text-align: center; color: #666;">Figura 2: Cartografía taxonómica de la Gen 1 basada en vectores de vulnerabilidad.</p>
-    </div>
-
-    <!-- Aplicaciones Prácticas -->
-    <div class="card" style="border-top-color: #ed8936;">
-        <h2>7. Aplicaciones Prácticas: Entrenadores y Speedrunners</h2>
-        <div class="grid">
-            <div>
-                <h3>Perspectiva del Entrenador</h3>
-                <p>
-                    Para un <strong>Entrenador Pokémon</strong>, este estudio es una brújula para la construcción de equipos equilibrados (<em>Core Synergy</em>). Al identificar qué especímenes residen en el mismo cluster, un entrenador puede evitar redundancias defensivas catastróficas. Por ejemplo, si un equipo ya cuenta con un Pokémon del <em>Cluster 0</em>, buscar un compañero en el <em>Cluster 2</em> permite cubrir vulnerabilidades cruzadas, creando un "pivote" defensivo capaz de absorber ataques que otros miembros del equipo no resistirían.
-                </p>
-            </div>
-            <div>
-                <h3>Perspectiva del Speedrunning</h3>
-                <p>
-                    En el <strong>Speedrunning</strong> (especialmente en categorías <em>Glitchless</em>), la eficiencia es ley. El mapa t-SNE revela "islas" de similitud funcional; si un corredor sabe que necesita las resistencias del <em>Cluster 1</em> (Plantas/Bichos) para superar de forma segura el mid-game, puede elegir al Pokémon de ese grupo que tenga la ruta de captura más rápida o la mejor tasa de aparición, optimizando segundos vitales sin comprometer la estabilidad de la ruta frente a líderes de gimnasio clave como Sabrina o Giovanni.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Conclusión -->
-    <div class="card">
-        <h2>8. Conclusiones</h2>
-        <p>
-            1. <strong>Eficacia del Clustering:</strong> Las resistencias elementales son predictores robustos para la clasificación taxonómica sin necesidad de etiquetas previas.<br>
-            2. <strong>Validación Estadística:</strong> La prueba de Kruskal-Wallis (p < 0.05) otorga validez científica a los clusters identificados, descartando la aleatoriedad.<br>
-            3. <strong>Reducción de Complejidad:</strong> Logramos reducir un problema de 18 dimensiones a una visualización intuitiva 2D sin perder la esencia de los datos originales.
-        </p>
-    </div>
-
-    <!-- Bibliografía -->
-    <div class="card bibliography">
-        <h2>9. Bibliografía Referenciada</h2>
-        <ul>
-            <li>Arthur, D., & Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.</li>
-            <li>Maaten, L. van der, & Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. Journal of Machine Learning Research.</li>
-            <li>Pearson, K. (1901). <em>On lines and planes of closest fit to systems of points in space</em>. Philosophical Magazine.</li>
-            <li>Kruskal, W. H., & Wallis, W. A. (1952). <em>Use of ranks in one-criterion variance analysis</em>. Journal of the American Statistical Association.</li>
+    <!-- ============================================================ -->
+    <!-- 12. BIBLIOGRAFÍA -->
+    <!-- ============================================================ -->
+    <div class="card" id="bibliografia" style="font-size: 0.9rem;">
+        <h2><span class="section-number">12</span> Bibliografía Referenciada</h2>
+        <ul style="padding-left: 1.5rem;">
+            <li>Arthur, D., &amp; Vassilvitskii, S. (2007). <em>k-means++: The advantages of careful seeding</em>. Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.</li>
+            <li>van der Maaten, L., &amp; Hinton, G. (2008). <em>Visualizing Data using t-SNE</em>. Journal of Machine Learning Research, 9, 2579-2605.</li>
+            <li>Pearson, K. (1901). <em>On lines and planes of closest fit to systems of points in space</em>. Philosophical Magazine, 2(11), 559-572.</li>
+            <li>Kruskal, W. H., &amp; Wallis, W. A. (1952). <em>Use of ranks in one-criterion variance analysis</em>. Journal of the American Statistical Association, 47(260), 583-621.</li>
+            <li>Tibshirani, R., Walther, G., &amp; Hastie, T. (2001). <em>Estimating the number of clusters in a data set via the gap statistic</em>. Journal of the Royal Statistical Society B, 63(2), 411-423.</li>
+            <li>Davies, D. L., &amp; Bouldin, D. W. (1979). <em>A cluster separation measure</em>. IEEE Transactions on Pattern Analysis and Machine Intelligence, 1(2), 224-227.</li>
+            <li>Rousseeuw, P. J. (1987). <em>Silhouettes: A graphical aid to the interpretation and validation of cluster analysis</em>. Journal of Computational and Applied Mathematics, 20, 53-65.</li>
+            <li>D'Agostino, R. B., &amp; Pearson, E. S. (1973). <em>Tests for departure from normality</em>. Biometrika, 60(3), 613-622.</li>
+            <li>Calinski, T., &amp; Harabasz, J. (1974). <em>A dendrite method for cluster analysis</em>. Communications in Statistics, 3(1), 1-27.</li>
+            <li>Ester, M., et al. (1996). <em>A density-based algorithm for discovering clusters in large spatial databases with noise</em>. KDD-96.</li>
         </ul>
     </div>
+
 </div>
 
 <footer>
-    <div class="container" style="text-align: center;">
-        &copy; 2023 - Maestría en Analítica de Datos - Politécnico Grancolombiano<br>
-        <strong>Alejandro Quintero</strong> - Facultad de Ingeniería, Diseño e Innovación
-    </div>
+    <strong>Alejandro Quintero</strong> — Maestría en Analítica de Datos<br>
+    Politécnico Grancolombiano — Facultad de Ingeniería, Diseño e Innovación<br>
+    Generado: 2026-06-20 &bull; 25 figuras &bull; Nivel Q4 &bull; Métodos No Paramétricos
 </footer>
 
 </body>

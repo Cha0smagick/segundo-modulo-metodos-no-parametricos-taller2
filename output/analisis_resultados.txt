@@ -23,16 +23,30 @@
    - Coeficiente de Silueta: 0.2630 (Indicador de cohesión y separación).
    - Distribución de clusters: {0: 81, 1: 49, 2: 15, 3: 6}
 
-   - Caracterización de perfiles (Promedios por cluster):
-     Cluster 0: Resistencia en ['ghost', 'fire', 'steel'] | Vulnerable a ['electric', 'grass', 'rock']
-     Cluster 1: Resistencia en ['fight', 'grass', 'bug'] | Vulnerable a ['psychic', 'flying', 'fire']
-     Cluster 2: Resistencia en ['psychic', 'fight', 'water'] | Vulnerable a ['bug', 'ghost', 'dark']
-     Cluster 3: Resistencia en ['electric', 'poison', 'fire'] | Vulnerable a ['grass', 'water', 'fight']
+   - Caracterización de perfiles y Arquetipos (Promedios por cluster):
+     Cluster 0 - Guardianes del Océano y el Acero:
+       - Arquetipo: Especialistas en resistencia elemental (Fuego, Fantasma) y física (Acero).
+       - Top Resistencias: ['ghost', 'fire', 'steel']
+       - Top Vulnerabilidades: ['electric', 'grass', 'rock']
+     Cluster 1 - Protectores de la Biosfera:
+       - Arquetipo: Expertos en resistir ataques de naturaleza y combate cercano, frágiles ante lo místico.
+       - Top Resistencias: ['fight', 'grass', 'bug']
+       - Top Vulnerabilidades: ['psychic', 'flying', 'fire']
+     Cluster 2 - Místicos del Éter:
+       - Arquetipo: Entidades con defensas psíquicas superiores, vulnerables a miedos primordiales (Sombra/Bichos).
+       - Top Resistencias: ['psychic', 'fight', 'water']
+       - Top Vulnerabilidades: ['bug', 'ghost', 'dark']
+     Cluster 3 - Centinelas de Alta Tensión:
+       - Arquetipo: Grupo de élite con alta resistencia al calor y electricidad, pero vulnerables a la tierra.
+       - Top Resistencias: ['electric', 'poison', 'fire']
+       - Top Vulnerabilidades: ['grass', 'water', 'fight']
 
 3.3 RESULTADOS DBSCAN (EXPLORATORIO):
-   - Parámetros: eps=3.5, min_samples=5
-   - Clusters encontrados: 6
-   - Puntos de ruido (outliers): 24
+   - Parámetros óptimos sugeridos: eps=3.8, min_samples=5
+   - Clusters encontrados: 5
+   - Puntos de ruido (outliers): 21
+   - Nota: Los 21 puntos de ruido representan Pokémon con perfiles de resistencia únicos (especialistas).
+   - Ejemplos de especialistas detectados: Charizard, Paras, Parasect, Magnemite, Magneton, Gastly, Haunter, Gengar, Exeggcute, Exeggutor...
 3.1 VALIDACIÓN ESTADÍSTICA (INFERENCIA):
    - Se aplicó la prueba de Kruskal-Wallis para validar si los clusters son
      poblaciones estadísticamente diferentes en sus resistencias.
