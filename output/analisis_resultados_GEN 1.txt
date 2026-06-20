@@ -1,5 +1,5 @@
 REPORTE DE ANALISIS ESTADISTICO DE POKEMON (GEN 1)
-Generado: 2026-06-20 18:01:58
+Generado: 2026-06-20 18:26:55
 ======================================================================
 
 1. ESTRUCTURA DE DIRECTORIOS CREADA.
@@ -92,15 +92,15 @@ water                2.391        6.537
 
 --- GAP STATISTIC ---
   k óptimo por Gap statistic: 9
-  Gap values: {2: 0.8475, 3: 0.9221, 4: 1.013, 5: 1.0811, 6: 1.1656, 7: 1.2662, 8: 1.3544, 9: 1.5146, 10: 1.5227}
+  Gap values: {2: 0.8457, 3: 0.9195, 4: 1.012, 5: 1.0798, 6: 1.1652, 7: 1.2655, 8: 1.3531, 9: 1.5142, 10: 1.5225}
 
---- K-MEANS CLUSTERING (k=4) ---
-  Inercia final: 1797.98
-  Coeficiente de Silueta: 0.2630
-  Índice Davies-Bouldin: 1.4576
-  Índice Calinski-Harabasz: 25.07
-  Distribución: {0: 81, 1: 49, 2: 15, 3: 6}
-  Número de iteraciones: 4
+--- K-MEANS CLUSTERING (k=9) ---
+  Inercia final: 929.05
+  Coeficiente de Silueta: 0.4216
+  Índice Davies-Bouldin: 0.9565
+  Índice Calinski-Harabasz: 34.18
+  Distribución: {0: 18, 1: 37, 2: 38, 3: 20, 4: 5, 5: 13, 6: 6, 7: 11, 8: 3}
+  Número de iteraciones: 5
 
 --- CLUSTERING JERÁRQUICO (WARD) ---
   Correlación cofenética: 0.6489
@@ -109,20 +109,40 @@ water                2.391        6.537
 --- ARQUETIPOS POR CLUSTER ---
   Cluster 0 - Guardianes del Océano y el Acero:
     Arquetipo: Especialistas en resistencia elemental (Fuego, Fantasma) y física (Acero).
-    Top Resistencias: ['ghost', 'fire', 'steel']
-    Top Vulnerabilidades: ['electric', 'grass', 'rock']
+    Top Resistencias: ['ground', 'bug', 'grass']
+    Top Vulnerabilidades: ['rock', 'electric', 'ice']
   Cluster 1 - Protectores de la Biosfera:
     Arquetipo: Expertos en resistir ataques de naturaleza y combate cercano, frágiles ante lo místico.
-    Top Resistencias: ['fight', 'grass', 'bug']
-    Top Vulnerabilidades: ['psychic', 'flying', 'fire']
+    Top Resistencias: ['ice', 'fire', 'ghost']
+    Top Vulnerabilidades: ['grass', 'electric', 'fight']
   Cluster 2 - Místicos del Éter:
     Arquetipo: Entidades con defensas psíquicas superiores, vulnerables a miedos primordiales.
-    Top Resistencias: ['psychic', 'fight', 'water']
-    Top Vulnerabilidades: ['bug', 'ghost', 'dark']
+    Top Resistencias: ['bug', 'fairy', 'poison']
+    Top Vulnerabilidades: ['ground', 'water', 'psychic']
   Cluster 3 - Centinelas de Alta Tensión:
     Arquetipo: Grupo de élite con alta resistencia al calor y electricidad, pero vulnerables a la tierra.
+    Top Resistencias: ['grass', 'fight', 'fairy']
+    Top Vulnerabilidades: ['fire', 'flying', 'psychic']
+  Cluster 4 - Espectros Sombríos:
+    Arquetipo: Maestros de lo etéreo y lo oscuro, resistentes a Fantasma y Siniestro.
+    Top Resistencias: ['dragon', 'bug', 'dark']
+    Top Vulnerabilidades: ['poison', 'steel', 'electric']
+  Cluster 5 - Titanes de la Tierra:
+    Arquetipo: Colosos inmutables, resistentes a Roca y Eléctrico, anclas del equipo.
+    Top Resistencias: ['psychic', 'fight', 'water']
+    Top Vulnerabilidades: ['bug', 'dark', 'ghost']
+  Cluster 6 - Guardianes Ígneos:
+    Arquetipo: Inmunes funcionales al Fuego, obligatorios contra entrenadores de tipo Fuego.
     Top Resistencias: ['electric', 'poison', 'fire']
     Top Vulnerabilidades: ['grass', 'water', 'fight']
+  Cluster 7 - Centinelas de Hielo:
+    Arquetipo: Resistentes al Hielo y al Dragón. Clave contra Lance y Lorelei.
+    Top Resistencias: ['bug', 'dark', 'rock']
+    Top Vulnerabilidades: ['fairy', 'flying', 'psychic']
+  Cluster 8 - Versátiles Híbridos:
+    Arquetipo: Perfiles mixtos y adaptables. Comodines estratégicos para cualquier escenario.
+    Top Resistencias: ['fight', 'normal', 'bug']
+    Top Vulnerabilidades: ['dark', 'ghost', 'ground']
 
 --- DBSCAN (DENSITY-BASED) ---
   Parámetros: eps=3.00, min_samples=5
@@ -131,11 +151,10 @@ water                2.391        6.537
   Ejemplos outliers: Charizard, Butterfree, Zubat, Golbat, Paras, Parasect, Magnemite, Magneton, Gastly, Haunter...
 
 --- VALIDACIÓN ESTADÍSTICA (KRUSKAL-WALLIS) ---
-  Variables significativas (p<0.05): 17/18
+  Variables significativas (p<0.05): 18/18
   Las variables con diferencias significativas entre clusters
   confirman que la segmentación captura diversidad real.
   Variables NO significativas:
-    - dragon: H=2.76, p=4.3020e-01
 
 --- CARTOGRAFÍA VISUAL ---
   Mapas generados: PCA y t-SNE con sprites de Pokémon.

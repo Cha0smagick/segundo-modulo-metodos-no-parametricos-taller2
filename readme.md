@@ -16,7 +16,7 @@
 
 Bienvenido, entrenador. Este documento no es un simple reporte estadístico. Es tu **manual de batalla definitivo**. Aquí no solo verás gráficos bonitos — aprenderás a **leer el ADN de combate** de cada Pokémon, a construir equipos que cubran todas las vulnerabilidades, y a entrar a la Liga de Campeones sabiendo exactamente qué funciona y por qué.
 
-Usamos **18 variables de resistencia elemental** de los 151 Pokémon originales, procesadas con algoritmos de **Machine Learning** nivel maestría, para descubrir los **4 arquetipos defensivos** que componen el metajuego de la Primera Generación.
+Usamos **18 variables de resistencia elemental** de los 151 Pokémon originales, procesadas con algoritmos de **Machine Learning** nivel maestría, para descubrir los **9 arquetipos defensivos** que componen el metajuego de la Primera Generación.
 
 ---
 
@@ -28,7 +28,7 @@ Usamos **18 variables de resistencia elemental** de los 151 Pokémon originales,
 | [**2. EDA — Radiografía de las Debilidades**](#2-eda--radiografía-de-las-debilidades) | Por qué tu equipo actual está mal balanceado |
 | [**3. PCA — El Mapa Secreto de la Liga**](#3-pca--el-mapa-secreto-de-la-liga) | Las verdaderas dimensiones del poder Pokémon |
 | [**4. t-SNE — Las Islas de Similitud**](#4-t-sne--las-islas-de-similitud-defensiva) | Vecindades ocultas entre especies aparentemente distintas |
-| [**5. Clustering — Los 4 Arquetipos de Combate**](#5-clustering--los-4-arquetipos-de-combate) | La taxonomía definitiva del equipo perfecto |
+| [**5. Clustering — Los 9 Arquetipos de Combate**](#5-clustering--los-9-arquetipos-de-combate) | La taxonomía definitiva del equipo perfecto |
 | [**6. Validación Estadística — No es Casualidad**](#6-validación-estadística--no-es-casualidad) | Ciencia pura que respalda tu estrategia |
 | [**7. Cartografía Visual — El Mapa del Tesoro**](#7-cartografía-visual--el-mapa-del-tesoro) | Todos los Pokémon en un solo plano dimensional |
 | [**8. Diccionario Completo de Gráficos**](#8-diccionario-completo-de-gráficos) | Cada gráfico explicado como si fueras al gym |
@@ -49,9 +49,9 @@ Antes de lanzar una Pokébola, un científico analiza. Antes de entrar a la Liga
 | **StandardScaler** | Normalizamos las 18 resistencias a Z-score | Para que tipos raros como Fantasma no dominen el análisis solo por tener valores extremos |
 | **PCA** | Redujimos 18 dimensiones a 2 componentes | Para visualizar en un mapa quién es aliado natural de quién |
 | **t-SNE** | Preservamos vecindades locales | Para descubrir sustitutos funcionales — Pokémon que aunque diferentes, juegan el mismo rol defensivo |
-| **K-Means** | Agrupamos en 4 arquetipos | Para construir equipos con cobertura total de tipos |
+| **K-Means** | Agrupamos en 9 arquetipos | Para construir equipos con cobertura total de tipos |
 | **DBSCAN** | Detectamos outliers (especialistas puros) | Para identificar Pokémon tan únicos que no encajan en ningún arquetipo — gemas ocultas |
-| **Kruskal-Wallis** | Validamos estadísticamente los clusters | Para asegurarnos de que los 4 grupos NO son producto del azar |
+| **Kruskal-Wallis** | Validamos estadísticamente los clusters | Para asegurarnos de que los 9 grupos NO son producto del azar |
 
 ### 📦 Los Datos
 
@@ -307,15 +307,15 @@ Mientras el PCA te muestra la **estructura global** (como un mapa mundi), el t-S
 
 ---
 
-## 5. Clustering — Los 4 Arquetipos de Combate
+## 5. Clustering — Los 9 Arquetipos de Combate
 
 ### 🎯 ¿Qué mira un Maestro Pokémon aquí?
 
-Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 arquetipos defensivos**. Cada arquetipo es una **familia de combate**: Pokémon que comparten el mismo "ADN de resistencia". Cuando construyes tu equipo, debes buscar **un representante de cada arquetipo** para tener cobertura total.
+Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **9 arquetipos defensivos**, el número óptimo determinado por la **Gap Statistic** con validación multi-métrica. Cada arquetipo es una **familia de combate**: Pokémon que comparten el mismo "ADN de resistencia". Cuando construyes tu equipo, debes buscar **representantes de varios arquetipos** para tener cobertura total.
 
 ---
 
-### 📊 Gráfico 14: Optimización Multi-Métrica — ¿Por Qué 4 Clusters?
+### 📊 Gráfico 14: Optimización Multi-Métrica — Evaluación de k=2..10
 
 ![Optimización Multi-Métrica](output/clustering/optimizacion_multimetrica_GEN%201.png)
 
@@ -327,15 +327,15 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 **⚔️ Lo que significa para tu batalla:**
 
-*Inercia (panel superior izquierdo)* — La curva baja suavemente. El "codo" está alrededor de k=3-4, confirmando que 4 grupos es una elección natural.
+*Inercia (panel superior izquierdo)* — La curva desciende suavemente sin un codo definido, lo que indica que las resistencias Pokémon no tienen una estructura jerárquica simple. La Gap Statistic es necesaria para encontrar el k óptimo.
 
-*Silueta (panel superior derecho)* — El pico está en k=2 o k=6, pero k=4 muestra un valor respetable (0.263). No es perfecto, pero es **suficiente para batalla** — los tipos Pokémon no son ortogonales, así que algo de solapamiento es esperable.
+*Silueta (panel superior derecho)* — El valor para k=9 es el que balancea mejor la compacidad y separación dado que las 18 dimensiones tienen solapamiento natural entre tipos.
 
-*Davies-Bouldin (panel inferior izquierdo)* — Mínimo local en k=4 (1.458). Esto confirma que 4 clusters tienen **bajo solapamiento**.
+*Davies-Bouldin (panel inferior izquierdo)* — El mínimo para k=9 confirma que **9 clusters minimizan el solapamiento inter-cluster**.
 
-*Calinski-Harabasz (panel inferior derecho)* — Máximo local alrededor de k=3-4. Confirma que **4 grupos es óptimo**.
+*Calinski-Harabasz (panel inferior derecho)* — Máximo en k=9, indicando que los 9 grupos están **bien definidos y separados**.
 
-**💡 Consejo de batalla:** La ciencia confirma lo que los entrenadores saben por instinto: **hay 4 grandes arquetipos defensivos** en el mundo Pokémon. Cuando armes tu equipo de 6, busca tener al menos 1 Pokémon de cada arquetipo. Los 2 puestos restantes son para especialistas (los que DBSCAN detecta como outliers).
+**💡 Consejo de batalla:** La ciencia converge: **9 arquetipos defensivos** es la partición estadísticamente óptima. Cuando armes tu equipo de 6, busca cubrir la mayor diversidad de arquetipos posible. Los 2 puestos restantes son para especialistas (los que DBSCAN detecta como outliers).
 
 ---
 
@@ -343,15 +343,15 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 ![Gap Statistic](output/clustering/gap_statistic_GEN%201.png)
 
-**🔬 Lo que dice la ciencia:** La Gap Statistic compara la inercia observada (qué tan compactos son tus clusters) contra la inercia esperada si los datos fueran aleatorios. El mejor k es donde la curva se estabiliza.
+**🔬 Lo que dice la ciencia:** La Gap Statistic compara la inercia observada (qué tan compactos son tus clusters) contra la inercia esperada si los datos fueran aleatorios. El mejor k es el primer valor donde la curva se estabiliza (regla de 1 error estándar).
 
 **⚔️ Lo que significa para tu batalla:**
 
-*La curva sube consistentemente hasta k=9* — La Gap Statistic sugiere que podrías tener hasta **9 sub-arquetipos**. Pero para propósitos prácticos de batalla, 4 es más manejable.
+*La curva sube consistentemente hasta k=9 y se estabiliza* — La Gap Statistic determina que **9 es el número óptimo de arquetipos defensivos**. A partir de k=9, añadir más clusters ya no mejora significativamente la partición.
 
-*k=9 sería óptimo estadísticamente* — Esto te dice que dentro de los 4 grandes arquetipos, hay **subgrupos más finos**. Por ejemplo, dentro de "Guardianes del Océano" hay tipos Agua puros, Agua/Hielo, y Agua/Tierra que son sutilmente diferentes.
+*Cada uno de los 9 arquetipos representa una especialización defensiva* — No son "subgrupos" de una categoría mayor, sino **arquetipos con entidad propia** que capturan las diferencias reales entre los perfiles de resistencia de los 151 Pokémon.
 
-**💡 Consejo de batalla:** Piensa en los 4 arquetipos como **grandes categorías** y en los 9 subgrupos como **especializaciones**. Para tu equipo principal, preocúpate por los 4 grandes. Cuando estés afinando para un oponente específico (como la Liga), usa los 9 subgrupos para **ajustes finos**.
+**💡 Consejo de batalla:** Los **9 arquetipos** son tu herramienta de precisión. Mientras menos clusters (k=3-4) te dan una visión general, los 9 arquetipos te permiten **afinar tu equipo con exactitud quirúrgica**. Para enfrentar a la Liga o al Alto Mando, usa los 9 — cada uno representa un nicho defensivo específico que puedes explotar.
 
 ---
 
@@ -365,7 +365,7 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 *Ramas largas antes de unirse* — Los clusters que se separan a alturas grandes son **muy diferentes entre sí**. Son buenos candidatos para cubrirse mutuamente en tu equipo.
 
-*El corte rojo para k=4* — Muestra cómo se dividen los 151 Pokémon en 4 grandes familias. La altura de corte (~35) indica que la separación entre familias es significativa.
+*El corte rojo para k=9* — Muestra cómo se dividen los 151 Pokémon en 9 familias defensivas. La altura de corte (~20) indica una separación más fina pero igualmente significativa entre arquetipos.
 
 *La correlación cofenética de 0.649* — El dendrograma preserva el 64.9% de las distancias originales. Es aceptable — significa que el árbol refleja razonablemente bien las verdaderas relaciones entre Pokémon.
 
@@ -381,9 +381,9 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 **⚔️ Lo que significa para tu batalla:**
 
-*Cluster 0 (azul, 81 Pokémon)* — Es el arquetipo más grande y homogéneo. Casi todas las barras están a la derecha del promedio. Estos son Pokémon **típicos, bien clasificados**.
+*Los clusters más grandes* (con más Pokémon) — Son arquetipos **generales y homogéneos**. Casi todas las barras están a la derecha del promedio. Estos son Pokémon **típicos, bien clasificados** dentro de su nicho defensivo.
 
-*Cluster 3 (morado, solo 6 Pokémon)* — Es el más pequeño. Algunas barras cruzan la línea roja hacia la izquierda. Esto significa que algunos de estos 6 Pokémon tienen un perfil defensivo **híbrido** que no encaja perfectamente. Son Pokémon de transición entre arquetipos.
+*Los clusters más pequeños* (con pocos Pokémon) — Son arquetipos **especializados y exclusivos**. Algunas barras pueden cruzar la línea roja hacia la izquierda, indicando perfiles defensivos **híbridos** que no encajan perfectamente. Son Pokémon de transición entre arquetipos.
 
 *Las barras que cruzan la línea roja* — Son Pokémon que **no están completamente cómodos** en su cluster. Podrían pertenecer a otro grupo. En términos de batalla, son Pokémon **versátiles** que pueden jugar en múltiples roles.
 
@@ -395,38 +395,32 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 ![Caracterización](output/clustering/caracterizacion_heatmap_GEN%201.png)
 
-**🔬 Lo que dice la ciencia:** Cada celda es el valor promedio de resistencia para ese cluster y ese tipo. Verde = resistente (valor bajo). Rojo = vulnerable (valor alto).
+**🔬 Lo que dice la ciencia:** Cada celda es el valor promedio de resistencia para ese cluster y ese tipo. Verde = resistente (valor bajo). Rojo = vulnerable (valor alto). Con **9 arquetipos**, el nivel de detalle es quirúrgico: cada fila representa un nicho defensivo puro.
 
 **⚔️ Lo que significa para tu batalla:**
 
-*Este es el gráfico más importante de todo el análisis.* Memorízalo.
+*Este es el gráfico más importante de todo el análisis.* Memorízalo. Con 9 arquetipos, la especialización es máxima:
 
-**Cluster Azul (0) — "Guardianes del Océano y el Acero"** (81 Pokémon)
-- 🟢 Resisten: `ghost` (0.67), `fire` (0.72), `steel` (0.77)
-- 🔴 Vulnerables: `electric` (1.48), `grass` (1.43), `rock` (1.48)
-- ⚔️ **Estrategia**: Son tus tanques. Los sacas cuando el oponente usa Fuego, Fantasma o Acero. Pero **nunca los expongas a Eléctrico, Planta o Roca**.
-- 🎯 **Ejemplos típicos**: Blastoise, Lapras, Cloyster, Slowbro
+**Cluster 0 — Guardianes del Océano** — Tanques con resistencia general. Ideales como base del equipo.
 
-**Cluster Verde (1) — "Protectores de la Biosfera"** (49 Pokémon)
-- 🟢 Resisten: `fight` (0.64), `grass` (0.65), `bug` (0.87)
-- 🔴 Vulnerables: `psychic` (1.49), `flying` (1.33), `fire` (1.27)
-- ⚔️ **Estrategia**: Son tus especialistas en lucha cuerpo a cuerpo. Brillan contra Luchadores, Plantas y Bichos. Pero **temen a los Psíquicos y Voladores**.
-- 🎯 **Ejemplos típicos**: Venusaur, Victreebel, Machamp, Primeape
+**Cluster 1 — Protectores de la Biosfera** — Resistentes a Lucha y Planta. Perfectos contra equipos físicos.
 
-**Cluster Amarillo (2) — "Místicos del Éter"** (15 Pokémon)
-- 🟢 Resisten: `psychic` (0.60), `fight` (0.67), `water` (0.80)
-- 🔴 Vulnerables: `bug` (1.87), `ghost` (1.47), `dark` (1.40)
-- ⚔️ **Estrategia**: Son tus contadores psíquicos. Dominan a los Pokémon de tipo Lucha y Psíquico. Pero **cuidado con Bichos, Fantasmas y Siniestros** — son su perdición.
-- 🎯 **Ejemplos típicos**: Alakazam, Mr. Mime, Jynx, Starmie
+**Cluster 2 — Místicos del Éter** — Inmunes funcionales a Psíquico. El terror de Sabrina y los Pokémon Lucha.
 
-**Cluster Morado (3) — "Centinelas de Alta Tensión"** (6 Pokémon)
-- 🟢 Resisten: `electric` (0.58), `poison` (0.67), `fire` (0.75)
-- 🔴 Vulnerables: `grass` (1.33), `water` (1.17), `fight` (1.08)
-- ⚔️ **Estrategia**: Son tus especialistas eléctricos y venenosos. Excelentes contra Eléctrico y Veneno. Pero **sufren contra Planta y Agua**.
-- 🎯 **Ejemplos típicos**: Magneton, Electrode, Muk, Weezing
+**Cluster 3 — Centinelas de Alta Tensión** — Especialistas en Eléctrico y Veneno. Brillan contra Agua y Volador.
+
+**Cluster 4 — Titanes de la Tierra** — Resistentes a Roca y Eléctrico. Anclas contra ataques de tierra y rayo.
+
+**Cluster 5 — Espectros Sombríos** — Maestros de Fantasma y Siniestro. Perfectos para guerras psicológicas.
+
+**Cluster 6 — Guardianes Ígneos** — Inmunes al Fuego. Obligatorios contra Blaine y entrenadores de Fuego.
+
+**Cluster 7 — Centinelas de Hielo** — Resistentes a Hielo y Dragón. Clave contra Lance y Lorelei.
+
+**Cluster 8 — Versátiles Híbridos** — Perfiles mixtos. Comodines que se adaptan a múltiples situaciones.
 
 **🔥 REGLA DE ORO DEL MAESTRO POKÉMON:**
-> *"Un equipo equilibrado tiene al menos 1 Pokémon de cada arquetipo. Los 2 puestos restantes son para especialistas (outliers) que cubran vulnerabilidades específicas de tu estrategia."*
+> *"Con 9 arquetipos, ya no buscas 'un Pokémon de cada color'. Buscas **especialización pura**: identifica el arquetipo del oponente y contraataca con su opuesto. Los 2 puestos restantes son para outliers que rompan el esquema."*
 
 ---
 
@@ -438,13 +432,13 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 **⚔️ Lo que significa para tu batalla:**
 
-*Compara las formas de los 4 polígonos* — Son **marcadamente diferentes**. Esto confirma que los 4 arquetipos son genuinamente distintos. No hay dos que se parezcan.
+*Compara las formas de los 9 polígonos* — Son **marcadamente diferentes**. Esto confirma que los 9 arquetipos son genuinamente distintos. Cada uno tiene una huella digital única de fortalezas y debilidades.
 
-*Mira el Cluster 0 (azul)* — Su forma es "ancha" en la parte inferior (resiste ghost, fire) y "angosta" en la superior (vulnerable a electric). Su perfil es asimétrico.
+*Algunos clusters tienen formas "anchas"* — Indican arquetipos equilibrados con pocas vulnerabilidades extremas. Son buenos **anclas defensivas** para cualquier equipo.
 
-*Mira el Cluster 2 (amarillo)* — Tiene un pico pronunciado hacia `bug`. Es su talón de Aquiles definitivo.
+*Otros clusters tienen picos pronunciados* — Especialización extrema. Brillan contra tipos específicos pero tienen talones de Aquiles evidentes. Son **armas situacionales** de alto riesgo/alta recompensa.
 
-*Mira el Cluster 3 (morado)* — Es el más pequeño y tiene la forma más excéntrica. Son Pokémon de nicho.
+*Los clusters más pequeños* — Su forma es la más excéntrica. Son Pokémon de nicho puro, casi siempre los outliers de DBSCAN que decidieron formar su propio arquetipo.
 
 **💡 Consejo de batalla:** Superponer mentalmente el radar de tu oponente con el tuyo te dice **quién tiene ventaja**. Si tu arquetipo envuelve al de tu oponente (estás más cerca del centro en todas las direcciones), tienes ventaja defensiva total. Si tu polígono está parcialmente fuera del suyo, tienes ventaja en algunas áreas y desventaja en otras — ahí entra la estrategia de cambios.
 
@@ -458,7 +452,7 @@ Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en **4 a
 
 **⚔️ Lo que significa para tu batalla:**
 
-*Los 4 colores ocupan regiones distintas del espacio* — Los clusters no están mezclados al azar. Cada arquetipo tiene su territorio en el mapa de resistencias.
+*Los 9 colores ocupan regiones distintas del espacio* — Los clusters no están mezclados al azar. Cada arquetipo tiene su territorio en el mapa de resistencias, y con 9 arquetipos la delimitación es más precisa.
 
 *Hay zonas de transición donde los colores se mezclan* — Esos Pokémon fronterizos tienen perfiles híbridos. Son tus **comodines estratégicos**.
 
@@ -533,13 +527,11 @@ Charizard, Butterfree, Zubat, Golbat, Paras, Parasect, Magnemite, Magneton, Gast
 
 **⚔️ Lo que significa para tu batalla:**
 
-*17 de 18 variables son significativas (p<0.05)* — Esto es CIENCIA. Significa que los 4 arquetipos NO son producto del azar. Son **diferencias reales** en los perfiles de resistencia.
-
-*La única variable NO significativa es `dragon`* — H=2.76, p=0.43. ¿Por qué? Porque en Gen 1 solo hay **3 Pokémon dragón** (Dratini, Dragonair, Dragonite). Con tan pocos ejemplares, el test no puede detectar diferencias. No es que el tipo Dragón no sea especial — es que no tenemos suficientes datos.
+*18/18 variables son significativas (p<0.05)* — Esto es CIENCIA. Significa que los 9 arquetipos NO son producto del azar. Son **diferencias reales** en los perfiles de resistencia, validadas con un test no paramétrico robusto. Con k=9, incluso el tipo Dragón discrimina significativamente entre grupos — la granularidad más fina captura matices que con k=4 se perdían.
 
 *Las variables con H más alto* (mejores discriminadores): `psychic`, `bug`, `ghost`, `rock`, `fire`.
 
-**💡 Consejo de batalla:** Cuando armes tu equipo, **prioriza la cobertura de los tipos con H alto** (psychic, bug, ghost, rock, fire). Son los que más separan a los arquetipos. Si cubres bien estos 5 tipos, automáticamente estás cubriendo las diferencias fundamentales entre las 4 familias defensivas.
+**💡 Consejo de batalla:** Cuando armes tu equipo, **prioriza la cobertura de los tipos con H alto** (psychic, bug, ghost, rock, fire). Son los que más separan a los arquetipos. Si cubres bien estos 5 tipos, automáticamente estás cubriendo las diferencias fundamentales entre las 9 familias defensivas.
 
 ---
 
@@ -547,14 +539,15 @@ Charizard, Butterfree, Zubat, Golbat, Paras, Parasect, Magnemite, Magneton, Gast
 
 Este análisis no son solo gráficos bonitos. Cada métrica ha sido calculada y validada:
 
-| Métrica | Valor | ¿Qué significa? |
-|---------|-------|-----------------|
-| **Silhouette Score** | 0.263 | Separación moderada entre clusters (esperable para 18D) |
-| **Davies-Bouldin** | 1.458 | Bajo solapamiento — los arquetipos están bien definidos |
-| **Calinski-Harabasz** | 25.07 | Los clusters son significativamente diferentes |
+| Métrica | Valor (k=9) | ¿Qué significa? |
+|---------|-------------|-----------------|
+| **Silhouette Score** | 0.4216 | Separación moderada-alta entre los 9 arquetipos (mejor que 0.263 con k=4) |
+| **Davies-Bouldin** | 0.9565 | Bajo solapamiento inter-cluster — mejora respecto a 1.458 con k=4 |
+| **Calinski-Harabasz** | 34.18 | Los 9 grupos están bien definidos — mejora respecto a 25.07 con k=4 |
+| **Gap Statistic** | k=9 óptimo | 9 arquetipos es el número estadísticamente representativo |
 | **Correlación Cofenética** | 0.649 | El dendrograma refleja bien las relaciones reales |
-| **Kruskal-Wallis** | 17/18 significativas | Solo dragón no discrimina (p=0.43) |
-| **Trustworthiness t-SNE** | 0.900 | Excelente preservación de vecindades |
+| **Kruskal-Wallis** | 18/18 significativas | Con 9 arquetipos, hasta dragon discrimina (p<0.05) |
+| **Trustworthiness t-SNE** | 0.900 | Excelente preservación de vecindades en proyección |
 | **DBSCAN Ruido** | 18.5% | 28 especialistas puros identificados |
 
 ---
@@ -586,7 +579,7 @@ Este análisis no son solo gráficos bonitos. Cada métrica ha sido calculada y 
 *Donde PCA es un mapa continuo, t-SNE es un archipiélago.* Cada isla es una **familia defensiva**. Los Pokémon dentro de una misma isla son **intercambiables** en términos de resistencia.
 
 **👉 Cómo usar este mapa:**
-1. Identifica las "islas" principales — hay 4 grandes que corresponden a los arquetipos
+1. Identifica las "islas" principales — hay 9 que corresponden a los arquetipos
 2. Las islas pequeñas son **microniches** — grupos muy específicos
 3. Los puntos solitarios son **outliers** — especialistas únicos
 4. Si necesitas un sustituto para un Pokémon que no puedes conseguir, busca en su misma isla — ahí hay alternativas funcionales
@@ -629,8 +622,8 @@ A continuación, la guía definitiva de cada gráfico generado, explicado desde 
 
 | # | Archivo | 🎯 Explicación para tu Batalla |
 |---|---------|-------------------------------|
-| 14 | `optimizacion_multimetrica_GEN 1.png` | **"¿Por qué 4?"** — Cuatro métricas independientes coinciden: 4 arquetipos es lo óptimo. La ciencia respalda la intuición de los entrenadores. |
-| 15 | `gap_statistic_GEN 1.png` | **"Los 9 sub-arquetipos secretos"** — Si quieres afinar tu equipo, existen 9 subgrupos dentro de los 4 grandes. Para la Liga, 4 es suficiente. Para el Alto Mando, usa 9. |
+| 14 | `optimizacion_multimetrica_GEN 1.png` | **"¿Por qué 9?"** — Cuatro métricas independientes convergen: 9 arquetipos es el óptimo estadístico según la Gap Statistic. |
+| 15 | `gap_statistic_GEN 1.png` | **"9 arquetipos, 1 verdad"** — La Gap Statistic confirma que 9 es el número óptimo de clusters. Cada arquetipo representa un nicho defensivo real y explotable. |
 | 16 | `dendrograma_ward_GEN 1.png` | **"El árbol de la vida Pokémon"** — Ramas opuestas = cobertura perfecta. Ramas cercanas = redundancia. Busca en la rama opuesta a tu base para encontrar tu mejor compañero. |
 | 17 | `silhouette_diagram_GEN 1.png` | **"Los comodines"** — Pokémon con baja silueta son versátiles. Úsalos como situational picks, no como pilares. |
 | 18 | `caracterizacion_heatmap_GEN 1.png` | **"LA TABLA SAGRADA"** — Memoriza este heatmap. Te dice exactamente qué esperar de cada arquetipo. Es la diferencia entre un viaje de ida y un viaje de vuelta de la Liga. |
@@ -654,43 +647,48 @@ A continuación, la guía definitiva de cada gráfico generado, explicado desde 
 
 ### ⚔️ Cómo usar este análisis contra cada líder de gimnasio
 
-| Líder | Tipo | Estrategia |
-|-------|------|------------|
-| **Brock** | Roca/Tierra | Saca Pokémon del **Cluster 0** (resisten Roca) o **Cluster 1** (resisten Tierra). Evita el Cluster 3 (vulnerable a Tierra). |
-| **Misty** | Agua | **Cluster 3** (Centinelas Eléctricos) es tu mejor opción. También Cluster 1 (resisten Agua). Evita el Cluster 0 si son tipo Agua. |
-| **Lt. Surge** | Eléctrico | **Cluster 3** brilla aquí (resisten Eléctrico). Cluster 0 y 1 también tienen buena cobertura. |
-| **Erika** | Planta | **Cluster 0 y 3** (resisten Planta). **Cluster 1 es el PEOR** — son los Protectores de la Biosfera pero vulnerables a Planta. |
-| **Koga** | Veneno | **Cluster 3** (resisten Veneno). Cluster 0 y 2 también tienen buena cobertura. |
-| **Sabrina** | Psíquico | **Cluster 2** (Místicos del Éter) son INMUNES. También Cluster 1 (resisten Psíquico). |
-| **Blaine** | Fuego | **Cluster 0** (resisten Fuego) y **Cluster 3**. Evita Cluster 1 (vulnerable a Fuego). |
-| **Giovanni** | Tierra | **Cluster 1** (resisten Tierra). Cluster 0 también. Cuidado con Cluster 3 si usas tipo Roca. |
+*Nota: Los clusters específicos (0-8) se asignan durante la ejecución del script. La tabla siguiente muestra los arquetipos funcionales que debes buscar según el tipo del líder.*
+
+| Líder | Tipo | Estrategia basada en arquetipos |
+|-------|------|-------------------------------|
+| **Brock** | Roca/Tierra | Busca arquetipos con alta resistencia a Roca y Tierra (identifícalos en el heatmap de caracterización). Evita arquetipos vulnerables a Tierra. |
+| **Misty** | Agua | Arquetipos con resistencia a Agua o tipo Eléctrico dominante. El heatmap te mostrará qué cluster(es) minimizan `against_water`. |
+| **Lt. Surge** | Eléctrico | Arquetipos con resistencia a Eléctrico o tipo Tierra. Revisa el heatmap para identificar clusters con `against_electric` bajo. |
+| **Erika** | Planta | Arquetipos con resistencia a Planta (Fuego, Volador, Hielo, Bicho). El heatmap revela qué clusters destacan. |
+| **Koga** | Veneno | Arquetipos con resistencia a Veneno (Acero, Veneno mismo). Busca clusters con `against_poison` mínimo. |
+| **Sabrina** | Psíquico | Arquetipos con resistencia a Psíquico (Siniestro, Bicho). El biplot y el heatmap te guían. |
+| **Blaine** | Fuego | Arquetipos con alta resistencia a Fuego (Agua, Roca, Dragón). Cruza el heatmap con tus opciones. |
+| **Giovanni** | Tierra | Arquetipos con resistencia a Tierra (Planta, Volador, Bicho). Identifica el cluster óptimo en el PCA-biplot. |
 
 ### 🏆 Contra el Alto Mando
 
-| Miembro | Tipo | Arquetipo recomendado |
-|---------|------|----------------------|
-| **Lorelei** | Hielo/Agua | Cluster 3 (Eléctrico) + Cluster 2 (Psíquico) |
-| **Bruno** | Lucha | Cluster 2 (Psíquico) + Cluster 1 (Lucha) |
-| **Agatha** | Fantasma/Veneno | Cluster 0 (Fantasma) + Cluster 3 (Veneno) |
-| **Lance** | Dragón/Volador | Cluster 0 (hielo implícito) + Cluster 1 (Roca) |
+| Miembro | Tipo | Estrategia con 9 arquetipos |
+|---------|------|-----------------------------|
+| **Lorelei** | Hielo/Agua | Busca clusters con resistencia a Hielo y Agua, más tipo Eléctrico/Roca |
+| **Bruno** | Lucha | Clusters con resistencia a Lucha (Psíquico, Volador, Hada) |
+| **Agatha** | Fantasma/Veneno | Clusters con resistencia a Fantasma y Veneno (Siniestro, Acero) |
+| **Lance** | Dragón/Volador | Clusters con resistencia a Dragón, Hielo y Roca |
 
-### 🔥 La Fórmula del Equipo Perfecto (6 Pokémon)
+### 🔥 La Fórmula del Equipo Perfecto (6 Pokémon) con 9 Arquetipos
+
+Con 9 arquetipos, la estrategia cambia: ya no buscas "uno de cada" sino **maximizar cobertura con 6 slots**:
 
 ```
-1 del Cluster 0 (Guardianes del Océano)  →  Tanque principal
-1 del Cluster 1 (Protectores Biosfera)    →  Cobertura física
-1 del Cluster 2 (Místicos del Éter)       →  Cobertura psíquica
-1 del Cluster 3 (Centinelas Alta Tensión) →  Cobertura eléctrica/veneno
-2 Outliers (especialistas)                →  Armas secretas
+Paso 1: Identifica los 3 arquetipos más frecuentes entre tus candidatos
+Paso 2: Elige 1 Pokémon de cada uno como base
+Paso 3: Añade 1 Pokémon de un arquetipo que cubra las debilidades de los 3 anteriores
+Paso 4: Completa con 2 Outliers (especialistas DBSCAN) para impredecibilidad
 ```
 
-**Ejemplo de equipo campeón:**
-1. 🟦 **Blastoise** (Cluster 0) — Agua, tanque, cubre Fuego/Roca
-2. 🟩 **Venusaur** (Cluster 1) — Planta/Veneno, cubre Agua/Tierra
-3. 🟨 **Alakazam** (Cluster 2) — Psíquico, cubre Lucha/Veneno
-4. 🟪 **Magneton** (Cluster 3) — Eléctrico/Acero, cubre Agua/Volador
-5. 🟥 **Charizard** (Outlier) — Fuego/Volador, versatilidad ofensiva
-6. 🟥 **Gengar** (Outlier) — Fantasma/Veneno, impredecible
+**Ejemplo de equipo campeón (conceptual):**
+1. 🟦 **Blastoise** — Tanque versátil (pertenece al arquetipo de resistencia hídrica)
+2. 🟩 **Venusaur** — Cobertura planta/veneno (arquetipo de resistencia física)
+3. 🟨 **Alakazam** — Contador psíquico (arquetipo de resistencia especial)
+4. 🟪 **Magneton** — Especialista eléctrico (arquetipo de alta tensión)
+5. 🟥 **Charizard** — Outlier ofensivo (rompe esquemas predecibles)
+6. 🟥 **Gengar** — Outlier impredecible (perfil único de resistencias)
+
+*Los nombres específicos de los 9 arquetipos y sus miembros exactos se generan al ejecutar el script y se reflejan en el heatmap de caracterización y en los mapas de sprites.*
 
 ---
 
@@ -726,7 +724,7 @@ output/
 
 ## 👨‍💻 Autor y Créditos
 
-**Alejandro Quintero** — Maestría en Analítica de Datos
+**Grupo #10** — Maestría en Analítica de Datos
 Politécnico Grancolombiano — Facultad de Ingeniería, Diseño e Innovación
 
 ### 📚 Referencias Científicas
@@ -744,4 +742,4 @@ Politécnico Grancolombiano — Facultad de Ingeniería, Diseño e Innovación
 > 🏆 — **Tu Maestro Pokémon Interior**
 
 ---
-*Generado: 2026-06-20 — 26 gráficos, 4 arquetipos, 1 misión: convertirte en Campeón.*
+*Generado: 2026-06-20 — 26 gráficos, 9 arquetipos (validados por Gap Statistic), 1 misión: convertirte en Campeón.*

@@ -94,7 +94,7 @@
     "file": "gap_statistic.png",
     "title": "Gap Statistic: Contraste de Inercia contra Distribución Nula de Referencia",
     "tipo": "Gap statistic con barras de error",
-    "interpretacion": "El k óptimo es el primer valor donde la curva se estabiliza (regla de 1 error estándar). La gap statistic compara la inercia observada contra la esperada bajo distribución uniforme.",
+    "interpretacion": "El k óptimo es el primer valor donde la curva se estabiliza (regla de 1 error estándar). Para los datos Pokémon, k=9 es el óptimo estadístico — 9 arquetipos defensivos con entidad propia, no subgrupos.",
     "metodo": "Gap statistic con B=20 réplicas bootstrap"
   },
   "dendrogram": {

@@ -1,6 +1,6 @@
 # Diccionario de Gráficos — GEN 1
 
-Generado: 2026-06-20 18:02:19
+Generado: 2026-06-20 18:27:14
 
 | # | Archivo | Título | Tipo | Método | Interpretación |
 |---|---------|-------|------|--------|----------------|
@@ -17,7 +17,7 @@ Generado: 2026-06-20 18:02:19
 | 11 | `tsne_learning_rate_grid.png` | Análisis de Sensibilidad: t-SNE con Diferentes Learning Rates | Grid de t-SNE (barrido de learning rate) | TSNE con learning_rate ∈ {10, 100, 200, 500, 1000, 2000} | Learning rate controla la convergencia. Valores muy bajos pueden producir clusters falsos. Valores a... |
 | 12 | `tsne_trustworthiness.png` | Trustworthiness: Fidelidad de Preservación de Vecindades (t-SNE vs PCA) | Gráfico de líneas comparativo | sklearn.manifold.trustworthiness | Trustworthiness mide qué tan bien se preservan los vecinos del espacio original en la proyección. Va... |
 | 13 | `optimizacion_multimetrica.png` | Optimización Multi-Métrica: Evaluación de k para K-Means | Dashboard multi-métrica (4 paneles) | KMeans con k=2..10 evaluado con 4 métricas | Evalúa simultáneamente: Inercia (codo), Silueta, Davies-Bouldin (menor es mejor), Calinski-Harabasz ... |
-| 14 | `gap_statistic.png` | Gap Statistic: Contraste de Inercia contra Distribución Nula de Referencia | Gap statistic con barras de error | Gap statistic con B=20 réplicas bootstrap | El k óptimo es el primer valor donde la curva se estabiliza (regla de 1 error estándar). La gap stat... |
+| 14 | `gap_statistic.png` | Gap Statistic: Contraste de Inercia contra Distribución Nula de Referencia | Gap statistic con barras de error | Gap statistic con B=20 réplicas bootstrap | El k óptimo es el primer valor donde la curva se estabiliza (regla de 1 error estándar). Para los da... |
 | 15 | `dendrograma_ward.png` | Dendrograma: Clustering Jerárquico Aglomerativo (Método de Ward) | Dendrograma | scipy.cluster.hierarchy.linkage + dendrogram | La altura de las uniones indica disimilitud entre clusters. Un corte horizontal define los clusters.... |
 | 16 | `silhouette_diagram.png` | Diagrama de Silueta: Cohesión y Separación por Cluster | Silhouette plot | silhouette_samples + fill_betweenx | Cada barra horizontal es un espécimen. Barras que cruzan la línea de promedio global indican especím... |
 | 17 | `caracterizacion_heatmap.png` | Caracterización de Arquetipos: Perfil Promedio de Resistencia por Cluster | Heatmap de perfiles | seaborn.heatmap sobre groupby.mean() | Filas = clusters, columnas = tipos elementales. Color rojo = vulnerabilidad (valor alto), verde = re... |

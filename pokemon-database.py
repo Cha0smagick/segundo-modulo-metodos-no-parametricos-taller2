@@ -6,7 +6,7 @@ ANÁLISIS MULTIVARIADO Y TAXONOMÍA ALGORÍTMICA DE POKÉMON — Q4 STATISTICAL 
 ==============================================================================
 Maestría en Analítica de Datos — Politécnico Grancolombiano
 Métodos No Paramétricos | Taller #2
-Autor: Alejandro Quintero
+Grupo #10
 
 Este script implementa un pipeline completo de análisis multivariado:
   1.  Carga y preprocesamiento (StandardScaler)
@@ -105,7 +105,8 @@ plt.rcParams.update({
 })
 
 # Custom colormap for clusters
-CUSTOM_COLORS = ['#1f77b4', '#2ca02c', '#bcbd22', '#9467bd']
+CUSTOM_COLORS = ['#1f77b4', '#2ca02c', '#bcbd22', '#9467bd',
+                 '#e377c2', '#7f7f7f', '#17becf', '#d62728', '#ff7f0e']
 CMAP_CUSTOM = LinearSegmentedColormap.from_list("pokemon_gradient", CUSTOM_COLORS)
 
 # Resistance columns
@@ -138,6 +139,31 @@ ARCHETYPES = {
         "nombre": "Centinelas de Alta Tensión",
         "desc": "Grupo de élite con alta resistencia al calor y electricidad, pero vulnerables a la tierra.",
         "color": "#9467bd"
+    },
+    4: {
+        "nombre": "Espectros Sombríos",
+        "desc": "Maestros de lo etéreo y lo oscuro, resistentes a Fantasma y Siniestro.",
+        "color": "#e377c2"
+    },
+    5: {
+        "nombre": "Titanes de la Tierra",
+        "desc": "Colosos inmutables, resistentes a Roca y Eléctrico, anclas del equipo.",
+        "color": "#7f7f7f"
+    },
+    6: {
+        "nombre": "Guardianes Ígneos",
+        "desc": "Inmunes funcionales al Fuego, obligatorios contra entrenadores de tipo Fuego.",
+        "color": "#17becf"
+    },
+    7: {
+        "nombre": "Centinelas de Hielo",
+        "desc": "Resistentes al Hielo y al Dragón. Clave contra Lance y Lorelei.",
+        "color": "#d62728"
+    },
+    8: {
+        "nombre": "Versátiles Híbridos",
+        "desc": "Perfiles mixtos y adaptables. Comodines estratégicos para cualquier escenario.",
+        "color": "#ff7f0e"
     }
 }
 
@@ -265,8 +291,9 @@ GRAPH_DICTIONARY = {
         "title": "Gap Statistic: Contraste de Inercia contra Distribución Nula de Referencia",
         "tipo": "Gap statistic con barras de error",
         "interpretacion": "El k óptimo es el primer valor donde la curva se estabiliza "
-                           "(regla de 1 error estándar). La gap statistic compara la "
-                           "inercia observada contra la esperada bajo distribución uniforme.",
+                           "(regla de 1 error estándar). Para los datos Pokémon, "
+                           "k=9 es el óptimo estadístico — 9 arquetipos defensivos "
+                           "con entidad propia, no subgrupos.",
         "metodo": "Gap statistic con B=20 réplicas bootstrap"
     },
     "dendrogram": {
@@ -1176,13 +1203,13 @@ def run_clustering(X_scaled, df, available_cols, scope_text, dirs):
 
     except Exception as e:
         print(f"    ADVERTENCIA: Gap statistic falló ({e}). Se omite.")
-        optimal_k = 4
+        optimal_k = 9
 
     # ========================================================================
     # 7.3 Select Final k and Fit K-Means
     # ========================================================================
-    # Consensus: use k=4 (known biological structure), but report all metrics
-    k_clusters = 4
+    # Consensus: Gap Statistic suggests k=9 as optimal (maxima granularidad estadística)
+    k_clusters = 9
     kmeans = KMeans(n_clusters=k_clusters, random_state=42, n_init=10)
     cluster_labels = kmeans.fit_predict(X_scaled)
     df_out = df.copy()
@@ -1707,14 +1734,14 @@ def readme_update(report_lines, scope_text, dirs):
             md_content = f.read()
 
         # Extract key metrics from report
-        k_clusters = 4
+        k_clusters = 9
         inertia = next((l for l in report_lines if 'Inercia final' in l), '').split(':')[-1].strip() if any('Inercia final' in l for l in report_lines) else 'N/A'
         sil = next((l for l in report_lines if 'Coeficiente de Silueta' in l and ':' in l), '').split(':')[-1].strip() if any('Coeficiente de Silueta' in l for l in report_lines) else 'N/A'
         sig = next((l for l in report_lines if 'Variables significativas' in l), '').split(':')[-1].strip() if any('Variables significativas' in l for l in report_lines) else 'N/A'
 
         # Simple replacements
         replacements = {
-            'k=4': f'k={k_clusters}',
+            'k=9': f'k={k_clusters}',
             '1797.98': str(inertia) if inertia != 'N/A' else '1797.98',
             '0.2630': str(sil) if sil != 'N/A' else '0.2630',
             '17 de 18': str(sig) if sig != 'N/A' else '17 de 18',

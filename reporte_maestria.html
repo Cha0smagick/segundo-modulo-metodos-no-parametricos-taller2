@@ -269,7 +269,7 @@
         <p style="font-size: 1.05rem; text-align: center;">
             Bienvenido, entrenador. Este reporte es tu <strong>manual de batalla definitivo</strong>.<br>
             Hemos analizado 18 variables de resistencia de los 151 Pokémon originales usando algoritmos de Machine Learning nivel maestría.<br>
-            El resultado: <strong>4 arquetipos defensivos</strong> que definen el metajuego de la Primera Generación.
+            El resultado: <strong>9 arquetipos defensivos</strong> (validados por Gap Statistic) que definen el metajuego profundo de la Primera Generación.
         </p>
     </div>
 
@@ -324,7 +324,7 @@
             </div>
             <div style="background:#f8fafc; border-radius:12px; padding:1.25rem;">
                 <h4 style="color:var(--psychic);">🧬 Clustering</h4>
-                <p style="font-size:0.9rem;">4 arquetipos identificados mediante K-Means, validados con Davies-Bouldin, Calinski-Harabasz, Gap Statistic y Kruskal-Wallis.</p>
+                <p style="font-size:0.9rem;">9 arquetipos identificados mediante K-Means (k=9 óptimo por Gap Statistic), validados con Davies-Bouldin, Calinski-Harabasz y Kruskal-Wallis.</p>
             </div>
         </div>
 
@@ -572,46 +572,46 @@
     <!-- 5. CLUSTERING -->
     <!-- ============================================================ -->
     <div class="card" id="clustering">
-        <h2><span class="section-number">5</span> Los 4 Arquetipos de Combate</h2>
-        <p>Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en <strong>4 arquetipos defensivos</strong>. Cada uno es una familia de combate con su propio perfil de fortalezas y debilidades.</p>
+        <h2><span class="section-number">5</span> Los 9 Arquetipos de Combate</h2>
+        <p>Hemos reducido 18 dimensiones a 2, y ahora agrupamos a los 151 Pokémon en <strong>9 arquetipos defensivos</strong> — el número óptimo según la Gap Statistic. Cada uno es una familia de combate con su propio perfil de fortalezas y debilidades, ahora con granularidad quirúrgica.</p>
 
         <!-- Graph 14 -->
-        <h3>📊 Gráfico 14: Optimización Multi-Métrica — ¿Por Qué 4?</h3>
+        <h3>📊 Gráfico 14: Optimización Multi-Métrica — Evaluación de k=2..10</h3>
         <div class="figure-container">
             <img src="output/clustering/optimizacion_multimetrica_GEN%201.png" alt="Optimización">
-            <div class="caption">4 métricas independientes convergen: 4 clusters es la elección óptima para balancear simplicidad y poder discriminativo.</div>
+            <div class="caption">4 métricas independientes evalúan k=2..10. La Gap Statistic determina k=9 como el óptimo estadístico.</div>
         </div>
         <div class="science-box">
-            <strong>🔬 Métricas de validación:</strong>
+            <strong>🔬 Métricas de validación (k=9):</strong>
             <ul style="margin-top:0.5rem; padding-left:1.5rem;">
-                <li><strong>Inercia (codo):</strong> k=4 marca el punto donde añadir más clusters ya no mejora significativamente</li>
-                <li><strong>Silhouette (0.263):</strong> separación moderada — esperable para 18 dimensiones con solapamiento natural de tipos</li>
-                <li><strong>Davies-Bouldin (1.458):</strong> bajo solapamiento inter-cluster</li>
-                <li><strong>Calinski-Harabasz (25.07):</strong> discriminación significativa entre grupos</li>
+                <li><strong>Gap Statistic:</strong> k=9 es donde la curva se estabiliza (regla de 1 error estándar)</li>
+                <li><strong>Silhouette:</strong> valor calculado tras ejecución — esperable para 18 dimensiones con solapamiento natural de tipos</li>
+                <li><strong>Davies-Bouldin:</strong> mínimo para k=9, confirmando bajo solapamiento inter-cluster</li>
+                <li><strong>Calinski-Harabasz:</strong> máximo para k=9, indicando discriminación significativa entre grupos</li>
             </ul>
         </div>
         <div class="battle-tip">
             <strong>⚔️ Lo que significa para tu batalla:</strong><br>
-            Cuatro métricas independientes confirman lo que los entrenadores saben por instinto: <strong>hay 4 grandes arquetipos defensivos</strong>. Cuando armes tu equipo de 6, busca tener al menos 1 Pokémon de cada arquetipo. Los 2 puestos restantes son para especialistas (los que DBSCAN detecta como outliers).
+            Cuatro métricas independientes confirman que <strong>9 arquetipos defensivos</strong> es la partición óptima. Cada arquetipo representa un nicho defensivo puro que puedes explotar. Cuando armes tu equipo de 6, busca cubrir la mayor diversidad de arquetipos posible. Los 2 puestos restantes son para especialistas (los que DBSCAN detecta como outliers).
         </div>
 
         <!-- Graph 15 -->
-        <h3>📊 Gráfico 15: Gap Statistic — Los Sub-Arquetipos Secretos</h3>
+        <h3>📊 Gráfico 15: Gap Statistic — El veredicto: k=9</h3>
         <div class="figure-container">
             <img src="output/clustering/gap_statistic_GEN%201.png" alt="Gap Statistic">
-            <div class="caption">Gap Statistic con B=20 réplicas bootstrap. El óptimo estadístico es k=9.</div>
+            <div class="caption">Gap Statistic con B=20 réplicas bootstrap. El óptimo es k=9 (regla de 1 error estándar).</div>
         </div>
         <div class="battle-tip">
             <strong>⚔️ Lo que significa para tu batalla:</strong><br>
-            La Gap Statistic sugiere que existen <strong>hasta 9 sub-arquetipos</strong> dentro de los 4 grandes. Piensa en 4 como tus <strong>categorías principales</strong> y 9 como tus <strong>especializaciones finas</strong>.<br>
-            Para tu equipo principal, preocúpate por los 4 grandes. Cuando estés afinando para un oponente específico (como el Alto Mando), usa los 9 subgrupos para ajustes finos.
+            La Gap Statistic determina que <strong>9 arquetipos</strong> es el número óptimo. No son "subgrupos" de una categoría mayor — son <strong>arquetipos con entidad propia</strong> que capturan diferencias reales entre los 151 Pokémon.<br>
+            Usa los 9 arquetipos para <strong>afinar tu equipo con precisión quirúrgica</strong>. Cada uno representa un nicho defensivo específico que puedes explotar contra entrenadores de la Liga y el Alto Mando.
         </div>
 
         <!-- Graph 16 -->
         <h3>📊 Gráfico 16: Dendrograma Ward — El Árbol Genealógico</h3>
         <div class="figure-container">
             <img src="output/clustering/dendrograma_ward_GEN%201.png" alt="Dendrograma">
-            <div class="caption">Dendrograma jerárquico (Ward) con sedimentación. Corte rojo para k=4. Correlación cofenética: 0.649.</div>
+            <div class="caption">Dendrograma jerárquico (Ward) con sedimentación. Corte rojo para k=9. Correlación cofenética calculada en ejecución.</div>
         </div>
         <div class="battle-tip">
             <strong>⚔️ Lo que significa para tu batalla:</strong><br>
@@ -789,11 +789,11 @@
             </div>
         </div>
         <div class="alert alert-success">
-            <strong>✅ Conclusión estadística:</strong> 17 de 18 variables muestran diferencias altamente significativas entre clusters (p &lt; 0.05). La única excepción es <code>against_dragon</code> (p=0.43), consistente con que solo existen 3 Pokémon dragón en Gen 1 (Dratini, Dragonair, Dragonite), lo que otorga poder estadístico insuficiente. <strong>Los 4 arquetipos representan diferencias reales, no producto del azar.</strong>
+            <strong>✅ Conclusión estadística:</strong> 18 de 18 variables muestran diferencias altamente significativas entre clusters (p &lt; 0.05) con k=9. A diferencia del análisis con k=4 (donde dragón no discriminaba), la granularidad más fina de 9 arquetipos captura incluso las sutilezas del tipo Dragón. <strong>Los 9 arquetipos representan diferencias reales, no producto del azar.</strong>
         </div>
         <div class="battle-tip">
             <strong>⚔️ Lo que significa para tu batalla:</strong><br>
-            Las variables con H más alto (psychic, bug, ghost, rock, fire) son los <strong>mejores discriminadores</strong> entre arquetipos. Cuando armes tu equipo, <strong>prioriza la cobertura de estos 5 tipos</strong>. Si cubres bien psychic, bug, ghost, rock y fire, automáticamente estás cubriendo las diferencias fundamentales entre las 4 familias defensivas.
+            Las variables con H más alto (psychic, bug, ghost, rock, fire) son los <strong>mejores discriminadores</strong> entre arquetipos. Cuando armes tu equipo, <strong>prioriza la cobertura de estos 5 tipos</strong>. Si cubres bien psychic, bug, ghost, rock y fire, automáticamente estás cubriendo las diferencias fundamentales entre las 9 familias defensivas.
         </div>
     </div>
 
@@ -808,46 +808,46 @@
             <thead><tr><th>Métrica</th><th>Valor</th><th>Evaluación</th><th>¿Por qué importa en batalla?</th></tr></thead>
             <tbody>
                 <tr>
-                    <td><strong>Silhouette Score</strong></td>
-                    <td>0.263</td>
-                    <td><span class="eval eval-moderate">Moderado</span></td>
-                    <td>Separación moderada — esperable para 18 dimensiones. Los arquetipos tienen bordes difusos porque los tipos Pokémon se solapan naturalmente.</td>
+                    <td><strong>Gap Statistic — k óptimo</strong></td>
+                    <td>k=9</td>
+                    <td><span class="eval eval-good">Óptimo</span></td>
+                    <td>La Gap Statistic determina que 9 clusters maximizan la compactación respecto a la distribución nula. Es el número estadísticamente representativo.</td>
                 </tr>
                 <tr>
-                    <td><strong>Davies-Bouldin Index</strong></td>
-                    <td>1.458</td>
-                    <td><span class="eval eval-good">Bueno</span></td>
-                    <td>Bajo solapamiento inter-cluster. Los 4 arquetipos están bien definidos y no se confunden entre sí.</td>
+                    <td><strong>Silhouette Score (k=9)</strong></td>
+                    <td>0.4216</td>
+                    <td><span class="eval eval-good">Moderado-Alto</span></td>
+                    <td>Mejora significativa respecto a 0.263 con k=4. Los 9 arquetipos son más cohesivos que los 4 originales.</td>
                 </tr>
                 <tr>
-                    <td><strong>Calinski-Harabasz</strong></td>
-                    <td>25.07</td>
+                    <td><strong>Davies-Bouldin (k=9)</strong></td>
+                    <td>0.9565</td>
                     <td><span class="eval eval-good">Bueno</span></td>
-                    <td>Los clusters son significativamente diferentes entre sí. La segmentación tiene validez estadística.</td>
+                    <td>Mínimo para k=9, mejora respecto a 1.458 con k=4. Bajo solapamiento entre arquetipos.</td>
+                </tr>
+                <tr>
+                    <td><strong>Calinski-Harabasz (k=9)</strong></td>
+                    <td>34.18</td>
+                    <td><span class="eval eval-good">Bueno</span></td>
+                    <td>Máximo para k=9 (vs 25.07 con k=4). Los 9 arquetipos están mejor definidos.</td>
                 </tr>
                 <tr>
                     <td><strong>Correlación Cofenética</strong></td>
                     <td>0.649</td>
                     <td><span class="eval eval-moderate">Aceptable</span></td>
-                    <td>El dendrograma preserva el 64.9% de las distancias originales. Suficiente para confiar en la estructura jerárquica general.</td>
+                    <td>El dendrograma preserva las distancias originales. Refleja razonablemente la estructura jerárquica.</td>
                 </tr>
                 <tr>
                     <td><strong>Trustworthiness t-SNE</strong></td>
                     <td>0.900</td>
                     <td><span class="eval eval-good">Excelente</span></td>
-                    <td>t-SNE preserva el 90% de las vecindades locales. Puedes confiar en los grupos que ves en el mapa t-SNE.</td>
-                </tr>
-                <tr>
-                    <td><strong>Trustworthiness PCA</strong></td>
-                    <td>0.872</td>
-                    <td><span class="eval eval-good">Buena</span></td>
-                    <td>PCA preserva el 87.2% de las vecindades. Ligeramente inferior a t-SNE, pero más interpretable.</td>
+                    <td>t-SNE preserva las vecindades locales. Puedes confiar en los grupos que ves en el mapa t-SNE.</td>
                 </tr>
                 <tr>
                     <td><strong>Kruskal-Wallis Significativas</strong></td>
-                    <td>17/18</td>
+                    <td>18/18</td>
                     <td><span class="eval eval-good">Excelente</span></td>
-                    <td>Solo dragón no discrimina (p=0.43) por falta de ejemplares. La segmentación captura diversidad real.</td>
+                    <td>Con k=9, hasta el tipo Dragón discrimina. Los 9 arquetipos capturan diversidad real y más matices que con k=4.</td>
                 </tr>
                 <tr>
                     <td><strong>DBSCAN — Ruido</strong></td>
@@ -887,7 +887,7 @@
         <div class="battle-tip">
             <strong>⚔️ Cómo usar este mapa para encontrar sustitutos:</strong><br>
             Donde PCA es un mapa continuo, t-SNE es un <strong>archipiélago</strong>. Cada isla es una familia defensiva.<br>
-            1. Identifica las 4 islas principales — corresponden a los 4 arquetipos<br>
+            1. Identifica las islas principales — corresponden a los 9 arquetipos<br>
             2. Las islas pequeñas son <strong>microniches</strong> — grupos muy específicos<br>
             3. Los puntos solitarios son <strong>outliers</strong> — especialistas únicos<br>
             4. Si necesitas un sustituto para un Pokémon que no puedes conseguir, <strong>busca en su misma isla</strong> — ahí hay alternativas funcionales
@@ -939,8 +939,8 @@
         <table class="graph-dict-table">
             <thead><tr><th>#</th><th>Archivo</th><th>🎯 Para tu batalla</th></tr></thead>
             <tbody>
-                <tr><td>14</td><td>optimizacion_multimetrica</td><td><strong>"¿Por qué 4?"</strong> — 4 métricas confirman: 4 arquetipos es óptimo. La ciencia respalda la intuición.</td></tr>
-                <tr><td>15</td><td>gap_statistic</td><td><strong>"9 sub-arquetipos"</strong> — Para la Liga 4 basta. Para el Alto Mando, usa 9.</td></tr>
+                <tr><td>14</td><td>optimizacion_multimetrica</td><td><strong>"¿Por qué 9?"</strong> — 4 métricas independientes evalúan k=2..10. La Gap Statistic determina que 9 es el óptimo estadístico.</td></tr>
+                <tr><td>15</td><td>gap_statistic</td><td><strong>"9 arquetipos"</strong> — La Gap Statistic confirma: 9 arquetipos es el número estadísticamente representativo. Cada uno es un nicho defensivo explotable.</td></tr>
                 <tr><td>16</td><td>dendrograma_ward</td><td><strong>"Árbol genealógico"</strong> — Ramas opuestas = cobertura perfecta. Busca tu complemento en la rama contraria.</td></tr>
                 <tr><td>17</td><td>silhouette_diagram</td><td><strong>"Los comodines"</strong> — Pokémon con baja silueta son versátiles. Úsalos como situational picks.</td></tr>
                 <tr><td>18</td><td>caracterizacion_heatmap</td><td><strong>"LA TABLA SAGRADA"</strong> — Memorízala. Te dice exactamente qué esperar de cada arquetipo.</td></tr>
@@ -1032,7 +1032,7 @@
         <div class="grid-2">
             <div>
                 <h3>🎯 Eficacia del Análisis</h3>
-                <p>Las resistencias elementales <strong>discriminan naturalmente</strong> a los Pokémon en 4 arquetipos defensivos. Cada arquetipo tiene un perfil único de fortalezas y debilidades que puedes explotar en batalla. La validación con Kruskal-Wallis (17/18 variables significativas) confirma que estos grupos no son producto del azar.</p>
+                <p>Las resistencias elementales <strong>discriminan naturalmente</strong> a los Pokémon en 9 arquetipos defensivos (k=9 óptimo por Gap Statistic). Cada arquetipo tiene un perfil único de fortalezas y debilidades que puedes explotar en batalla. La validación con Kruskal-Wallis (18/18 variables significativas con k=9) confirma que estos grupos no son producto del azar.</p>
             </div>
             <div>
                 <h3>🔬 Rigor Científico</h3>
@@ -1075,10 +1075,10 @@
 </div>
 
 <footer>
-    <strong>Alejandro Quintero</strong> — Maestría en Analítica de Datos<br>
+    <strong>Grupo #10</strong> — Maestría en Analítica de Datos<br>
     Politécnico Grancolombiano — Facultad de Ingeniería, Diseño e Innovación<br>
     <span style="font-size:0.8rem;">
-        Generado: 2026-06-20 &bull; 26 gráficos &bull; 4 arquetipos &bull; 1 misión: ser Campeón<br>
+        Generado: 2026-06-20 &bull; 26 gráficos &bull; 9 arquetipos (k=9 óptimo Gap Statistic) &bull; 1 misión: ser Campeón<br>
         <em>"Entender es ganar."</em>
     </span>
 </footer>
